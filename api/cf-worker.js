@@ -1,13 +1,7 @@
 // api/cf-worker.js
 // Vercel serverless function — serve cf-worker JS as text
 // Adapted for reyy tools
-
-module.exports = (req, res) => {
-  res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Cache-Control', 'public, max-age=3600');
-  res.status(200).send(CF_WORKER_SOURCE);
-};
+// FIXED: CF_WORKER_SOURCE di atas, res.end() bukan res.send()
 
 const CF_WORKER_SOURCE = `(function(){
   const CONTAINER_BOXES = new Set(['moov','trak','mdia','minf','stbl','edts','dinf','udta','meta','ilst']);
@@ -117,29 +111,6 @@ const CF_WORKER_SOURCE = `(function(){
     odv.setUint32(36,0xFFFFFFFF,false);
     out.set(arr.slice(restSrc,restSrc+restLen),40);
     return out;
-  }
-
-  function buildItag(tag, text){
-    const enc  = new TextEncoder();
-    const tb   = enc.encode(text);
-    const data = new Uint8Array(4+4+4+4+tb.length);
-    const ddv  = new DataView(data.buffer);
-    ddv.setUint32(0, data.length, false);
-    setFcc(data, 4, 'data');
-    ddv.setUint32(8,  1, false);
-    ddv.setUint32(12, 0, false);
-    data.set(tb, 16);
-    const tagBytes = new TextEncoder().encode(tag);
-    const box = new Uint8Array(4+4+data.length);
-    const bdv = new DataView(box.buffer);
-    bdv.setUint32(0, box.length, false);
-    if(tagBytes.length===4){
-      box.set(tagBytes, 4);
-    } else {
-      setFcc(box, 4, tag);
-    }
-    box.set(data, 8);
-    return box;
   }
 
   function buildCpyTag(text){
@@ -252,7 +223,6 @@ const CF_WORKER_SOURCE = `(function(){
     if(!mvhdBox) throw new Error('mvhd not found');
     const newMvhd = buildMvhd(arr,dv,mvhdBox);
     repl.set(mvhdBox, newMvhd);
-    const mvhdDelta = newMvhd.length - mvhdBox.size;
 
     const allStco = [];
     for(const trak of moovBox.children){
@@ -306,3 +276,11 @@ const CF_WORKER_SOURCE = `(function(){
     return { output: output.buffer, realSamples: 0, fakeSamples: 0 };
   };
 })();`;
+
+module.exports = (req, res) => {
+  res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Cache-Control', 'public, max-age=3600');
+  res.statusCode = 200;
+  res.end(CF_WORKER_SOURCE);
+};
