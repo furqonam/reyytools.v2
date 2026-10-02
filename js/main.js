@@ -83,21 +83,12 @@ document.addEventListener('DOMContentLoaded', () => {
 // 2. SECTION NAVIGATION & MODES
 // ==========================================
 function switchSection(sectionName) {
-  document.querySelectorAll('.section').forEach(s => {
-    s.classList.remove('active');
-  });
-  
+  document.querySelectorAll('.tool-content .section').forEach(s => s.classList.remove('active'));
   const target = document.getElementById('section-' + sectionName);
-  if (target) {
-    target.classList.add('active');
-  }
-  
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.querySelectorAll(`.nav-item[data-section="${sectionName}"]`).forEach(btn => {
-    btn.classList.add('active');
-  });
-  
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (target) target.classList.add('active');
+
+  document.querySelectorAll('.home-tool-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll(`.home-tool-tab[data-section="${sectionName}"]`).forEach(b => b.classList.add('active'));
 
   if (sectionName === 'encoder') setMode('encoder');
   if (sectionName === 'patcher') setMode('patch');
@@ -109,18 +100,17 @@ function setMode(mode) {
     card.classList.remove('active');
     if (card.dataset.mode === mode) card.classList.add('active');
   });
-  
+
   const itsPanel = document.getElementById('itsPanel');
   if (itsPanel) {
-    if (mode === 'its') itsPanel.classList.add('show');
-    else itsPanel.classList.remove('show');
+    itsPanel.style.display = (mode === 'its') ? 'block' : 'none';
   }
   updateProcessButton();
 }
 
 function selectItsScale(el) {
-  document.querySelectorAll('.its-item[data-scale]').forEach(i => i.classList.remove('selected'));
-  el.classList.add('selected');
+  document.querySelectorAll('.its-pill').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
 }
 
 function selectInterpScale(el) {
