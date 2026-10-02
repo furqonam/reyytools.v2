@@ -3,10 +3,6 @@
    Preserves 100% Core AI Photo Engine (ONNX Waifu2x) & Cloud Video Upscale (Colab/Ngrok API) Logic
    ══════════════════════════════════════════════════════════════ */
 
-let selectedFile = null;
-let curMode = 'patch';
-let t0 = 0;
-
 // ==========================================
 // 1. THEME & LOCALIZATION ENGINE (LOCALSTORAGE)
 // ==========================================
