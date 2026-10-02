@@ -22,9 +22,6 @@ function updateLocalStats() {
 document.addEventListener('DOMContentLoaded', () => {
   updateLocalStats(); 
   
-  // Force Indonesian Language
-  changeLanguage('id');
-  
   // Hide Welcome Splash Overlay after delay
   setTimeout(() => {
     const overlay = document.getElementById('welcomeOverlay');
