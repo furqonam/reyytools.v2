@@ -235,45 +235,34 @@ async function runProcess() {
   const sb = selectedFile.size;
   const base = selectedFile.name.replace(/\.[^/.]+$/, '');
 
-  if (curMode === 'patch') {
-    setStatus('⚙️ reyy tools Engine: Applying Sample Table Patch...', 'working');
-    setProgress(10, 'Reading file...', true);
+if (curMode === 'patch') {
+  setStatus('⚙️ reyy tools Engine: Applying Sample Table Patch...', 'working');
+  setProgress(10, 'Reading file...', true);
 
-    try {
-      let ab = await selectedFile.arrayBuffer();
-      
-      // Inject reyy tools Copyright Metadata
-      setProgress(20, 'Injecting reyy tools Copyright Metadata...');
-      const ff = await loadFFmpeg();
-      ff.FS('writeFile', 'temp_in.mp4', new Uint8Array(ab));
-      await ff.run('-i', 'temp_in.mp4', '-c', 'copy', '-metadata', 'copyright=reyy tools', '-metadata', 'encoded_by=Encoder by reyy tools', 'temp_out.mp4');
-      const ffOut = ff.FS('readFile', 'temp_out.mp4');
-      ab = ffOut.buffer.slice(ffOut.byteOffset, ffOut.byteOffset + ffOut.byteLength);
-      try { ff.FS('unlink', 'temp_in.mp4'); ff.FS('unlink', 'temp_out.mp4'); } catch(e){}
+  try {
+    const ab = await selectedFile.arrayBuffer();
+    setProgress(50, 'Applying Shark HD Patch (CF Logic)...');
 
-      setProgress(50, 'Applying Shark HD Patch (CF Logic)...');
+    const patch = (typeof patchSharkSampleTableMethod === 'function')
+      ? await patchSharkSampleTableMethod(ab)
+      : { output: new Uint8Array(ab) };
 
-      const patch = (typeof patchSharkSampleTableMethod === 'function')
-        ? await patchSharkSampleTableMethod(ab)
-        : { output: new Uint8Array(ab) };
+    if (!patch || !patch.output) throw new Error('Patch gagal: output kosong.');
 
-      if (!patch || !patch.output) throw new Error('Patch gagal: output kosong.');
+    setProgress(90, 'Preparing download...');
+    const outBuf = patch.output instanceof Uint8Array ? patch.output.buffer : patch.output;
+    downloadBlob(outBuf, base + '_reyy_smart.mp4');
+    setProgress(100, 'Complete!');
 
-      setProgress(90, 'Preparing download...');
-      const outBuf = patch.output instanceof Uint8Array ? patch.output.buffer : patch.output;
-      downloadBlob(outBuf, base + '_reyy_smart.mp4');
-      setProgress(100, 'Complete!');
-
-      const elapsed = (Date.now() - t0) / 1000;
-      setStatus('✅ Success! Video file patched.', 'success');
-      showResult(selectedFile.name, elapsed, sb, patch.output.byteLength || patch.output.length);
-      recordSuccess();
-      setTimeout(() => setProgress(0, '', false), 3000);
-
-    } catch (err) {
-      setStatus('❌ Error: ' + err.message, 'error');
-      setProgress(0, '', false);
-    }
+    const elapsed = (Date.now() - t0) / 1000;
+    setStatus('✅ Success! Video file patched.', 'success');
+    showResult(selectedFile.name, elapsed, sb, patch.output.byteLength || patch.output.length);
+    recordSuccess();
+    setTimeout(() => setProgress(0, '', false), 3000);
+  } catch (err) {
+    setStatus('❌ Error: ' + err.message, 'error');
+    setProgress(0, '', false);
+  }
 } else if (curMode === 'ky60') {
     setStatus('⏳ reyy tools 60fps Method: Processing...', 'working');
     setProgress(0, 'Reading file...', true);
