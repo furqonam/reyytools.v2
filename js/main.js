@@ -1,42 +1,63 @@
 /* ══════════════════════════════════════════════════════════════
    reyy tools — Main Modular Application Logic
-   Preserves 100% Core AI Photo Engine (ONNX Waifu2x) & Cloud Video Upscale (Colab/Ngrok API) Logic
+   FIXED VERSION — Semua bug udah dibersihin:
+   - changeLanguage dihapus (i18n.js udah gak ada)
+   - selectedFile duplikat dihapus
+   - Interp Lab unused code dihapus
+   - switchSection selector fix (.tool-content .section)
+   - setStatus/setProgress/showResult standalone
+   - encode_patch handler ditambah (FIX 1)
+   - patchType event listener ditambah (FIX 2)
+   - setMode reset dropdown (FIX 3)
+   - ONNX path absolute /noise2_scale2.0x_model.onnx
    ══════════════════════════════════════════════════════════════ */
 
-// ==========================================
-// 1. THEME & LOCALIZATION ENGINE (LOCALSTORAGE)
-// ==========================================
 let selectedFile = null;
 let curMode = 'patch';
 let t0 = 0;
 
+// ==========================================
+// 1. STATS & LOCAL STORAGE
+// ==========================================
 function updateLocalStats() {
   const el = document.getElementById('statFiles');
   if (el) {
-    const count = localStorage.getItem('reyy_processed_total') || '0';
+    const count = localStorage.getItem('reyy_processed_count') || '0';
     el.textContent = count;
   }
 }
 
-// Automatic Initialization on DOM Load
+function recordSuccess() {
+  let count = parseInt(localStorage.getItem('reyy_processed_count') || '0');
+  count++;
+  localStorage.setItem('reyy_processed_count', count);
+  updateLocalStats();
+}
+
+// ==========================================
+// 2. INIT ON DOM LOAD
+// ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-  updateLocalStats(); 
-  
+  updateLocalStats();
+
   // Hide Welcome Splash Overlay after delay
   setTimeout(() => {
     const overlay = document.getElementById('welcomeOverlay');
-    if (overlay) overlay.classList.add('hidden');
-  }, 2200); 
+    if (overlay) {
+      overlay.style.opacity = '0';
+      setTimeout(() => overlay.remove(), 500);
+    }
+  }, 2200);
 
   // Setup Drag & Drop Upload Zone
   const uploadZone = document.getElementById('uploadZone');
   if (uploadZone) {
-    uploadZone.addEventListener('dragover', (e) => { 
-      e.preventDefault(); 
-      uploadZone.classList.add('over'); 
+    uploadZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadZone.classList.add('over');
     });
-    uploadZone.addEventListener('dragleave', () => { 
-      uploadZone.classList.remove('over'); 
+    uploadZone.addEventListener('dragleave', () => {
+      uploadZone.classList.remove('over');
     });
     uploadZone.addEventListener('drop', (e) => {
       e.preventDefault();
@@ -48,33 +69,33 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-// Sync patchType dropdown → curMode
-const patchTypeSelect = document.getElementById('patchType');
-if (patchTypeSelect) {
-  patchTypeSelect.addEventListener('change', (e) => {
-    const val = e.target.value;
-    if (val === 'encode_patch') {
-      curMode = 'patch';
-      // un-highlight mode cards karena ini bukan mode card
-      document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
-      console.log('[SmartPatch] Mode: Encode + Patch');
-    } else {
-      // patch_only → balikin ke mode card default
-      curMode = 'patch';
-      setMode('patch');
-      console.log('[SmartPatch] Mode: Patch Only');
-    }
-  });
-}
-  
-  // Bind AI Upscale Engine Handlers (Local ONNX & Cloud Colab/Ngrok)
+  // ═══════════════════════════════════════════════════════
+  // FIX 2: Sync patchType dropdown → curMode
+  // ═══════════════════════════════════════════════════════
+  const patchTypeSelect = document.getElementById('patchType');
+  if (patchTypeSelect) {
+    patchTypeSelect.addEventListener('change', (e) => {
+      const val = e.target.value;
+      if (val === 'encode_patch') {
+        curMode = 'patch';
+        document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
+        console.log('[SmartPatch] Mode: Encode + Patch');
+      } else {
+        curMode = 'patch';
+        setMode('patch');
+        console.log('[SmartPatch] Mode: Patch Only');
+      }
+    });
+  }
+
+  // Bind AI Upscale Engine Handlers
   initLocalAIUpscale();
   initCloudVideoUpscale();
 });
 
 
 // ==========================================
-// 2. SECTION NAVIGATION & MODES
+// 3. SECTION NAVIGATION & MODES
 // ==========================================
 function switchSection(sectionName) {
   document.querySelectorAll('.tool-content .section').forEach(s => s.classList.remove('active'));
@@ -100,7 +121,7 @@ function setMode(mode) {
     itsPanel.style.display = (mode === 'its') ? 'block' : 'none';
   }
 
-  // Reset dropdown patchType ke patch_only kalo pindah mode card
+  // FIX 3: Reset dropdown patchType kalo pindah mode card
   const patchTypeSelect = document.getElementById('patchType');
   if (patchTypeSelect && (mode === 'ky60' || mode === 'its')) {
     patchTypeSelect.value = 'patch_only';
@@ -114,11 +135,6 @@ function selectItsScale(el) {
   el.classList.add('active');
 }
 
-function selectInterpScale(el) {
-  document.querySelectorAll('#section-interp .its-item').forEach(i => i.classList.remove('selected'));
-  el.classList.add('selected');
-}
-
 function handleFileSelect(event) {
   const file = event.target.files[0];
   if (!file) return;
@@ -127,12 +143,12 @@ function handleFileSelect(event) {
 
 function processSelectedFile(file) {
   selectedFile = file;
-  
+
   const fileDisplay = document.getElementById('fileDisplay');
   const fileName = document.getElementById('fileName');
   if (fileDisplay) fileDisplay.classList.add('ok');
   if (fileName) fileName.textContent = file.name;
-  
+
   const video = document.getElementById('videoPreview');
   const placeholder = document.getElementById('previewPlaceholder');
   if (video && placeholder) {
@@ -140,7 +156,7 @@ function processSelectedFile(file) {
     video.style.display = 'block';
     placeholder.style.display = 'none';
   }
-  
+
   updateProcessButton();
 
   const homeSection = document.getElementById('section-home');
@@ -168,17 +184,16 @@ function setStatus(msg, type) {
 }
 
 function setProgress(percent, label, show) {
-  const isEnc = (curMode === 'encoder');
-  const wrap = document.getElementById(isEnc ? 'encProgressWrap' : 'progressWrap');
-  const fill = document.getElementById(isEnc ? 'encProgressFill' : 'progressFill');
-  const lbl = document.getElementById(isEnc ? 'encProgressLabel' : 'progressLabel');
-  const eta = document.getElementById(isEnc ? 'encProgressEta' : 'progressEta');
-  
+  const wrap = document.getElementById('progressWrap');
+  const fill = document.getElementById('progressFill');
+  const lbl = document.getElementById('progressLabel');
+  const eta = document.getElementById('progressEta');
+
   if (show && wrap) wrap.classList.add('show');
+  if (!show && wrap) wrap.classList.remove('show');
   if (fill) fill.style.width = percent + '%';
   if (lbl) lbl.textContent = label || '';
   if (eta) eta.textContent = Math.round(percent) + '%';
-  if (percent >= 100 && wrap) setTimeout(() => wrap.classList.remove('show'), 2000);
 }
 
 function showResult(fileName, elapsed, sizeBefore, sizeAfter) {
@@ -202,13 +217,6 @@ function formatBytes(bytes) {
   return (bytes / 1048576).toFixed(2) + ' MB';
 }
 
-function recordSuccess() {
-  let count = parseInt(localStorage.getItem('reyy_processed_count') || '0');
-  count++;
-  localStorage.setItem('reyy_processed_count', count);
-  updateLocalStats();
-}
-
 function buildEncoderArgs() {
   const codec = document.getElementById('encCodec')?.value || 'libx264';
   const crf = document.getElementById('encCrf')?.value || '18';
@@ -219,128 +227,9 @@ function buildEncoderArgs() {
   return { ffmpegArgs, codec, crf, preset };
 }
 
+
 // ==========================================
-// 3. VIDEO ENGINE PIPELINE (PATCH/ENCODE)
-// ==========================================
-async function runProcess() {
-  if (!selectedFile) return;
-  
-  const btn = document.getElementById(curMode === 'encoder' ? 'encBtn' : 'patchBtn');
-  if (btn) btn.disabled = true;
-  
-  let t0 = Date.now();
-  const sb = selectedFile.size;
-  const base = selectedFile.name.replace(/\.[^/.]+$/, '');
-
-if (curMode === 'patch') {
-  setStatus('⚙️ reyy tools Engine: Applying Sample Table Patch...', 'working');
-  setProgress(10, 'Reading file...', true);
-
-  try {
-    const ab = await selectedFile.arrayBuffer();
-    setProgress(50, 'Applying Shark HD Patch (CF Logic)...');
-
-    const patch = (typeof patchSharkSampleTableMethod === 'function')
-      ? await patchSharkSampleTableMethod(ab)
-      : { output: new Uint8Array(ab) };
-
-    if (!patch || !patch.output) throw new Error('Patch gagal: output kosong.');
-
-    setProgress(90, 'Preparing download...');
-    const outBuf = patch.output instanceof Uint8Array ? patch.output.buffer : patch.output;
-    downloadBlob(outBuf, base + '_reyy_smart.mp4');
-    setProgress(100, 'Complete!');
-
-    const elapsed = (Date.now() - t0) / 1000;
-    setStatus('✅ Success! Video file patched.', 'success');
-    showResult(selectedFile.name, elapsed, sb, patch.output.byteLength || patch.output.length);
-    recordSuccess();
-    setTimeout(() => setProgress(0, '', false), 3000);
-  } catch (err) {
-    setStatus('❌ Error: ' + err.message, 'error');
-    setProgress(0, '', false);
-  }
-} else if (curMode === 'ky60') {
-    setStatus('⏳ reyy tools 60fps Method: Processing...', 'working');
-    setProgress(0, 'Reading file...', true);
-    try {
-      const ab = await selectedFile.arrayBuffer();
-      setProgress(30, 'Analyzing structure...');
-      setProgress(55, 'Embedding metadata stamp...');
-      const data = new Uint8Array(ab.slice(0));
-patchZPayload(data);
-const buf = data.buffer;
-      setProgress(95, 'Downloading...');
-      downloadBlob(buf, base + '_reyy60.mp4');
-      setProgress(100, 'Complete!');
-      const elapsed = (Date.now() - t0) / 1000;
-      setStatus('✅ reyy tools 60fps Method Complete!', 'success');
-      showResult(selectedFile.name, elapsed, sb, buf.byteLength);
-      recordSuccess();
-      setTimeout(() => setProgress(0, '', false), 3000);
-    } catch (err) { 
-      setStatus('❌ Error: ' + err.message, 'error'); 
-      setProgress(0, '', false); 
-    }
-
-} else if (curMode === 'its') {
-  const scale = document.querySelector('.its-pill.active')?.dataset.scale || '2';
-  setStatus(`⏳ Speed Booster x${scale}: Processing video...`, 'working');
-  setProgress(0, 'Loading engine...', true);
-  try {
-    const ff = await loadFFmpeg();
-    setProgress(20, 'Writing input...');
-    ff.FS('writeFile', 'input.mp4', await ff._fetchFile(selectedFile));
-    setProgress(40, 'Processing frame timing...');
-    await ff.run('-itsscale', scale, '-i', 'input.mp4', '-c', 'copy', 'its_out.mp4');
-    setProgress(72, 'Finalizing output...');
-    const itsData = ff.FS('readFile', 'its_out.mp4');
-    const ab = itsData.buffer.slice(itsData.byteOffset, itsData.byteOffset + itsData.byteLength);
-    const patched = (typeof applyMetadataStamp === 'function') ? applyMetadataStamp(ab) : ab;
-    setProgress(95, 'Downloading...');
-    downloadBlob(patched, base + `_its${scale}_patched.mp4`);
-    try { ff.FS('unlink', 'input.mp4'); ff.FS('unlink', 'its_out.mp4'); } catch (e) {}
-    setProgress(100, 'Complete!');
-    const elapsed = (Date.now() - t0) / 1000;
-    setStatus(`✅ Speed Booster x${scale} Complete!`, 'success');
-    showResult(selectedFile.name, elapsed, sb, patched.byteLength);
-    recordSuccess();
-    setTimeout(() => setProgress(0, '', false), 3000);
-  } catch (err) {
-    setStatus('❌ Error: ' + err.message, 'error');
-    setProgress(0, '', false);
-  }
-} else if (curMode === 'encoder') {
-    const args = buildEncoderArgs();
-    const applyStamp = document.getElementById('encApplyStamp')?.checked;
-    setStatus('⏳ Advanced Encoder: Encoding video...', 'working');
-    setProgress(0, 'Loading engine...', true);
-    try {
-      const ff = await loadFFmpeg();
-      args.ffmpegArgs.push('-threads', String(ff._multiThread ? (typeof ffmpegThreadCount === 'function' ? ffmpegThreadCount() : 1) : 1));
-      
-      // Inject Copyright Metadata
-      args.ffmpegArgs.push('-metadata', 'copyright=reyy tools', '-metadata', 'encoded_by=Encoder by reyy tools');
-      
-      setProgress(15, 'Writing input file...');
-      ff.FS('writeFile', 'input.mp4', await ff._fetchFile(selectedFile));
-      setProgress(35, `Encoding Video (${args.preset}, CRF ${args.crf})...`);
-
-      ff.setLogger(({ type, message }) => console.log(`[FFmpeg ${type}] ${message}`));
-      ff.setProgress(({ ratio }) => {
-        if (ratio >= 0 && ratio <= 1) {
-          setProgress(35 + (Math.round(ratio * 100) * 0.40), `Encoding Video: ${Math.round(ratio * 100)}%`);
-        }
-      });
-
-      await ff.run('-i', 'input.mp4', ...args.ffmpegArgs, 'enc_out.mp4');
-
-      ff.setProgress(() => {}); 
-      ff.setLogger(() => {}); 
-
-      setProgress(75, 'Finalizing output buffer...');
-// ==========================================
-// 3. VIDEO ENGINE PIPELINE (PATCH/ENCODE)
+// 4. VIDEO ENGINE PIPELINE
 // ==========================================
 async function runProcess() {
   if (!selectedFile) return;
@@ -348,13 +237,13 @@ async function runProcess() {
   const btn = document.getElementById(curMode === 'encoder' ? 'encBtn' : 'patchBtn');
   if (btn) btn.disabled = true;
 
-  const t0 = Date.now();
+  const tStart = Date.now();
   const sb = selectedFile.size;
   const base = selectedFile.name.replace(/\.[^/.]+$/, '');
   const patchType = document.getElementById('patchType')?.value || 'patch_only';
 
   // ═══════════════════════════════════════════
-  // MODE 1: PATCH ONLY (Instant Metadata)
+  // MODE 1: PATCH ONLY
   // ═══════════════════════════════════════════
   if (curMode === 'patch' && patchType === 'patch_only') {
     setStatus('⚙️ SmartPatch: Applying Sample Table Patch...', 'working');
@@ -375,7 +264,7 @@ async function runProcess() {
       downloadBlob(outBuf, base + '_reyy_smart.mp4');
       setProgress(100, 'Complete!');
 
-      const elapsed = (Date.now() - t0) / 1000;
+      const elapsed = (Date.now() - tStart) / 1000;
       setStatus('✅ Success! Video file patched.', 'success');
       showResult(selectedFile.name, elapsed, sb, patch.output.byteLength || patch.output.length);
       recordSuccess();
@@ -387,7 +276,7 @@ async function runProcess() {
   }
 
   // ═══════════════════════════════════════════
-  // MODE 2: ENCODE + PATCH (HD Optimization)
+  // MODE 2: ENCODE + PATCH
   // ═══════════════════════════════════════════
   else if (curMode === 'patch' && patchType === 'encode_patch') {
     setStatus('⏳ Encode + Patch: Re-encoding H.264...', 'working');
@@ -433,7 +322,7 @@ async function runProcess() {
       try { ff.FS('unlink', 'input.mp4'); ff.FS('unlink', 'enc_out.mp4'); } catch (e) {}
 
       setProgress(100, 'Complete!');
-      const elapsed = (Date.now() - t0) / 1000;
+      const elapsed = (Date.now() - tStart) / 1000;
       setStatus('✅ Encode + Patch Complete!', 'success');
       showResult(selectedFile.name, elapsed, sb, ab.byteLength);
       recordSuccess();
@@ -445,7 +334,7 @@ async function runProcess() {
   }
 
   // ═══════════════════════════════════════════
-  // MODE 3: KY60 (reyy 60fps Stamp)
+  // MODE 3: KY60
   // ═══════════════════════════════════════════
   else if (curMode === 'ky60') {
     setStatus('⏳ reyy tools 60fps Method: Processing...', 'working');
@@ -460,7 +349,7 @@ async function runProcess() {
       setProgress(95, 'Downloading...');
       downloadBlob(buf, base + '_reyy60.mp4');
       setProgress(100, 'Complete!');
-      const elapsed = (Date.now() - t0) / 1000;
+      const elapsed = (Date.now() - tStart) / 1000;
       setStatus('✅ reyy tools 60fps Method Complete!', 'success');
       showResult(selectedFile.name, elapsed, sb, buf.byteLength);
       recordSuccess();
@@ -472,7 +361,7 @@ async function runProcess() {
   }
 
   // ═══════════════════════════════════════════
-  // MODE 4: ITS (Speed Booster / Frame Timing)
+  // MODE 4: ITS
   // ═══════════════════════════════════════════
   else if (curMode === 'its') {
     const scale = document.querySelector('.its-pill.active')?.dataset.scale || '2';
@@ -492,7 +381,7 @@ async function runProcess() {
       downloadBlob(patched, base + `_its${scale}_patched.mp4`);
       try { ff.FS('unlink', 'input.mp4'); ff.FS('unlink', 'its_out.mp4'); } catch (e) {}
       setProgress(100, 'Complete!');
-      const elapsed = (Date.now() - t0) / 1000;
+      const elapsed = (Date.now() - tStart) / 1000;
       setStatus(`✅ Speed Booster x${scale} Complete!`, 'success');
       showResult(selectedFile.name, elapsed, sb, patched.byteLength);
       recordSuccess();
@@ -504,7 +393,7 @@ async function runProcess() {
   }
 
   // ═══════════════════════════════════════════
-  // MODE 5: ENCODER TAB (Standalone Encoder)
+  // MODE 5: ENCODER TAB
   // ═══════════════════════════════════════════
   else if (curMode === 'encoder') {
     const args = buildEncoderArgs();
@@ -543,7 +432,7 @@ async function runProcess() {
       downloadBlob(ab, base + `_encoded_crf${args.crf}` + (applyStamp ? '_reyy' : '') + '.mp4');
       try { ff.FS('unlink', 'input.mp4'); ff.FS('unlink', 'enc_out.mp4'); } catch (e) {}
       setProgress(100, 'Complete!');
-      const elapsed = (Date.now() - t0) / 1000;
+      const elapsed = (Date.now() - tStart) / 1000;
       setStatus('✅ Advanced Encoder Complete!', 'success');
       showResult(selectedFile.name, elapsed, sb, ab.byteLength);
       recordSuccess();
@@ -557,9 +446,37 @@ async function runProcess() {
   if (btn) btn.disabled = false;
 }
 
-// ════════════════════════════════════════════════════════════
-// 4. LOCAL AI PHOTO UPSCALE (ONNX WAIFU2X ENGINE)
-// ════════════════════════════════════════════════════════════
+
+// ==========================================
+// 5. DOWNLOAD HELPER
+// ==========================================
+function downloadBlob(data, filename) {
+  const blob = new Blob([data], { type: 'video/mp4' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function downloadImageBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+
+// ==========================================
+// 6. LOCAL AI PHOTO UPSCALE (ONNX WAIFU2X)
+// ==========================================
 let selectedUpscaleFile = null;
 
 function switchUpscaleTab(tabMode) {
@@ -611,17 +528,6 @@ function initLocalAIUpscale() {
   }
 }
 
-function downloadImageBlob(blob, filename) {
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
-
 function setUpscaleProgress(percent, text) {
   const fill = document.getElementById('upscaleProgressFill');
   const statusText = document.getElementById('upscaleStatusText');
@@ -629,34 +535,33 @@ function setUpscaleProgress(percent, text) {
   if (statusText) statusText.textContent = text;
 }
 
-// Main ONNX Neural Super-Resolution Processing Logic
 async function runLocalAIUpscale(imageFile) {
   const btnStartUpscale = document.getElementById('btnStartUpscale');
   const upscaleStatusBox = document.getElementById('upscaleStatusBox');
-  
+
   try {
     if (btnStartUpscale) btnStartUpscale.disabled = true;
     if (upscaleStatusBox) upscaleStatusBox.style.display = 'block';
     const fill = document.getElementById('upscaleProgressFill');
     if (fill) fill.style.background = 'var(--accent)';
-    
+
     setUpscaleProgress(15, 'Preparing ONNX WASM Super-Resolution Engine...');
 
     if (typeof ort !== 'undefined' && ort.env && ort.env.wasm) {
       ort.env.wasm.numThreads = 4;
       ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/';
     }
-    
+
     const session = await ort.InferenceSession.create('/noise2_scale2.0x_model.onnx', {
       executionProviders: ['wasm']
     });
 
     setUpscaleProgress(30, 'Extracting image matrix tensors...');
-    
+
     const img = new Image();
     img.src = URL.createObjectURL(imageFile);
     await new Promise(r => img.onload = r);
-    
+
     let targetW = Math.floor(img.width / 4) * 4;
     let targetH = Math.floor(img.height / 4) * 4;
     if (targetW > 1080 || targetH > 1080) {
@@ -682,15 +587,15 @@ async function runLocalAIUpscale(imageFile) {
     const inputTensor = new ort.Tensor('float32', floatData, [1, 3, targetH, targetW]);
     const feeds = {};
     feeds[session.inputNames[0]] = inputTensor;
-    
+
     setUpscaleProgress(65, '🔥 AI Engine rendering Ultra HD pixels...');
-    await new Promise(resolve => setTimeout(resolve, 50)); 
-    
+    await new Promise(resolve => setTimeout(resolve, 50));
+
     const results = await session.run(feeds);
     const outputTensor = results[session.outputNames[0]];
     const outData = outputTensor.data;
     const dims = outputTensor.dims;
-    
+
     let outH, outWidth, isNCHW;
     if (dims[1] === 3) {
       isNCHW = true; outH = dims[2]; outWidth = dims[3];
@@ -700,7 +605,7 @@ async function runLocalAIUpscale(imageFile) {
     const pixels = outH * outWidth;
 
     setUpscaleProgress(85, '✨ Reconstructing high-resolution image...');
-    
+
     const outCanvas = document.createElement('canvas');
     outCanvas.width = outWidth;
     outCanvas.height = outH;
@@ -718,17 +623,17 @@ async function runLocalAIUpscale(imageFile) {
         g = outData[i * 3 + 1] * 255;
         b = outData[i * 3 + 2] * 255;
       }
-      
+
       outImgData.data[i * 4]     = Math.round(Math.max(0, Math.min(255, r)));
       outImgData.data[i * 4 + 1] = Math.round(Math.max(0, Math.min(255, g)));
       outImgData.data[i * 4 + 2] = Math.round(Math.max(0, Math.min(255, b)));
-      outImgData.data[i * 4 + 3] = 255; 
+      outImgData.data[i * 4 + 3] = 255;
     }
-    
+
     outCtx.putImageData(outImgData, 0, 0);
 
     setUpscaleProgress(100, '🎉 Complete! Downloading image...');
-    
+
     outCanvas.toBlob((blob) => {
       downloadImageBlob(blob, 'reyy_Waifu2x_UltraHD_' + Date.now() + '.png');
       if (upscaleStatusBox) upscaleStatusBox.className = 'status-box success';
@@ -751,9 +656,10 @@ async function runLocalAIUpscale(imageFile) {
   }
 }
 
-// ════════════════════════════════════════════════════════════
-// 5. CLOUD VIDEO UPSCALE ENGINE (COLAB / NGROK API)
-// ════════════════════════════════════════════════════════════
+
+// ==========================================
+// 7. CLOUD VIDEO UPSCALE (COLAB / NGROK API)
+// ==========================================
 let selectedCloudVideoFile = null;
 
 function initCloudVideoUpscale() {
@@ -809,7 +715,6 @@ async function runCloudVideoUpscale() {
 
   try {
     if (btnStartCloudUpscale) btnStartCloudUpscale.disabled = true;
-  
     if (cloudStatusBox) {
       cloudStatusBox.style.display = 'block';
       cloudStatusBox.className = 'status-box working';
@@ -837,7 +742,10 @@ async function runCloudVideoUpscale() {
     const resultBlob = await response.blob();
     setCloudProgress(100, '🎉 Cloud Upscale Complete! Downloading video...');
 
-    downloadBlob(await resultBlob.arrayBuffer(), selectedCloudVideoFile.name.replace(/\.[^.]+$/, '') + '_cloud_upscale_4k.mp4');
+    downloadBlob(
+      await resultBlob.arrayBuffer(),
+      selectedCloudVideoFile.name.replace(/\.[^.]+$/, '') + '_cloud_upscale_4k.mp4'
+    );
 
     if (cloudStatusBox) cloudStatusBox.className = 'status-box success';
     if (btnStartCloudUpscale) {
