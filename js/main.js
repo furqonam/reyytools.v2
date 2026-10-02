@@ -286,35 +286,34 @@ const buf = data.buffer;
       setProgress(0, '', false); 
     }
 
-  } else if (curMode === 'its') {
-    const scale = document.querySelector('.its-item[data-scale].selected')?.dataset.scale || '2';
-    setStatus(`⏳ Speed Booster x${scale}: Processing video...`, 'working');
-    setProgress(0, 'Loading engine...', true);
-    try {
-      const ff = await loadFFmpeg();
-      setProgress(20, 'Writing input...');
-      ff.FS('writeFile', 'input.mp4', await ff._fetchFile(selectedFile));
-      setProgress(40, 'Processing frame timing...');
-      await ff.run('-itsscale', scale, '-i', 'input.mp4', '-c', 'copy', 'its_out.mp4');
-      setProgress(72, 'Finalizing output...');
-      const itsData = ff.FS('readFile', 'its_out.mp4');
-      const ab = itsData.buffer.slice(itsData.byteOffset, itsData.byteOffset + itsData.byteLength);
-      const patched = (typeof applyMetadataStamp === 'function') ? applyMetadataStamp(ab) : ab;
-      setProgress(95, 'Downloading...');
-      downloadBlob(patched, base + `_its${scale}_patched.mp4`);
-      try { ff.FS('unlink', 'input.mp4'); ff.FS('unlink', 'its_out.mp4'); } catch (e) {}
-      setProgress(100, 'Complete!');
-      const elapsed = (Date.now() - t0) / 1000;
-      setStatus(`✅ Speed Booster x${scale} Complete!`, 'success');
-      showResult(selectedFile.name, elapsed, sb, patched.byteLength);
-      recordSuccess();
-      setTimeout(() => setProgress(0, '', false), 3000);
-    } catch (err) { 
-      setStatus('❌ Error: ' + err.message, 'error'); 
-      setProgress(0, '', false); 
-    }
-
-  } else if (curMode === 'encoder') {
+} else if (curMode === 'its') {
+  const scale = document.querySelector('.its-pill.active')?.dataset.scale || '2';
+  setStatus(`⏳ Speed Booster x${scale}: Processing video...`, 'working');
+  setProgress(0, 'Loading engine...', true);
+  try {
+    const ff = await loadFFmpeg();
+    setProgress(20, 'Writing input...');
+    ff.FS('writeFile', 'input.mp4', await ff._fetchFile(selectedFile));
+    setProgress(40, 'Processing frame timing...');
+    await ff.run('-itsscale', scale, '-i', 'input.mp4', '-c', 'copy', 'its_out.mp4');
+    setProgress(72, 'Finalizing output...');
+    const itsData = ff.FS('readFile', 'its_out.mp4');
+    const ab = itsData.buffer.slice(itsData.byteOffset, itsData.byteOffset + itsData.byteLength);
+    const patched = (typeof applyMetadataStamp === 'function') ? applyMetadataStamp(ab) : ab;
+    setProgress(95, 'Downloading...');
+    downloadBlob(patched, base + `_its${scale}_patched.mp4`);
+    try { ff.FS('unlink', 'input.mp4'); ff.FS('unlink', 'its_out.mp4'); } catch (e) {}
+    setProgress(100, 'Complete!');
+    const elapsed = (Date.now() - t0) / 1000;
+    setStatus(`✅ Speed Booster x${scale} Complete!`, 'success');
+    showResult(selectedFile.name, elapsed, sb, patched.byteLength);
+    recordSuccess();
+    setTimeout(() => setProgress(0, '', false), 3000);
+  } catch (err) {
+    setStatus('❌ Error: ' + err.message, 'error');
+    setProgress(0, '', false);
+  }
+} else if (curMode === 'encoder') {
     const args = buildEncoderArgs();
     const applyStamp = document.getElementById('encApplyStamp')?.checked;
     setStatus('⏳ Advanced Encoder: Encoding video...', 'working');
