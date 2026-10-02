@@ -10,50 +10,14 @@ let t0 = 0;
 // ==========================================
 // 1. THEME & LOCALIZATION ENGINE (LOCALSTORAGE)
 // ==========================================
-const i18nDict = {
-  en: {
-    navHome: "Home", navPatch: "Patch", navEnc: "Encoder", navUp: "Upscale", navSet: "Settings", navAbout: "About",
-    heroTitle: "reyy tools", heroSub: "All-In-One Creator Toolkit & AI Suite", getStarted: "Get Started",
-    themeTitle: "Theme Appearance", themeDesc: "Choose application skin",
-    langTitle: "Interface Language", langDesc: "Select your language",
-    landingNavAbout: "About", landingNavFeatures: "Features", landingNavHow: "How it Works",
-    landingNavCTA: "Open Tools", landingHeroTitle1: "One Tool.", landingHeroTitle2: "Solves All.",
-    landingHeroSub: "reyy tools is a step-by-step video processing system proven by thousands of creators. No bloated software — patch directly, see instant results.",
-    landingKicker: "★ #1 Choice for Creators", landingApk: "Download APK", landingRibet: "★ Zero Hassle<br>Club ★",
-    landingReview: "4.9★ from<br>2.400+ reviews", landingTentangTitle: "Not Just An Ordinary Tool",
-    landingTentangDesc: "We're sick of platform video compression ruining content quality. That's why reyy tools was born.",
-    landingCtaTitle: "Stop Making Bad Content!", landingCtaDesc: "Join thousands of creators who have used reyy tools to secure their video quality."
-  },
-  id: {
-    navHome: "Beranda", navPatch: "Tambal", navEnc: "Enkoder", navUp: "Perbesar", navSet: "Pengaturan", navAbout: "Tentang",
-    heroTitle: "reyy tools", heroSub: "Toolkit Kreator All-In-One & AI Engine", getStarted: "Mulai Sekarang",
-    themeTitle: "Tampilan Tema", themeDesc: "Pilih kulit aplikasi",
-    langTitle: "Bahasa Antarmuka", langDesc: "Pilih bahasa anda",
-    landingNavAbout: "Tentang", landingNavFeatures: "Fitur", landingNavHow: "Cara Kerja",
-    landingNavCTA: "Buka Tools", landingHeroTitle1: "Satu Tools.", landingHeroTitle2: "Semua Beres.",
-    landingHeroSub: "reyy tools adalah sistem step-by-step video processing yang udah dibuktiin ribuan kreator. Tanpa software bertele-tele — langsung patch, langsung keliatan hasilnya.",
-    landingKicker: "★ Tools No. 1 Pilihan Kreator", landingApk: "Unduh APK", landingRibet: "★ No Ribet<br>Club ★",
-    landingReview: "4.9★ dari<br>2.400+ review", landingTentangTitle: "Bukan Sekadar Alat Biasa",
-    landingTentangDesc: "Kami muak dengan kompresi video dari platform yang ngerusak kualitas konten. Makanya reyy tools lahir.",
-    landingCtaTitle: "Berhenti Bikin Konten Burik!", landingCtaDesc: "Gabung sama ribuan kreator lain yang udah pake reyy tools buat ngamain kualitas video mereka."
-  }
-};
-
-function changeLanguage(lang) {
-  localStorage.setItem('reyy_lang', lang);
-  const dict = i18nDict[lang] || i18nDict['en'];
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.getAttribute('data-i18n');
-    if (dict[key]) el.textContent = dict[key];
-  });
-  const sel = document.getElementById('langSelect');
-  if (sel) sel.value = lang;
-}
+let selectedFile = null;
+let curMode = 'patch';
+let t0 = 0;
 
 function updateLocalStats() {
   const el = document.getElementById('statFiles');
   if (el) {
-    const count = localStorage.getItem('reyy_processed_count') || '0';
+    const count = localStorage.getItem('reyy_processed_total') || '0';
     el.textContent = count;
   }
 }
