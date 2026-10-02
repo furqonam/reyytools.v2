@@ -280,10 +280,11 @@
       #workspace-panel { width:100%; }
     }
   </style>
-  
- <script src="js/atom-utils.js" defer></script>
+
+  <script src="js/atom-utils.js" defer></script>
   <script src="js/patcher.js" defer></script>
   <script src="js/ffmpeg-engine.js" defer></script>
+  <script src="js/i18n.js" defer></script>
   <script src="js/main.js" defer></script>
   <script src="js/ui.js" defer></script>
 </head>
@@ -375,15 +376,13 @@
             </div>
             <div class="workspace-grid">
               <div class="workspace-panel">
-            <div class="control-group">
-           <label>Execution Method</label>
-          <select class="modern-select" id="patchType">
-    <option value="patch_only" selected>Patch Only (Instant Metadata)</option>
-    <option value="encode_patch">Encode + Patch (HD Optimization)</option>
-  </select>
-         <p style="font-size:11px;color:#5e6f8a;margin-top:6px;line-height:1.4;">
-          <b style="color:#6ec8ff;">Patch Only:</b> Inject metadata instan, video stream gak di-reencode (1-3 detik).<br>             <b style="color:#fbbf5a;">Encode + Patch:</b> Re-encode H.264 CRF 18 + metadata stamp (10-60 detik).              </p>
-              </div>
+                <div class="control-group">
+                  <label>Execution Method</label>
+                  <select class="modern-select" id="patchType">
+                    <option value="patch_only" selected>Patch Only (Instant Metadata)</option>
+                    <option value="encode_patch">Encode + Patch (HD Optimization)</option>
+                  </select>
+                </div>
                 <div class="control-group">
                   <label>Processing Mode</label>
                   <div class="mode-stack">
