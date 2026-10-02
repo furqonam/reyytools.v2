@@ -58,24 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Bind AI Upscale Engine Handlers (Local ONNX & Cloud Colab/Ngrok)
   initLocalAIUpscale();
   initCloudVideoUpscale();
-
-  // Secret Interp Lab Unlock Handler
-  const vEl = document.getElementById('versionVal');
-  if (vEl) {
-    vEl.addEventListener('click', () => {
-      secretTapCount++; 
-      clearTimeout(secretTapTimer);
-      secretTapTimer = setTimeout(() => { secretTapCount = 0; }, 1000);
-      if (secretTapCount >= 3) {
-        secretTapCount = 0;
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        const interpSec = document.getElementById('section-interp');
-        if (interpSec) interpSec.classList.add('active');
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        interpLog('inf', 'Interp Lab unlocked 🔓');
-      }
-    });
-  }
 });
 
 
@@ -361,73 +343,6 @@ const buf = data.buffer;
   if (btn) btn.disabled = false;
 }
 
-// Interpolation Lab Handlers
-let secretTapCount = 0, secretTapTimer = null;
-let interpFileData = null;
-
-function interpLog(type, msg) {
-  const el = document.getElementById('interpLog');
-  if (!el) return;
-  if (el.textContent === '— ready —') el.innerHTML = '';
-  const line = document.createElement('div'); line.className = type;
-  line.textContent = (type === 'ok' ? '✓ ' : type === 'err' ? '✗ ' : '→ ') + msg;
-  el.appendChild(line); el.scrollTop = el.scrollHeight;
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  const interpFileInput = document.getElementById('interpFile');
-  if (interpFileInput) {
-    interpFileInput.addEventListener('change', e => {
-      interpFileData = e.target.files[0] || null;
-      if (interpFileData) { 
-        const fn = document.getElementById('interpFname');
-        const ib = document.getElementById('interpBtn');
-        if (fn) fn.textContent = interpFileData.name; 
-        if (ib) ib.disabled = false; 
-        interpLog('inf', 'File ready: ' + interpFileData.name); 
-      }
-    });
-  }
-
-  const interpBtn = document.getElementById('interpBtn');
-  if (interpBtn) {
-    interpBtn.addEventListener('click', async () => {
-      if (!interpFileData) return;
-      interpBtn.disabled = true;
-      document.getElementById('interpLog').innerHTML = '';
-      const scale = document.querySelector('#section-interp [data-iscale].selected')?.dataset.iscale || '2';
-      interpLog('inf', 'Loading FFmpeg.wasm...');
-      try {
-        const ff = await loadFFmpeg(); interpLog('ok', 'FFmpeg ready');
-        interpLog('inf', 'Writing input...'); ff.FS('writeFile', 'src.mp4', await ff._fetchFile(interpFileData));
-        interpLog('inf', 'Step 1: Interpolate 60fps → ' + (60 * parseInt(scale)) + 'fps...');
-        
-        await ff.run(
-          '-i', 'src.mp4', 
-          '-vf', 'minterpolate=fps=' + (60 * parseInt(scale)) + ':mi_mode=mci:mc_mode=aobmc:vsbmc=1', 
-          '-c:v', 'libx264', '-preset', 'ultrafast', '-crf', '20', '-bf', '0',
-          '-threads', String(ff._multiThread ? (typeof ffmpegThreadCount === 'function' ? ffmpegThreadCount() : 1) : 1), 
-          '-c:a', 'aac', '-b:a', '128k', '-shortest', '-metadata', 'copyright=By reyy tools',
-          '-metadata', 'artist=By reyy tools', 'interp.mp4'
-        );
-        
-        interpLog('ok', 'Interpolation done');
-        interpLog('inf', 'Step 2: Frame boost x' + scale + '...');
-        await ff.run('-itsscale', scale, '-i', 'interp.mp4', '-c', 'copy', 'its.mp4');
-        interpLog('ok', 'Frame boost applied');
-        interpLog('inf', 'Step 3: Optimizing metadata...');
-        const raw = ff.FS('readFile', 'its.mp4');
-        const ab = raw.buffer.slice(raw.byteOffset, raw.byteOffset + raw.byteLength);
-        const patched = (typeof applyMetadataStamp === 'function') ? applyMetadataStamp(ab) : ab;
-        interpLog('ok', 'Metadata & structure optimized');
-        downloadBlob(patched, interpFileData.name.replace(/\.[^.]+$/, '') + '_interp_boost' + scale + '_reyy.mp4');
-        try { ff.FS('unlink', 'src.mp4'); ff.FS('unlink', 'interp.mp4'); ff.FS('unlink', 'its.mp4'); } catch (e) {}
-        interpLog('ok', 'Done!');
-      } catch (e) { interpLog('err', e.message); }
-      interpBtn.disabled = false;
-    });
-  }
-});
 
 function downloadBlob(data, filename) {
   const blob = new Blob([data], { type: 'video/mp4' });
