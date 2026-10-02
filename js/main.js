@@ -531,7 +531,7 @@ async function runLocalAIUpscale(imageFile) {
       ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/';
     }
     
-    const session = await ort.InferenceSession.create('noise2_scale2.0x_model.onnx', {
+    const session = await ort.InferenceSession.create('/noise2_scale2.0x_model.onnx', {
       executionProviders: ['wasm']
     });
 
