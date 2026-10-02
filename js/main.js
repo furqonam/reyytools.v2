@@ -209,17 +209,13 @@ function recordSuccess() {
 }
 
 function buildEncoderArgs() {
-  const codec = document.getElementById('encCodec') ? document.getElementById('encCodec').value : 'libx264';
-  const crf = document.getElementById('encCrf') ? document.getElementById('encCrf').value : '18';
-  const preset = document.getElementById('encPreset') ? document.getElementById('encPreset').value : 'medium';
-  const tune = document.getElementById('encTune') ? document.getElementById('encTune').value : 'none';
-  const profile = document.getElementById('encProfile') ? document.getElementById('encProfile').value : 'none';
-  
+  const codec = document.getElementById('encCodec')?.value || 'libx264';
+  const crf = document.getElementById('encCrf')?.value || '18';
+  const preset = document.getElementById('encPreset')?.value || 'medium';
+
   const ffmpegArgs = ['-c:v', codec, '-crf', crf, '-preset', preset];
-  if (tune !== 'none') ffmpegArgs.push('-tune', tune);
-  if (profile !== 'none') ffmpegArgs.push('-profile:v', profile);
   ffmpegArgs.push('-c:a', 'copy');
-  return { ffmpegArgs, codec, crf, preset, tune, profile };
+  return { ffmpegArgs, codec, crf, preset };
 }
 
 // ==========================================
