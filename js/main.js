@@ -157,12 +157,11 @@ function updateProcessButton() {
 }
 
 function setStatus(msg, type) {
-  const isEnc = (curMode === 'encoder');
-  const statusBox = document.getElementById(isEnc ? 'encStatusBox' : 'statusBox');
-  const statusText = document.getElementById(isEnc ? 'encStatusText' : 'statusText');
+  const statusBox = document.getElementById('statusBox');
+  const statusText = document.getElementById('statusText');
   if (statusBox && statusText) {
     statusText.textContent = msg;
-    statusBox.className = 'status-box';
+    statusBox.className = 'status-indicator';
     if (type) statusBox.classList.add(type);
   }
 }
