@@ -809,6 +809,7 @@ async function runCloudVideoUpscale() {
 
   try {
     if (btnStartCloudUpscale) btnStartCloudUpscale.disabled = true;
+  
     if (cloudStatusBox) {
       cloudStatusBox.style.display = 'block';
       cloudStatusBox.className = 'status-box working';
