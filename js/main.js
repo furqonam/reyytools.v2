@@ -48,6 +48,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+// Sync patchType dropdown → curMode
+const patchTypeSelect = document.getElementById('patchType');
+if (patchTypeSelect) {
+  patchTypeSelect.addEventListener('change', (e) => {
+    const val = e.target.value;
+    if (val === 'encode_patch') {
+      curMode = 'patch';
+      // un-highlight mode cards karena ini bukan mode card
+      document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
+      console.log('[SmartPatch] Mode: Encode + Patch');
+    } else {
+      // patch_only → balikin ke mode card default
+      curMode = 'patch';
+      setMode('patch');
+      console.log('[SmartPatch] Mode: Patch Only');
+    }
+  });
+}
+  
   // Bind AI Upscale Engine Handlers (Local ONNX & Cloud Colab/Ngrok)
   initLocalAIUpscale();
   initCloudVideoUpscale();
@@ -80,6 +99,13 @@ function setMode(mode) {
   if (itsPanel) {
     itsPanel.style.display = (mode === 'its') ? 'block' : 'none';
   }
+
+  // Reset dropdown patchType ke patch_only kalo pindah mode card
+  const patchTypeSelect = document.getElementById('patchType');
+  if (patchTypeSelect && (mode === 'ky60' || mode === 'its')) {
+    patchTypeSelect.value = 'patch_only';
+  }
+
   updateProcessButton();
 }
 
