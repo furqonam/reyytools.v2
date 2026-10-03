@@ -7,18 +7,18 @@ const LIMITS = {
   free: {
     patchOnly:    2,
     encodePatch:  0,
-    ky60:         0,
+    reyy60:         0,
     its:          0,
     aiUpscale:    0,
     cloudUpscale: 0,
     analyzer:     5
   },
   basic: {
-    patchOnly:    20, encodePatch:  20, ky60:         20, its:          20,
+    patchOnly:    20, encodePatch:  20, reyy60:         20, its:          20,
     aiUpscale:    20, cloudUpscale: 20, analyzer:     20
   },
   pro: {
-    patchOnly:    999999, encodePatch:  999999, ky60:         999999, its:          999999,
+    patchOnly:    999999, encodePatch:  999999, reyy60:         999999, its:          999999,
     aiUpscale:    999999, cloudUpscale: 999999, analyzer:     999999
   }
 };
@@ -26,7 +26,7 @@ const LIMITS = {
 const FEATURE_LABELS = {
   patchOnly:    'Magic Patch',
   encodePatch:  'Encoder',
-  ky60:         '60fps Boost',
+  reyy60:         '60fps Boost',
   its:          'Speed Booster',
   aiUpscale:    'AI Upscaler',
   cloudUpscale: 'Cloud Upscale',
