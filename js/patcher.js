@@ -1,8 +1,9 @@
 /* ══════════════════════════════════════
-   patcher.js — reyy tools v6.2
+   patcher.js — reyy tools v7.0
    Byte-level MP4 manipulation.
    FIX: cleanup + return type konsisten.
    ══════════════════════════════════════ */
+
 
 /* ── Z-Payload: 0x5A-fill a small window after mdat starts ── */
 function patchZPayload(data) {
@@ -85,10 +86,6 @@ function injectMTLib(origBuffer) {
   return { buffer: newBuf, injected: true };
 }
 
-/**
- * Z-Payload + MTLib + encoder-string stamp, as one step.
- * Returns new ArrayBuffer.
- */
 function applyMetadataStamp(arrayBuffer) {
   let buf = arrayBuffer;
   const firstPass = new Uint8Array(buf);
@@ -132,25 +129,18 @@ function _loadreyyPatcher() {
   return _reyyLoading;
 }
 
-// Preload di idle
 if (typeof requestIdleCallback === 'function') {
   requestIdleCallback(function(){ _loadreyyPatcher().catch(function(){}); });
 } else {
   setTimeout(function(){ _loadreyyPatcher().catch(function(){}); }, 2000);
 }
 
-/**
- * Smart Patch (MODE 2) — pakai reyy tools HD dari CF Worker.
- * Return: Promise<{ output: ArrayBuffer, realSamples, fakeSamples, audioFake }>
- */
 function patchSharkSampleTableMethod(arrayBuffer) {
   return _loadreyyPatcher().then(function() {
-    // Pakai reyyPatchMP4 (nama baru), fallback ke kyPatchMP4 (legacy)
-    var fn = window.reyyPatchMP4 || window.kyPatchMP4;
-    if (typeof fn !== 'function') {
+    if (typeof window.reyyPatchMP4 !== 'function') {
       throw new Error('reyy tools HD patcher tidak tersedia. Coba refresh.');
     }
-    var result = fn(arrayBuffer);
+    var result = window.reyyPatchMP4(arrayBuffer);
     if (!result || !result.output) throw new Error('Patch gagal: output kosong.');
     return {
       output: result.output,
