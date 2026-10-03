@@ -3,7 +3,21 @@
    Dipecah dari inline <script> index.html
    ══════════════════════════════════════ */
 
-var profile = JSON.parse(localStorage.getItem('kyProfile') || '{}');
+/* ─── MIGRASI: kyProfile → reyyProfile ─── */
+(function migrateProfile() {
+  var oldKey = 'kyProfile';
+  var newKey = 'reyyProfile';
+  var oldVal = localStorage.getItem(oldKey);
+  var newVal = localStorage.getItem(newKey);
+
+  if (oldVal && !newVal) {
+    localStorage.setItem(newKey, oldVal);
+    localStorage.removeItem(oldKey);
+    console.log('[profile.js] Migrated kyProfile → reyyProfile');
+  }
+})();
+
+var profile = JSON.parse(localStorage.getItem('reyyProfile') || '{}');
 
 function applyProfile() {
   var name = profile.name || 'Guest';
@@ -46,7 +60,7 @@ function saveProfile() {
   var el = document.getElementById('inputDisplayName');
   var name = el ? el.value.trim() || 'Guest' : 'Guest';
   profile.name = name;
-  localStorage.setItem('kyProfile', JSON.stringify(profile));
+  localStorage.setItem('reyyProfile', JSON.stringify(profile));
   applyProfile();
   if (typeof showToast === 'function') showToast('Profil berhasil disimpan');
 }
@@ -58,14 +72,14 @@ function saveTelegram() {
   if (!id) { if (typeof showToast === 'function') showToast('Masukkan Telegram ID terlebih dahulu'); return; }
   profile.tgId   = id;
   profile.tgUser = user;
-  localStorage.setItem('kyProfile', JSON.stringify(profile));
+  localStorage.setItem('reyyProfile', JSON.stringify(profile));
   applyProfile();
   if (typeof showToast === 'function') showToast('Telegram berhasil terhubung');
 }
 
 function unlinkTelegram() {
   profile.tgId = ''; profile.tgUser = '';
-  localStorage.setItem('kyProfile', JSON.stringify(profile));
+  localStorage.setItem('reyyProfile', JSON.stringify(profile));
   applyProfile();
   if (typeof showToast === 'function') showToast('Telegram telah di-unlink');
 }
@@ -80,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function(){
       var reader = new FileReader();
       reader.onload = function(ev){
         profile.avatar = ev.target.result;
-        localStorage.setItem('kyProfile', JSON.stringify(profile));
+        localStorage.setItem('reyyProfile', JSON.stringify(profile));
         var img = document.getElementById('avatarImg');
         var el3 = document.getElementById('avatarInitial');
         if (img) { img.src = ev.target.result; img.classList.add('loaded'); }
@@ -90,11 +104,4 @@ document.addEventListener('DOMContentLoaded', function(){
       reader.readAsDataURL(file);
     });
   }
-
-  var saveBtn = document.getElementById('saveProfileBtn');
-  if (saveBtn) saveBtn.addEventListener('click', saveProfile);
-  var tgBtn = document.getElementById('saveTelegramBtn');
-  if (tgBtn) tgBtn.addEventListener('click', saveTelegram);
-  var unlinkBtn = document.getElementById('unlinkTelegramBtn');
-  if (unlinkBtn) unlinkBtn.addEventListener('click', unlinkTelegram);
 });
