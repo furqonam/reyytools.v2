@@ -101,20 +101,22 @@ function handleFileSelect(event) {
 
 function processSelectedFile(file) {
   selectedFile = file;
-  
+
   const fileDisplay = document.getElementById('fileDisplay');
   const fileName = document.getElementById('fileName');
   if (fileDisplay) fileDisplay.classList.add('ok');
   if (fileName) fileName.textContent = file.name;
-  
+
   const video = document.getElementById('videoPreview');
   const placeholder = document.getElementById('previewPlaceholder');
-  if (video && placeholder) {
+  const previewBox = document.getElementById('previewBox');       // ← TAMBAH
+  if (video && placeholder && previewBox) {                       // ← UBAH
     video.src = URL.createObjectURL(file);
     video.style.display = 'block';
+    previewBox.style.display = 'block';                            // ← TAMBAH
     placeholder.style.display = 'none';
   }
-  
+
   updateProcessButton();
 
   const homeSection = document.getElementById('section-home');
