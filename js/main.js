@@ -1,12 +1,9 @@
 /* ══════════════════════════════════════════════════════════════
-   reyy tools — Main Modular Application Logic
-   Preserves 100% Core AI Photo Engine (ONNX Waifu2x) &
-   Cloud Video Upscale (Colab/Ngrok API) Logic
-   
-   FIXES:
-   - Hapus `let t0 = 0;` duplikat (t0 dipakai lokal di runProcess)
-   - Ganti key `reyy_processed_total` → `reyy_processed_count`
-   - Integrasi checkQuota() di runProcess + analyzer + upscale
+   main.js — v6.2
+   FIX:
+   - patchType sync → route ke encoder pipeline
+   - Simplify return type handling
+   - Cleanup console.log
    ══════════════════════════════════════════════════════════════ */
 
 let selectedFile = null;
@@ -17,10 +14,7 @@ let curMode = 'patch';
 // ==========================================
 function updateLocalStats() {
   const el = document.getElementById('statFiles');
-  if (el) {
-    const count = localStorage.getItem('reyy_processed_count') || '0';
-    el.textContent = count;
-  }
+  if (el) el.textContent = localStorage.getItem('reyy_processed_count') || '0';
 }
 
 function recordSuccess() {
@@ -36,7 +30,6 @@ function recordSuccess() {
 document.addEventListener('DOMContentLoaded', () => {
   updateLocalStats();
 
-  // Hide Welcome Splash Overlay
   setTimeout(() => {
     const overlay = document.getElementById('welcomeOverlay');
     if (overlay) {
@@ -45,16 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, 2200);
 
-  // Setup Drag & Drop Upload Zone
   const uploadZone = document.getElementById('uploadZone');
   if (uploadZone) {
-    uploadZone.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      uploadZone.classList.add('over');
-    });
-    uploadZone.addEventListener('dragleave', () => {
-      uploadZone.classList.remove('over');
-    });
+    uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('over'); });
+    uploadZone.addEventListener('dragleave', () => { uploadZone.classList.remove('over'); });
     uploadZone.addEventListener('drop', (e) => {
       e.preventDefault();
       uploadZone.classList.remove('over');
@@ -65,24 +52,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Sync patchType dropdown → curMode
+  // ─── FIX #3: patchType sync → route ke encoder ───
   const patchTypeSelect = document.getElementById('patchType');
   if (patchTypeSelect) {
     patchTypeSelect.addEventListener('change', (e) => {
       const val = e.target.value;
       if (val === 'encode_patch') {
-        curMode = 'patch';
-        document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
-        console.log('[SmartPatch] Mode: Encode + Patch');
+        curMode = 'encoder';
+        switchSection('encoder');
+        setMode('encoder');
       } else {
         curMode = 'patch';
         setMode('patch');
-        console.log('[SmartPatch] Mode: Patch Only');
       }
     });
   }
 
-  // Bind AI Upscale Engine Handlers
   initLocalAIUpscale();
   initCloudVideoUpscale();
 });
@@ -110,9 +95,7 @@ function setMode(mode) {
   });
 
   const itsPanel = document.getElementById('itsPanel');
-  if (itsPanel) {
-    itsPanel.style.display = (mode === 'its') ? 'block' : 'none';
-  }
+  if (itsPanel) itsPanel.style.display = (mode === 'its') ? 'block' : 'none';
 
   const patchTypeSelect = document.getElementById('patchType');
   if (patchTypeSelect && (mode === 'ky60' || mode === 'its')) {
@@ -152,12 +135,6 @@ function processSelectedFile(file) {
   }
 
   updateProcessButton();
-
-  const homeSection = document.getElementById('section-home');
-  if (homeSection && homeSection.classList.contains('active')) {
-    switchSection('patcher');
-    setMode('patch');
-  }
 }
 
 function updateProcessButton() {
@@ -199,7 +176,6 @@ function showResult(fileName, elapsed, sizeBefore, sizeAfter) {
   const rt = document.getElementById('resTime');
   const rb = document.getElementById('resBefore');
   const ra = document.getElementById('resAfter');
-
   if (rf) rf.textContent = fileName;
   if (rt) rt.textContent = elapsed.toFixed(1) + 's';
   if (rb) rb.textContent = formatBytes(sizeBefore);
@@ -217,19 +193,17 @@ function buildEncoderArgs() {
   const codec = document.getElementById('encCodec')?.value || 'libx264';
   const crf = document.getElementById('encCrf')?.value || '18';
   const preset = document.getElementById('encPreset')?.value || 'medium';
-
   const ffmpegArgs = ['-c:v', codec, '-crf', crf, '-preset', preset];
   ffmpegArgs.push('-c:a', 'copy');
   return { ffmpegArgs, codec, crf, preset };
 }
 
 // ==========================================
-// 4. VIDEO ENGINE PIPELINE (PATCH/ENCODE)
+// 4. VIDEO ENGINE PIPELINE
 // ==========================================
 async function runProcess() {
   if (!selectedFile) return;
 
-  // ─── Cek quota ───
   const patchType = document.getElementById('patchType')?.value || 'patch_only';
   let featureKey = 'patchOnly';
   if (curMode === 'patch' && patchType === 'encode_patch') featureKey = 'encodePatch';
@@ -257,18 +231,20 @@ async function runProcess() {
 
       const patch = (typeof patchSharkSampleTableMethod === 'function')
         ? await patchSharkSampleTableMethod(ab)
-        : { output: new Uint8Array(ab) };
+        : { output: ab };
 
       if (!patch || !patch.output) throw new Error('Patch gagal: output kosong.');
 
       setProgress(90, 'Preparing download...');
       const outBuf = patch.output instanceof Uint8Array ? patch.output.buffer : patch.output;
+      const outSize = outBuf.byteLength || 0;
+
       downloadBlob(outBuf, base + '_reyy_smart.mp4');
       setProgress(100, 'Complete!');
 
       const elapsed = (Date.now() - tStart) / 1000;
       setStatus('✅ Success! Video file patched.', 'success');
-      showResult(selectedFile.name, elapsed, sb, patch.output.byteLength || patch.output.length);
+      showResult(selectedFile.name, elapsed, sb, outSize);
       recordSuccess();
       setTimeout(() => setProgress(0, '', false), 3000);
     } catch (err) {
@@ -309,18 +285,18 @@ async function runProcess() {
     setProgress(0, 'Loading engine...', true);
     try {
       const ff = await loadFFmpeg();
-      setProgress(20, 'Writing input...');
+      setProgress(20, 'Writing input...', true);
       ff.FS('writeFile', 'input.mp4', await ff._fetchFile(selectedFile));
-      setProgress(40, 'Processing frame timing...');
+      setProgress(40, 'Processing frame timing...', true);
       await ff.run('-itsscale', scale, '-i', 'input.mp4', '-c', 'copy', 'its_out.mp4');
-      setProgress(72, 'Finalizing output...');
+      setProgress(72, 'Finalizing output...', true);
       const itsData = ff.FS('readFile', 'its_out.mp4');
       const ab = itsData.buffer.slice(itsData.byteOffset, itsData.byteOffset + itsData.byteLength);
       const patched = (typeof applyMetadataStamp === 'function') ? applyMetadataStamp(ab) : ab;
-      setProgress(95, 'Downloading...');
+      setProgress(95, 'Downloading...', true);
       downloadBlob(patched, base + `_its${scale}_patched.mp4`);
       try { ff.FS('unlink', 'input.mp4'); ff.FS('unlink', 'its_out.mp4'); } catch (e) {}
-      setProgress(100, 'Complete!');
+      setProgress(100, 'Complete!', true);
       const elapsed = (Date.now() - tStart) / 1000;
       setStatus(`✅ Speed Booster x${scale} Complete!`, 'success');
       showResult(selectedFile.name, elapsed, sb, patched.byteLength);
@@ -343,14 +319,14 @@ async function runProcess() {
       args.ffmpegArgs.push('-threads', String(ff._multiThread ? (typeof ffmpegThreadCount === 'function' ? ffmpegThreadCount() : 1) : 1));
       args.ffmpegArgs.push('-metadata', 'copyright=reyy tools', '-metadata', 'encoded_by=Encoder by reyy tools');
 
-      setProgress(15, 'Writing input file...');
+      setProgress(15, 'Writing input file...', true);
       ff.FS('writeFile', 'input.mp4', await ff._fetchFile(selectedFile));
-      setProgress(35, `Encoding Video (${args.preset}, CRF ${args.crf})...`);
+      setProgress(35, `Encoding Video (${args.preset}, CRF ${args.crf})...`, true);
 
       ff.setLogger(({ type, message }) => console.log(`[FFmpeg ${type}] ${message}`));
       ff.setProgress(({ ratio }) => {
         if (ratio >= 0 && ratio <= 1) {
-          setProgress(35 + (Math.round(ratio * 100) * 0.40), `Encoding Video: ${Math.round(ratio * 100)}%`);
+          setProgress(35 + (Math.round(ratio * 100) * 0.40), `Encoding Video: ${Math.round(ratio * 100)}%`, true);
         }
       });
 
@@ -359,17 +335,17 @@ async function runProcess() {
       ff.setProgress(() => {});
       ff.setLogger(() => {});
 
-      setProgress(75, 'Finalizing output buffer...');
+      setProgress(75, 'Finalizing output buffer...', true);
       const encData = ff.FS('readFile', 'enc_out.mp4');
       let ab = encData.buffer.slice(encData.byteOffset, encData.byteOffset + encData.byteLength);
       if (applyStamp && typeof applyMetadataStamp === 'function') {
-        setProgress(88, 'Embedding TikTok HD stamp...');
+        setProgress(88, 'Embedding TikTok HD stamp...', true);
         ab = applyMetadataStamp(ab);
       }
-      setProgress(95, 'Downloading...');
+      setProgress(95, 'Downloading...', true);
       downloadBlob(ab, base + `_encoded_crf${args.crf}` + (applyStamp ? '_reyy' : '') + '.mp4');
       try { ff.FS('unlink', 'input.mp4'); ff.FS('unlink', 'enc_out.mp4'); } catch (e) {}
-      setProgress(100, 'Complete!');
+      setProgress(100, 'Complete!', true);
       const elapsed = (Date.now() - tStart) / 1000;
       setStatus('✅ Advanced Encoder Complete!', 'success');
       showResult(selectedFile.name, elapsed, sb, ab.byteLength);
@@ -385,7 +361,7 @@ async function runProcess() {
 }
 
 // ==========================================
-// 5. DOWNLOAD HELPER
+// 5. DOWNLOAD HELPERS
 // ==========================================
 function downloadBlob(data, filename) {
   const blob = new Blob([data], { type: 'video/mp4' });
@@ -560,7 +536,6 @@ async function runLocalAIUpscale(imageFile) {
         g = outData[i * 3 + 1] * 255;
         b = outData[i * 3 + 2] * 255;
       }
-
       outImgData.data[i * 4]     = Math.round(Math.max(0, Math.min(255, r)));
       outImgData.data[i * 4 + 1] = Math.round(Math.max(0, Math.min(255, g)));
       outImgData.data[i * 4 + 2] = Math.round(Math.max(0, Math.min(255, b)));
@@ -568,7 +543,6 @@ async function runLocalAIUpscale(imageFile) {
     }
 
     outCtx.putImageData(outImgData, 0, 0);
-
     setUpscaleProgress(100, '🎉 Complete! Downloading image...');
 
     outCanvas.toBlob((blob) => {
@@ -579,7 +553,6 @@ async function runLocalAIUpscale(imageFile) {
         btnStartUpscale.innerHTML = '<span>🚀 Start AI Upscale Again</span>';
       }
     });
-
   } catch (error) {
     console.error('AI Error:', error);
     if (upscaleStatusBox) upscaleStatusBox.style.display = 'block';
@@ -641,14 +614,8 @@ async function runCloudVideoUpscale() {
   const cloudStatusBox = document.getElementById('cloudStatusBox');
 
   const apiUrl = apiUrlInput ? apiUrlInput.value.trim().replace(/\/+$/, '') : '';
-  if (!apiUrl) {
-    alert('Please enter your active Ngrok API Tunnel URL from Google Colab.');
-    return;
-  }
-  if (!selectedCloudVideoFile) {
-    alert('Please select an MP4 video file to upscale.');
-    return;
-  }
+  if (!apiUrl) { alert('Please enter your active Ngrok API Tunnel URL from Google Colab.'); return; }
+  if (!selectedCloudVideoFile) { alert('Please select an MP4 video file to upscale.'); return; }
 
   try {
     if (btnStartCloudUpscale) btnStartCloudUpscale.disabled = true;
@@ -656,7 +623,6 @@ async function runCloudVideoUpscale() {
       cloudStatusBox.style.display = 'block';
       cloudStatusBox.className = 'status-box working';
     }
-
     setCloudProgress(20, 'Uploading video to Cloud GPU cluster (Ngrok API)...');
 
     const formData = new FormData();
@@ -668,12 +634,9 @@ async function runCloudVideoUpscale() {
       headers: { 'ngrok-skip-browser-warning': 'true' }
     });
 
-    if (!response.ok) {
-      throw new Error(`Cloud API responded with HTTP status ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`Cloud API responded with HTTP status ${response.status}`);
 
     setCloudProgress(70, '🔥 Processing frame-by-frame Real-ESRGAN GPU Super-Resolution...');
-
     const resultBlob = await response.blob();
     setCloudProgress(100, '🎉 Cloud Upscale Complete! Downloading video...');
 
@@ -688,7 +651,6 @@ async function runCloudVideoUpscale() {
       btnStartCloudUpscale.innerHTML = '<span>☁️ Launch Cloud Video Super-Resolution Again</span>';
     }
     recordSuccess();
-
   } catch (err) {
     console.error('Cloud Upscale Error:', err);
     if (cloudStatusBox) cloudStatusBox.className = 'status-box error';
