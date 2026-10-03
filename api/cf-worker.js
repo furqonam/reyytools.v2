@@ -241,9 +241,8 @@ const CF_WORKER_SOURCE = `(function(){
     return { output: output.buffer, realSamples: 0, fakeSamples: 0 };
   }
 
-  // Expose with both new name and legacy alias
+  // Expose ONLY as reyyPatchMP4
   window.reyyPatchMP4 = reyyPatchMP4;
-  window.kyPatchMP4   = reyyPatchMP4;
 })();`;
 
 module.exports = (req, res) => {
