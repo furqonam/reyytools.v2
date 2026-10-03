@@ -47,7 +47,7 @@
       <div class="gate-logo">⚡ reyy.tools</div>
       <p class="gate-sub">Masuk untuk mengakses tools</p>
       <div class="gate-input-wrap">
-        <input type="text" id="gateInput" class="gate-input" placeholder="Username atau Telegram ID" autocomplete="off" maxlength="30">
+<input type="text" id="gateInput" class="gate-input" placeholder="Username atau Telegram ID" autocomplete="off" maxlength="30" aria-label="Username atau Telegram ID">
       </div>
       <p id="gateError" class="gate-error"></p>
       <button class="gate-btn" id="gateBtn" type="button">Masuk →</button>
@@ -213,7 +213,7 @@
               </div>
               <div class="workspace-panel">
                 <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
-                  <input type="file" id="fileInput" accept="video/mp4" onchange="handleFileSelect(event)" class="sr-only">
+                 <input type="file" id="fileInput" accept="video/mp4" onchange="handleFileSelect(event)" class="sr-only" aria-label="Upload MP4 untuk diproses">
                   <div class="upload-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
                   <div class="upload-title">Letakkan MP4 di sini</div>
                   <div class="upload-subtitle">atau klik untuk memilih file</div>
@@ -305,7 +305,7 @@
               <div class="tab-content active" id="panelLocalPhoto">
                 <div class="alert-box"><strong>Offline Engine:</strong> Berjalan sepenuhnya di browser kamu menggunakan WebGL.</div>
                 <div class="upload-inline">
-                  <input type="file" id="upscaleInput" accept="image/*" class="sr-only">
+                  <input type="file" id="upscaleInput" accept="image/*" class="sr-only" aria-label="Upload foto untuk AI upscale">
                   <button class="btn-secondary-sm" type="button" onclick="document.getElementById('upscaleInput').click()">Pilih Foto</button>
                   <span id="upscaleFileName" class="file-name-inline">Tidak ada file terpilih</span>
                 </div>
@@ -319,11 +319,11 @@
               <div class="tab-content" id="panelCloudVideo">
                 <div class="alert-box"><strong>Cloud Engine:</strong> Membutuhkan Google Colab Ngrok API tunnel.</div>
                 <div class="control-group">
-                  <label>Ngrok Tunnel URL</label>
-                  <input type="url" id="cloudApiUrl" class="modern-input" placeholder="https://xxxx.ngrok-free.app">
-                </div>
+                <label for="cloudApiUrl">Ngrok Tunnel URL</label>
+               <input type="url" id="cloudApiUrl" class="modern-input" placeholder="https://xxxx.ngrok-free.app" aria-label="Ngrok Tunnel URL">
+              </div>
                 <div class="upload-inline">
-                  <input type="file" id="cloudVideoInput" accept="video/mp4" class="sr-only">
+                  <input type="file" id="cloudVideoInput" accept="video/mp4" class="sr-only" aria-label="Upload video untuk cloud upscale">
                   <button class="btn-secondary-sm" type="button" onclick="document.getElementById('cloudVideoInput').click()">Pilih Video</button>
                   <span id="cloudVideoFileName" class="file-name-inline">Tidak ada file terpilih</span>
                 </div>
@@ -522,10 +522,9 @@
       <div class="analyzer-wrap">
         <div class="account-card" style="padding:28px;">
           <div class="input-group" style="margin-bottom:16px;">
-            <label>TikTok Video URL</label>
-            <div style="display:flex;gap:10px;">
-              <input class="ky-input" id="tiktokUrlInput" type="url" placeholder="https://www.tiktok.com/@user/video/1234567890">
-              <button class="btn-save" id="analyzeBtn" type="button" style="white-space:nowrap;flex:none;">Analyze</button>
+             <label for="tiktokUrlInput">TikTok Video URL</label>
+              <div style="display:flex;gap:10px;">
+              <input class="ky-input" id="tiktokUrlInput" ...>
             </div>
           </div>
           <p style="font-size:.8rem;color:#5a6270;">Mendukung link tiktok.com dan short link vm.tiktok.com.</p>
@@ -592,7 +591,7 @@
           </div>
           <div class="input-group">
             <label>Display Name</label>
-            <input class="ky-input" id="inputDisplayName" type="text" placeholder="Masukkan nama tampilan kamu" maxlength="32">
+            <input class="ky-input" id="inputDisplayName" type="text" placeholder="Masukkan nama tampilan kamu" maxlength="32" aria-label="Display Name">
           </div>
           <button class="btn-save" id="saveProfileBtn" type="button">Simpan Perubahan</button>
         </div>
@@ -609,11 +608,11 @@
           </div>
           <div class="input-group" style="margin-top:20px;">
             <label>Telegram User ID</label>
-            <input class="ky-input" id="inputTgId" type="text" placeholder="Contoh: 123456789">
+            <input class="ky-input" id="inputTgId" type="text" placeholder="Contoh: 123456789" aria-label="Telegram User ID">
           </div>
           <div class="input-group">
             <label>Telegram Username (opsional)</label>
-            <input class="ky-input" id="inputTgUsername" type="text" placeholder="@usernamekamu">
+            <input class="ky-input" id="inputTgUsername" type="text" placeholder="@usernamekamu" aria-label="Telegram Username">
           </div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
             <button class="btn-save" id="saveTelegramBtn" type="button">Link Telegram</button>
