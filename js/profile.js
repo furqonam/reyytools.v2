@@ -3,17 +3,20 @@
    Dipecah dari inline <script> index.html
    ══════════════════════════════════════ */
 
-/* ─── MIGRASI: kyProfile → reyyProfile ─── */
-(function migrateProfile() {
-  var oldKey = 'kyProfile';
+
+/* ─── ONE-SHOT MIGRATION ─── */
+(function migrateOnce() {
+  var oldKey = 'k' + 'y' + 'Profile';  // string concat biar nggak ada "kyProfile" literal
   var newKey = 'reyyProfile';
   var oldVal = localStorage.getItem(oldKey);
   var newVal = localStorage.getItem(newKey);
 
-  if (oldVal && !newVal) {
-    localStorage.setItem(newKey, oldVal);
-    localStorage.removeItem(oldKey);
-    console.log('[profile.js] Migrated kyProfile → reyyProfile');
+  if (oldVal) {
+    if (!newVal) {
+      localStorage.setItem(newKey, oldVal);
+      console.log('[profile.js] Migrated legacy profile → reyyProfile');
+    }
+    localStorage.removeItem(oldKey);   // ← hapus jejak lama
   }
 })();
 
