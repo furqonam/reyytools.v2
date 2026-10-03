@@ -190,11 +190,13 @@
     }
   </style>
 
-  <script src="js/atom-utils.js" defer></script>
-  <script src="js/patcher.js" defer></script>
-  <script src="js/ffmpeg-engine.js" defer></script>
-  <script src="js/main.js" defer></script>
-  <script src="js/ui.js" defer></script>
+<script src="js/atom-utils.js" defer></script>
+<script src="js/patcher.js" defer></script>
+<script src="js/ffmpeg-engine.js" defer></script>
+<script src="js/auth.js" defer></script>      
+<script src="js/limits.js" defer></script>     
+<script src="js/main.js" defer></script>
+<script src="js/ui.js" defer></script>
 </head>
 
 <body>
@@ -248,6 +250,61 @@
   </div>
 
   <div class="page-view active" id="page-home">
+
+<!-- ══════════════════════════════════════ -->
+<!-- GATE SCREEN                             -->
+<!-- ══════════════════════════════════════ -->
+<div id="gateScreen" class="gate-screen">
+  <div class="gate-card">
+    <div class="gate-logo">⚡ reyy.tools</div>
+    <p class="gate-sub">Masuk untuk mengakses tools</p>
+    
+    <div class="gate-input-wrap">
+      <input 
+        type="text" 
+        id="gateInput" 
+        class="gate-input" 
+        placeholder="Username atau Telegram ID"
+        autocomplete="off"
+        maxlength="30"
+      >
+    </div>
+    
+    <p id="gateError" class="gate-error"></p>
+    
+    <button class="gate-btn" id="gateBtn" onclick="doLogin()">
+      Masuk →
+    </button>
+    
+    <p class="gate-hint">
+      Belum punya username?<br>
+      <a href="https://t.me/reyystecuu_bot" target="_blank">Daftar di @reyystecuu_bot</a>
+    </p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- LIMIT MODAL                             -->
+<!-- ══════════════════════════════════════ -->
+<div id="limitModal" class="modal-overlay">
+  <div class="modal-card">
+    <div class="modal-icon">⚠️</div>
+    <h2 class="modal-title">Quota Habis</h2>
+    <p class="modal-desc" id="limitModalDesc"></p>
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-secondary" onclick="closeLimitModal()">
+        Tunggu Besok
+      </button>
+      <button class="modal-btn modal-btn-primary" onclick="goToBot()">
+        Upgrade VIP
+      </button>
+    </div>
+    <p class="modal-hint">
+      Chat bot: <a href="https://t.me/reyystecuu_bot" target="_blank">@reyystecuu_bot</a>
+    </p>
+  </div>
+</div>
+    
     <div class="ky-page-wrap">
 
       <div class="hero-home">
