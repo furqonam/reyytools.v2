@@ -1,14 +1,10 @@
 /* ══════════════════════════════════════
-   patcher.js — reyy tools
-   The actual byte-level MP4 manipulation. Depends on atom-utils.js.
-
-   FIX (refactor v6.1): "Z-Payload + MTLib + encoder string" used to be
-   copy-pasted inline in 3 places (ky60 mode, interp lab, and a 4th
-   half-version inside applyMetadataStamp). It's now one function:
-   applyMetadataStamp(). Call it once per buffer, get a new buffer back.
+   patcher.js — reyy tools v6.2
+   Byte-level MP4 manipulation.
+   FIX: cleanup + return type konsisten.
    ══════════════════════════════════════ */
 
-/* ── Z-Payload: zero/0x5A-fill a small window right after mdat starts ── */
+/* ── Z-Payload: 0x5A-fill a small window after mdat starts ── */
 function patchZPayload(data) {
   const mdatIdx = findRawAtomOffset(data, 'mdat');
   if (mdatIdx === -1) throw new Error('Struktur video tidak valid. Pastikan file MP4 tidak corrupt.');
@@ -17,7 +13,7 @@ function patchZPayload(data) {
   return true;
 }
 
-/* ── Rewrite an existing "Lavf..." encoder string to a target version ── */
+/* ── Rewrite existing "Lavf..." encoder string ── */
 function patchEncoderStr(data) {
   const enc = new TextEncoder(), lavf = enc.encode('Lavf'), target = enc.encode('Lavf59.16.100');
   for (let i = 0; i <= data.length - 16; i++) {
@@ -33,7 +29,7 @@ function patchEncoderStr(data) {
   return false;
 }
 
-/* ── Inject a custom "MTLib" freeform metadata atom under moov/udta ── */
+/* ── Inject custom "MTLib" freeform metadata atom ── */
 function injectMTLib(origBuffer) {
   const enc = new TextEncoder(), origData = new Uint8Array(origBuffer), origView = new DataView(origBuffer);
   const domain = enc.encode('com.apple.quicktime'), keyBytes = enc.encode('MTLib'), valBytes = enc.encode('PyPVGCodec');
@@ -91,8 +87,7 @@ function injectMTLib(origBuffer) {
 
 /**
  * Z-Payload + MTLib + encoder-string stamp, as one step.
- * Previously inlined 3x (ky60 mode, interp lab, applyMetadataStamp).
- * Returns the new ArrayBuffer.
+ * Returns new ArrayBuffer.
  */
 function applyMetadataStamp(arrayBuffer) {
   let buf = arrayBuffer;
@@ -110,76 +105,7 @@ function applyreyyPatch(arrayBuffer, originalName) {
   return buf.byteLength;
 }
 
-/* MODE 2 — SHARK SAMPLE TABLE */
-const SHARK = {
-  FAKE_SAMPLE_COUNT: 8573, FAKE_SAMPLE_SIZE: 8, FAKE_SAMPLE_BYTES: new Uint8Array([0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00]),
-  VIDEO_TIMESCALE: 90000, VIDEO_DURATION: 2269500, VIDEO_EDIT_MEDIA_TIME: 3000, VIDEO_SAMPLE_DELTA: 1500
-};
-function buildMdhd(box) {
-  const payload = boxPayload(box); const view = new DataView(payload.buffer);
-  if (payload[0] !== 0) throw new Error(`Versi mdhd tidak didukung: ${payload[0]}.`);
-  view.setUint32(12, SHARK.VIDEO_TIMESCALE, false); view.setUint32(16, SHARK.VIDEO_DURATION, false);
-  return makeBox('mdhd', payload);
-}
-function buildElst(box) {
-  const payload = boxPayload(box); const view = new DataView(payload.buffer);
-  const ver = payload[0], ec = view.getUint32(4, false);
-  if (ver !== 0 || ec < 1) throw new Error('elst butuh version 0 dengan minimal 1 entry.');
-  view.setUint32(12, SHARK.VIDEO_EDIT_MEDIA_TIME, false);
-  return makeBox('elst', payload);
-}
-function buildStts(realSampleCount, fakeSampleCount) {
-  const payload = new Uint8Array(4 + 4 + 8 + 8); const view = new DataView(payload.buffer);
-  view.setUint32(4, 2, false); view.setUint32(8, realSampleCount, false); view.setUint32(12, SHARK.VIDEO_SAMPLE_DELTA, false);
-  view.setUint32(16, fakeSampleCount, false); view.setUint32(20, SHARK.VIDEO_SAMPLE_DELTA, false);
-  return makeBox('stts', payload);
-}
-function buildStsz(originalSizes, fakeSampleCount) {
-  const total = originalSizes.length + fakeSampleCount;
-  const payload = new Uint8Array(4 + 4 + 4 + total * 4); const view = new DataView(payload.buffer);
-  view.setUint32(8, total, false); let offset = 12;
-  originalSizes.forEach(s => { view.setUint32(offset, s, false); offset += 4; });
-  for (let i = 0; i < fakeSampleCount; i++) { view.setUint32(offset, SHARK.FAKE_SAMPLE_SIZE, false); offset += 4; }
-  return makeBox('stsz', payload);
-}
-function buildStsc(originalRows, originalChunkCount) {
-  const rows = originalRows.map(r => [...r]); const last = rows[rows.length - 1];
-  if (!last || last[1] !== 1) rows.push([originalChunkCount + 1, 1, 1]);
-  const payload = new Uint8Array(4 + 4 + rows.length * 12); const view = new DataView(payload.buffer);
-  view.setUint32(4, rows.length, false); let offset = 8;
-  rows.forEach(([fc, spc, sdi]) => { view.setUint32(offset, fc, false); view.setUint32(offset + 4, spc, false); view.setUint32(offset + 8, sdi, false); offset += 12; });
-  return makeBox('stsc', payload);
-}
-function buildStco(originalOffsets, delta, fakeOffset = null, fakeSampleCount = 0) {
-  const count = originalOffsets.length + (fakeOffset === null ? 0 : fakeSampleCount);
-  const payload = new Uint8Array(4 + 4 + count * 4); const view = new DataView(payload.buffer);
-  view.setUint32(4, count, false); let tableOffset = 8;
-  originalOffsets.forEach(off => { const shifted = off + delta; assertUint32(shifted, 'stco.chunk_offset'); view.setUint32(tableOffset, shifted, false); tableOffset += 4; });
-  if (fakeOffset !== null) { assertUint32(fakeOffset, 'stco.fake_sample_offset'); for (let i = 0; i < fakeSampleCount; i++) { view.setUint32(tableOffset, fakeOffset, false); tableOffset += 4; } }
-  return makeBox('stco', payload);
-}
-function rebuildBox(box, replacements) {
-  if (replacements.has(box)) return replacements.get(box);
-  if (!box.children.length) return boxBytes(box);
-  const parts = [box.data.slice(box.prefixStart, box.prefixEnd)];
-  box.children.forEach(child => parts.push(rebuildBox(child, replacements)));
-  return makeBox(box.type, concatBytes(parts));
-}
-function collectTrackStcoBoxes(moov) {
-  const stcoBoxes = [];
-  moov.children.filter(c => c.type === 'trak').forEach(trak => {
-    const stbl = findDescendant(trak, ['mdia', 'minf', 'stbl']); if (!stbl) return;
-    const co64 = findChild(stbl, 'co64'); if (co64) throw new Error('Metode ini tidak mendukung MP4 dengan co64.');
-    const stco = findChild(stbl, 'stco'); if (stco) stcoBoxes.push(stco);
-  });
-  return stcoBoxes;
-}
-function buildStcoReplacements(stcoBoxes, videoStco, delta, fakeOffset, fakeSampleCount) {
-  const replacements = new Map();
-  stcoBoxes.forEach(stco => { replacements.set(stco, buildStco(parseStco(stco), delta, stco === videoStco ? fakeOffset : null, fakeSampleCount)); });
-  return replacements;
-}
-// ── CF Worker URL ────────────────────────────────────────────
+/* ── CF Worker URL & lazy loader ── */
 var _REYY_WORKER_URL = '/api/cf-worker';
 var _reyyLoaded = false;
 var _reyyLoading = null;
@@ -188,7 +114,10 @@ function _loadreyyPatcher() {
   if (_reyyLoaded && typeof window.kyPatchMP4 === 'function') return Promise.resolve();
   if (_reyyLoading) return _reyyLoading;
   _reyyLoading = fetch(_REYY_WORKER_URL, { cache: 'no-cache' })
-    .then(function(r) { return r.text(); })
+    .then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.text();
+    })
     .then(function(src) {
       var s = document.createElement('script');
       s.textContent = src;
@@ -203,12 +132,16 @@ function _loadreyyPatcher() {
   return _reyyLoading;
 }
 
-// Preload patcher saat file ini dimuat
-_loadreyyPatcher().catch(function(){});
+// Preload di idle
+if (typeof requestIdleCallback === 'function') {
+  requestIdleCallback(function(){ _loadreyyPatcher().catch(function(){}); });
+} else {
+  setTimeout(function(){ _loadreyyPatcher().catch(function(){}); }, 2000);
+}
 
 /**
- * Smart Patch (MODE 2) - sekarang pakai reyy tools HD dari CF Worker
- * Return: Promise<{ output, realSamples, fakeSamples, audioFake }>
+ * Smart Patch (MODE 2) — pakai reyy tools HD dari CF Worker.
+ * Return: Promise<{ output: ArrayBuffer, realSamples, fakeSamples, audioFake }>
  */
 function patchSharkSampleTableMethod(arrayBuffer) {
   return _loadreyyPatcher().then(function() {
@@ -218,50 +151,10 @@ function patchSharkSampleTableMethod(arrayBuffer) {
     var result = window.kyPatchMP4(arrayBuffer);
     if (!result || !result.output) throw new Error('Patch gagal: output kosong.');
     return {
-      output: result.output,
+      output: result.output,           // ArrayBuffer
       realSamples: result.realSamples,
       fakeSamples: result.fakeSamples,
       audioFake: result.audioFake
     };
   });
 }
-
-// ── Versi lama disimpan untuk referensi (tidak dipanggil) ──
-function _patchSharkSampleTableMethod_LEGACY(arrayBuffer) {
-  const data = new Uint8Array(arrayBuffer); const view = new DataView(arrayBuffer);
-  const topLevel = parseBoxes(data, view);
-  const ftyp = findTopLevel(topLevel, 'ftyp'), moov = findTopLevel(topLevel, 'moov'), mdat = findTopLevel(topLevel, 'mdat');
-  if (!ftyp) throw new Error('"ftyp" box tidak ditemukan.');
-  if (!moov) throw new Error('"moov" box tidak ditemukan.');
-  if (!mdat) throw new Error('"mdat" box tidak ditemukan.');
-  const videoTrak = moov.children.find(c => c.type === 'trak' && handlerTypeForTrak(c) === 'vide');
-  if (!videoTrak) throw new Error('Track video tidak ditemukan.');
-  const stbl = findDescendant(videoTrak, ['mdia', 'minf', 'stbl']);
-  const mdhd = findDescendant(videoTrak, ['mdia', 'mdhd']);
-  const elst = findDescendant(videoTrak, ['edts', 'elst']);
-  const stts = stbl && findChild(stbl, 'stts'), stsc = stbl && findChild(stbl, 'stsc'), stsz = stbl && findChild(stbl, 'stsz'), stco = stbl && findChild(stbl, 'stco');
-  if (!stbl || !mdhd || !elst || !stts || !stsc || !stsz || !stco) throw new Error('MP4 kurang tabel: mdhd, elst, stts, stsc, stsz, stco wajib ada.');
-  const originalSizes = parseStsz(stsz), originalStscRows = parseStsc(stsc), originalChunkOffsets = parseStco(stco);
-  const stcoBoxes = collectTrackStcoBoxes(moov);
-  const preservedTopLevel = topLevel.filter(b => !['ftyp', 'moov', 'mdat'].includes(b.type)).map(boxBytes);
-  const fakeSampleCount = originalSizes.length * 9;
-  const fixedReplacements = new Map([[mdhd, buildMdhd(mdhd)], [elst, buildElst(elst)], [stts, buildStts(originalSizes.length, fakeSampleCount)], [stsc, buildStsc(originalStscRows, originalChunkOffsets.length)], [stsz, buildStsz(originalSizes, fakeSampleCount)]]);
-  const placeholderRep = new Map(fixedReplacements);
-  buildStcoReplacements(stcoBoxes, stco, 0, 0, fakeSampleCount).forEach((v, k) => placeholderRep.set(k, v));
-  const moovPlaceholder = rebuildBox(moov, placeholderRep);
-  const preservedBytes = concatBytes(preservedTopLevel);
-  const oldMdatPayload = data.slice(mdat.contentStart, mdat.end);
-  let newMdatPayloadStart = ftyp.size + moovPlaceholder.length + preservedBytes.length + 8;
-  let delta = newMdatPayloadStart - mdat.contentStart, fakeOffset = newMdatPayloadStart + oldMdatPayload.length;
-  let finalRep = new Map(fixedReplacements);
-  buildStcoReplacements(stcoBoxes, stco, delta, fakeOffset, fakeSampleCount).forEach((v, k) => finalRep.set(k, v));
-  let moovNew = rebuildBox(moov, finalRep);
-  const recalculated = ftyp.size + moovNew.length + preservedBytes.length + 8;
-  delta = recalculated - mdat.contentStart; fakeOffset = recalculated + oldMdatPayload.length;
-  finalRep = new Map(fixedReplacements);
-  buildStcoReplacements(stcoBoxes, stco, delta, fakeOffset, fakeSampleCount).forEach((v, k) => finalRep.set(k, v));
-  moovNew = rebuildBox(moov, finalRep);
-  const mdatNew = makeBox('mdat', concatBytes([oldMdatPayload, SHARK.FAKE_SAMPLE_BYTES]));
-  const output = concatBytes([boxBytes(ftyp), moovNew, preservedBytes, mdatNew]);
-  return { output, realSamples: originalSizes.length, fakeSamples: SHARK.FAKE_SAMPLE_COUNT, fakeOffset, stcoDelta: delta };
-} // end _LEGACY
