@@ -111,7 +111,7 @@ var _reyyLoaded = false;
 var _reyyLoading = null;
 
 function _loadreyyPatcher() {
-  if (_reyyLoaded && typeof window.kyPatchMP4 === 'function') return Promise.resolve();
+  if (_reyyLoaded && typeof window.reyyPatchMP4 === 'function') return Promise.resolve();
   if (_reyyLoading) return _reyyLoading;
   _reyyLoading = fetch(_REYY_WORKER_URL, { cache: 'no-cache' })
     .then(function(r) {
@@ -145,13 +145,15 @@ if (typeof requestIdleCallback === 'function') {
  */
 function patchSharkSampleTableMethod(arrayBuffer) {
   return _loadreyyPatcher().then(function() {
-    if (typeof window.kyPatchMP4 !== 'function') {
+    // Pakai reyyPatchMP4 (nama baru), fallback ke kyPatchMP4 (legacy)
+    var fn = window.reyyPatchMP4 || window.kyPatchMP4;
+    if (typeof fn !== 'function') {
       throw new Error('reyy tools HD patcher tidak tersedia. Coba refresh.');
     }
-    var result = window.kyPatchMP4(arrayBuffer);
+    var result = fn(arrayBuffer);
     if (!result || !result.output) throw new Error('Patch gagal: output kosong.');
     return {
-      output: result.output,           // ArrayBuffer
+      output: result.output,
       realSamples: result.realSamples,
       fakeSamples: result.fakeSamples,
       audioFake: result.audioFake
