@@ -176,19 +176,19 @@
             <div class="workspace-grid">
               <div class="workspace-panel">
                 <div class="control-group">
-                  <label>Execution Method</label>
-                  <select class="modern-select" id="patchType">
-                    <option value="patch_only" selected>Patch Only (Instant Metadata)</option>
-                    <option value="encode_patch">Encode + Patch (HD Optimization)</option>
-                  </select>
+                 <label for="patchType">Execution Method</label>
+                  <select class="modern-select" id="patchType" aria-label="Execution Method">
+                 <option value="patch_only" selected>Patch Only (Instant Metadata)</option>
+                <option value="encode_patch">Encode + Patch (HD Optimization)</option>
+               </select>
                   <p style="font-size:11px;color:#5a6270;margin-top:6px;line-height:1.5;">
                     <b style="color:#00d9ff;">Patch Only:</b> Perbaikan metadata instan (1-3 detik).<br>
                     <b style="color:#00d9ff;">Encode + Patch:</b> Re-encode H.264 CRF 18 (10-60 detik).
                   </p>
                 </div>
                 <div class="control-group">
-                  <label>Processing Mode</label>
-                  <div class="mode-stack">
+               <label id="labelProcessingMode">Processing Mode</label>
+                 <div class="mode-stack" role="group" aria-labelledby="labelProcessingMode">
                     <button class="mode-card active" type="button" data-mode="patch" onclick="setMode('patch')">
                       <div class="mode-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></div>
                       <div class="mode-info"><div class="mode-name">MAGIC PATCH</div><div class="mode-desc">Perbaiki struktur MP4 otomatis</div></div>
@@ -203,9 +203,9 @@
                     </button>
                   </div>
                 </div>
-                <div class="control-group its-panel" id="itsPanel">
-                  <label>Timing Multiplier</label>
-                  <div class="its-grid">
+              <div class="control-group its-panel" id="itsPanel">
+                <label id="labelTimingMultiplier">Timing Multiplier</label>
+                  <div class="its-grid" role="group" aria-labelledby="labelTimingMultiplier">
                     <button class="its-pill active" type="button" data-scale="2" data-iscale="2" onclick="selectItsScale(this)">x2 (120fps)</button>
                     <button class="its-pill" type="button" data-scale="4" data-iscale="4" onclick="selectItsScale(this)">x4 (240fps)</button>
                   </div>
@@ -319,9 +319,9 @@
               <div class="tab-content" id="panelCloudVideo">
                 <div class="alert-box"><strong>Cloud Engine:</strong> Membutuhkan Google Colab Ngrok API tunnel.</div>
                 <div class="control-group">
-                  <label>Ngrok Tunnel URL</label>
-                  <input type="url" id="cloudApiUrl" class="modern-input" placeholder="https://xxxx.ngrok-free.app">
-                </div>
+               <label for="cloudApiUrl">Ngrok Tunnel URL</label>
+               <input type="url" id="cloudApiUrl" class="modern-input" placeholder="https://xxxx.ngrok-free.app" aria-label="Ngrok Tunnel URL">
+               </div>
                 <div class="upload-inline">
                   <input type="file" id="cloudVideoInput" accept="video/mp4" class="sr-only">
                   <button class="btn-secondary-sm" type="button" onclick="document.getElementById('cloudVideoInput').click()">Pilih Video</button>
@@ -521,12 +521,12 @@
 
       <div class="analyzer-wrap">
         <div class="account-card" style="padding:28px;">
-          <div class="input-group" style="margin-bottom:16px;">
-            <label>TikTok Video URL</label>
-            <div style="display:flex;gap:10px;">
-              <input class="ky-input" id="tiktokUrlInput" type="url" placeholder="https://www.tiktok.com/@user/video/1234567890">
-              <button class="btn-save" id="analyzeBtn" type="button" style="white-space:nowrap;flex:none;">Analyze</button>
-            </div>
+        <div class="input-group" style="margin-bottom:16px;">
+        <label for="tiktokUrlInput">TikTok Video URL</label>
+        <div style="display:flex;gap:10px;">
+        <input class="ky-input" id="tiktokUrlInput" type="url" placeholder="https://www.tiktok.com/@user/video/1234567890" aria-label="TikTok Video URL">
+        <button class="btn-save" id="analyzeBtn" type="button" style="white-space:nowrap;flex:none;">Analyze</button>
+         </div>
           </div>
           <p style="font-size:.8rem;color:#5a6270;">Mendukung link tiktok.com dan short link vm.tiktok.com.</p>
         </div>
@@ -590,10 +590,10 @@
               <div class="account-role" id="accountRoleBadge">Guest User</div>
             </div>
           </div>
-          <div class="input-group">
-            <label>Display Name</label>
-            <input class="ky-input" id="inputDisplayName" type="text" placeholder="Masukkan nama tampilan kamu" maxlength="32">
-          </div>
+        <div class="input-group">
+        <label for="inputDisplayName">Display Name</label>
+        <input class="ky-input" id="inputDisplayName" type="text" placeholder="Masukkan nama tampilan kamu" maxlength="32" aria-label="Display Name">
+         </div>
           <button class="btn-save" id="saveProfileBtn" type="button">Simpan Perubahan</button>
         </div>
 
@@ -608,13 +608,13 @@
             <span id="tgStatusText">Tidak ada Telegram yang terhubung — berjalan sebagai Guest</span>
           </div>
           <div class="input-group" style="margin-top:20px;">
-            <label>Telegram User ID</label>
-            <input class="ky-input" id="inputTgId" type="text" placeholder="Contoh: 123456789">
-          </div>
+         <label for="inputTgId">Telegram User ID</label>
+         <input class="ky-input" id="inputTgId" type="text" placeholder="Contoh: 123456789" aria-label="Telegram User ID">
+         </div>
           <div class="input-group">
-            <label>Telegram Username (opsional)</label>
-            <input class="ky-input" id="inputTgUsername" type="text" placeholder="@usernamekamu">
-          </div>
+         <label for="inputTgUsername">Telegram Username (opsional)</label>
+         <input class="ky-input" id="inputTgUsername" type="text" placeholder="@usernamekamu" aria-label="Telegram Username">
+         </div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
             <button class="btn-save" id="saveTelegramBtn" type="button">Link Telegram</button>
             <button class="btn-save" id="unlinkTelegramBtn" type="button" style="background:rgba(248,113,113,0.12);color:#f87171;border:1px solid rgba(248,113,113,0.25);">Unlink</button>
