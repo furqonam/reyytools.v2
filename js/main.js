@@ -199,6 +199,16 @@ function buildEncoderArgs() {
 async function runProcess() {
   if (!selectedFile) return;
   
+  // ─── Cek quota ───
+  const patchType = document.getElementById('patchType')?.value || 'patch_only';
+  let featureKey = 'patchOnly';
+  if (curMode === 'patch' && patchType === 'encode_patch') featureKey = 'encodePatch';
+  else if (curMode === 'ky60') featureKey = 'ky60';
+  else if (curMode === 'its') featureKey = 'its';
+  else if (curMode === 'encoder') featureKey = 'encodePatch';
+  
+  if (typeof checkQuota === 'function' && !checkQuota(featureKey)) return;
+  
   const btn = document.getElementById(curMode === 'encoder' ? 'encBtn' : 'patchBtn');
   if (btn) btn.disabled = true;
   
@@ -423,6 +433,7 @@ function setUpscaleProgress(percent, text) {
 
 // Main ONNX Neural Super-Resolution Processing Logic
 async function runLocalAIUpscale(imageFile) {
+  if (typeof checkQuota === 'function' && !checkQuota('aiUpscale')) return;
   const btnStartUpscale = document.getElementById('btnStartUpscale');
   const upscaleStatusBox = document.getElementById('upscaleStatusBox');
   
@@ -585,6 +596,7 @@ function setCloudProgress(percent, text) {
 }
 
 async function runCloudVideoUpscale() {
+  if (typeof checkQuota === 'function' && !checkQuota('cloudUpscale')) return;
   const apiUrlInput = document.getElementById('cloudApiUrl');
   const btnStartCloudUpscale = document.getElementById('btnStartCloudUpscale');
   const cloudStatusBox = document.getElementById('cloudStatusBox');
