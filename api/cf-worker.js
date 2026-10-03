@@ -1,7 +1,7 @@
 // api/cf-worker.js
 // Vercel serverless function — serve cf-worker JS as text
 // Adapted for reyy tools
-// FIXED: CF_WORKER_SOURCE di atas, res.end() bukan res.send()
+// FIXED: double-append udta (BUG #9)
 
 const CF_WORKER_SOURCE = `(function(){
   const CONTAINER_BOXES = new Set(['moov','trak','mdia','minf','stbl','edts','dinf','udta','meta','ilst']);
@@ -113,7 +113,7 @@ const CF_WORKER_SOURCE = `(function(){
     return out;
   }
 
-  function buildCpyTag(text){
+  function buildTagBox(fourcc, text){
     const enc = new TextEncoder();
     const tb  = enc.encode(text);
     const data= new Uint8Array(4+4+4+4+tb.length);
@@ -126,51 +126,15 @@ const CF_WORKER_SOURCE = `(function(){
     const box=new Uint8Array(4+4+data.length);
     const bdv=new DataView(box.buffer);
     bdv.setUint32(0,box.length,false);
-    box[4]=0xa9; box[5]=0x63; box[6]=0x70; box[7]=0x79;
-    box.set(data,8);
-    return box;
-  }
-
-  function buildEncTag(text){
-    const enc = new TextEncoder();
-    const tb  = enc.encode(text);
-    const data= new Uint8Array(4+4+4+4+tb.length);
-    const ddv = new DataView(data.buffer);
-    ddv.setUint32(0,data.length,false);
-    setFcc(data,4,'data');
-    ddv.setUint32(8,1,false);
-    ddv.setUint32(12,0,false);
-    data.set(tb,16);
-    const box=new Uint8Array(4+4+data.length);
-    const bdv=new DataView(box.buffer);
-    bdv.setUint32(0,box.length,false);
-    box[4]=0xa9; box[5]=0x65; box[6]=0x6e; box[7]=0x63;
-    box.set(data,8);
-    return box;
-  }
-
-  function buildTooTag(text){
-    const enc = new TextEncoder();
-    const tb  = enc.encode(text);
-    const data= new Uint8Array(4+4+4+4+tb.length);
-    const ddv = new DataView(data.buffer);
-    ddv.setUint32(0,data.length,false);
-    setFcc(data,4,'data');
-    ddv.setUint32(8,1,false);
-    ddv.setUint32(12,0,false);
-    data.set(tb,16);
-    const box=new Uint8Array(4+4+data.length);
-    const bdv=new DataView(box.buffer);
-    bdv.setUint32(0,box.length,false);
-    box[4]=0xa9; box[5]=0x74; box[6]=0x6f; box[7]=0x6f;
+    setFcc(box,4,fourcc);
     box.set(data,8);
     return box;
   }
 
   function buildSignatureUdta(){
-    const cpyTag = buildCpyTag('reyy tools');
-    const encTag = buildEncTag('reyy tools upload');
-    const tooTag = buildTooTag('reyy tools | reyytools.my.id');
+    const cpyTag = buildTagBox('\\xa9cpy', 'reyy tools');
+    const encTag = buildTagBox('\\xa9enc', 'reyy tools upload');
+    const tooTag = buildTagBox('\\xa9too', 'reyy tools | reyytools.my.id');
 
     const ilstBody = concat([cpyTag, encTag, tooTag]);
     const ilst = new Uint8Array(8+ilstBody.length);
@@ -262,6 +226,9 @@ const CF_WORKER_SOURCE = `(function(){
     for(const co of allStco) repl.set(co, buildStco(readStco(arr,dv,co),0));
     const ftypBytes = ftypBox ? rawOf(arr,ftypBox) : new Uint8Array(0);
     const moov1     = rebuildMoov(arr,moovBox,repl);
+
+    // FIX: hapus append marker biar nggak double di pass 2
+    repl.delete('__appendUdta__');
 
     const newMdatDataStart = ftypBytes.length + moov1.length + 8;
     const oldMdatDataStart = mdatBox.cs;
