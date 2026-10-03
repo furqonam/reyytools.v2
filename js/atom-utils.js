@@ -1,37 +1,17 @@
 /* ══════════════════════════════════════
-   atom-utils.js
+   atom-utils.js — v6.2
    Shared low-level MP4 box/atom helpers.
-
-   FIX (refactor v6.1): the original file had the same "find mdat by
-   scanning raw bytes" loop copy-pasted in 4 different places
-   (Kythera patch, ky60 mode, interp lab, and inline in runProcess).
-   That's the kind of thing that quietly breaks when only 3 of the 4
-   copies get updated. Everything now goes through findRawAtomOffset()
-   and the box-tree helpers below.
+   FIX: isFaststart pakai DataView yang benar.
    ══════════════════════════════════════ */
 
 const CONTAINER_BOXES = new Set(['moov', 'trak', 'mdia', 'minf', 'stbl', 'edts', 'dinf', 'udta', 'meta', 'ilst']);
 
-/**
- * Validates that a buffer at least looks like an MP4 (has a real box
- * structure starting with a 4-byte size + known box type) before we
- * spend time running FFmpeg or binary-patching it.
- * This replaces the old behavior of just trying to patch and hoping
- * for a sane error message if it wasn't actually an MP4.
- */
 function looksLikeMp4(data) {
   if (data.length < 12) return false;
   const type = String.fromCharCode(data[4], data[5], data[6], data[7]);
   return type === 'ftyp' || type === 'moov' || type === 'mdat' || type === 'free' || type === 'wide';
 }
 
-/**
- * Raw byte-scan for a 4-character code (used for the simple
- * "find first mdat" trick used by the Z-Payload patch). This is
- * intentionally a dumb linear scan — it doesn't understand box
- * nesting — because that's what the original Z-Payload method relied
- * on. Box-aware lookups should use parseBoxes()/findTopLevel() instead.
- */
 function findRawAtomOffset(data, fourCC) {
   const c0 = fourCC.charCodeAt(0), c1 = fourCC.charCodeAt(1), c2 = fourCC.charCodeAt(2), c3 = fourCC.charCodeAt(3);
   for (let i = 0; i <= data.length - 4; i++) {
@@ -127,9 +107,13 @@ function concatBytes(parts) {
 function boxBytes(box) { return box.data.slice(box.offset, box.end); }
 function boxPayload(box) { return box.data.slice(box.contentStart, box.end); }
 
-/** Cheap top-level scan used only to decide if "moov" already precedes "mdat" (faststart). */
+/**
+ * Cheap top-level scan to check if "moov" comes before "mdat" (faststart).
+ * FIX: buat DataView langsung dari data.buffer + data.byteOffset.
+ */
 function isFaststart(data) {
-  const view = new DataView(data.buffer instanceof ArrayBuffer ? data.buffer : data.buffer);
+  if (!data || data.length < 8) return false;
+  const view = new DataView(data.buffer, data.byteOffset, data.byteLength);
   let o = 0;
   while (o + 8 <= data.length) {
     const sz = view.getUint32(o, false);
