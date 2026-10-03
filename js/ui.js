@@ -1,65 +1,11 @@
 /* ══════════════════════════════════════
-   ui.js — reyy tools (2026 SaaS Updates)
-   
-   FIXED:
-   - Hapus handler burger duplikat (udah ada onclick="toggleMenu()" di HTML)
-   - Hapus observer class yang gak dipake (.fade-up, dll)
-   - Hapus animateCounters (gak ada .stat-num di HTML)
-   - Keep splash, lazy-load AI engines
-   ══════════════════════════════════════ */
-
-document.addEventListener('DOMContentLoaded', () => {
-  // 1. Hide splash screen (kalo belum di-hidden oleh main.js)
-  setTimeout(() => {
-    const splash = document.getElementById('welcomeOverlay');
-    if (splash && splash.parentNode) {
-      splash.style.opacity = '0';
-      setTimeout(() => {
-        if (splash.parentNode) splash.remove();
-      }, 500);
-    }
-  }, 2500);
-
-  // 2. Lazy-load AI Engines on first interaction
-  const triggerAILoad = () => {
-    loadAIEngines();
-    window.removeEventListener('scroll', triggerAILoad);
-    window.removeEventListener('mousemove', triggerAILoad);
-    window.removeEventListener('touchstart', triggerAILoad);
-  };
-  window.addEventListener('scroll', triggerAILoad, { passive: true });
-  window.addEventListener('mousemove', triggerAILoad, { passive: true });
-  window.addEventListener('touchstart', triggerAILoad, { passive: true });
-});
-
-/* ── Load AI Engines (FFmpeg + TF.js + ONNX) ── */
-let aiEnginesLoaded = false;
-function loadAIEngines() {
-  if (aiEnginesLoaded) return;
-  aiEnginesLoaded = true;
-  const scriptsToLoad = [
-    "https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js",
-    "https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js",
-    "https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"
-  ];
-  scriptsToLoad.forEach(src => {
-    const script = document.createElement('script');
-    script.src = src;
-    script.defer = true;
-    document.body.appendChild(script);
-  });
-  console.log("reyy tools: AI Engines Loaded.");
-}
-
-/* ══════════════════════════════════════
-   UI UTILITIES — v6.2 FIX
-   Fungsi ini tadinya inline di index.html.
-   Dipindahin ke sini biar bersih & modular.
+   ui.js — reyy tools v7.0
+   Clean : reyyToast, reyyParticles.
    ══════════════════════════════════════ */
 
 /* ─── Toast Notification ─── */
 function showToast(msg, dur) {
-  var t = document.getElementById('kyToast');
+  var t = document.getElementById('reyyToast');
   if (!t) return;
   t.textContent = msg;
   t.classList.add('show');
@@ -91,8 +37,38 @@ function toggleGrimoire(btn) {
   if (icon) icon.textContent = item.classList.contains('open') ? '−' : '+';
 }
 
-/* ─── Home Tool Tabs (MAGIC PATCH / ENCODER / UPSCALE) ─── */
-document.addEventListener('DOMContentLoaded', function() {
+/* ─── Splash Screen + Event Bindings + Lazy Load AI ─── */
+document.addEventListener('DOMContentLoaded', () => {
+  // Hide splash
+  setTimeout(() => {
+    const splash = document.getElementById('welcomeOverlay');
+    if (splash && splash.parentNode) {
+      splash.style.opacity = '0';
+      setTimeout(() => {
+        if (splash.parentNode) splash.remove();
+      }, 500);
+    }
+  }, 2500);
+
+  // Burger menu
+  const burger = document.getElementById('burger');
+  if (burger) burger.addEventListener('click', toggleMenu);
+
+  // Profile buttons
+  const saveProfileBtn = document.getElementById('saveProfileBtn');
+  if (saveProfileBtn) saveProfileBtn.addEventListener('click', saveProfile);
+
+  const saveTelegramBtn = document.getElementById('saveTelegramBtn');
+  if (saveTelegramBtn) saveTelegramBtn.addEventListener('click', saveTelegram);
+
+  const unlinkTelegramBtn = document.getElementById('unlinkTelegramBtn');
+  if (unlinkTelegramBtn) unlinkTelegramBtn.addEventListener('click', unlinkTelegram);
+
+  // Analyze button
+  const analyzeBtn = document.getElementById('analyzeBtn');
+  if (analyzeBtn) analyzeBtn.addEventListener('click', analyzeTikTok);
+
+  // Home tool tabs — visual active state
   document.querySelectorAll('.home-tool-tab').forEach(function(btn) {
     btn.addEventListener('click', function() {
       document.querySelectorAll('.home-tool-tab').forEach(function(b){ b.classList.remove('active'); });
@@ -100,29 +76,41 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Bind burger menu
-  var burger = document.getElementById('burger');
-  if (burger) burger.addEventListener('click', toggleMenu);
-
-  // Bind profile buttons
-  var saveProfileBtn = document.getElementById('saveProfileBtn');
-  if (saveProfileBtn) saveProfileBtn.addEventListener('click', saveProfile);
-
-  var saveTelegramBtn = document.getElementById('saveTelegramBtn');
-  if (saveTelegramBtn) saveTelegramBtn.addEventListener('click', saveTelegram);
-
-  var unlinkTelegramBtn = document.getElementById('unlinkTelegramBtn');
-  if (unlinkTelegramBtn) unlinkTelegramBtn.addEventListener('click', unlinkTelegram);
-
-  // Bind analyze button
-  var analyzeBtn = document.getElementById('analyzeBtn');
-  if (analyzeBtn) analyzeBtn.addEventListener('click', analyzeTikTok);
+  // Lazy-load AI Engines on first interaction
+  const triggerAILoad = () => {
+    loadAIEngines();
+    window.removeEventListener('scroll', triggerAILoad);
+    window.removeEventListener('mousemove', triggerAILoad);
+    window.removeEventListener('touchstart', triggerAILoad);
+  };
+  window.addEventListener('scroll', triggerAILoad, { passive: true });
+  window.addEventListener('mousemove', triggerAILoad, { passive: true });
+  window.addEventListener('touchstart', triggerAILoad, { passive: true });
 });
+
+/* ─── Load AI Engines (FFmpeg + TF.js + ONNX) ─── */
+let aiEnginesLoaded = false;
+function loadAIEngines() {
+  if (aiEnginesLoaded) return;
+  aiEnginesLoaded = true;
+  const scriptsToLoad = [
+    "https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js",
+    "https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js",
+    "https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"
+  ];
+  scriptsToLoad.forEach(src => {
+    const script = document.createElement('script');
+    script.src = src;
+    script.defer = true;
+    document.body.appendChild(script);
+  });
+  console.log("reyy tools: AI Engines Loaded.");
+}
 
 /* ─── Particles Canvas (ambient background) ─── */
 (function initParticles(){
   document.addEventListener('DOMContentLoaded', function() {
-    var c = document.getElementById('kyParticles');
+    var c = document.getElementById('reyyParticles');
     if (!c) return;
     var ctx = c.getContext('2d');
     var W, H, particles = [];
