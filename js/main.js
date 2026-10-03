@@ -1,9 +1,6 @@
 /* ══════════════════════════════════════════════════════════════
-   main.js — v6.2
-   FIX:
-   - patchType sync → route ke encoder pipeline
-   - Simplify return type handling
-   - Cleanup console.log
+   main.js — reyy tools v7.0
+   Clean : mode reyy60
    ══════════════════════════════════════════════════════════════ */
 
 let selectedFile = null;
@@ -52,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ─── FIX #3: patchType sync → route ke encoder ───
+  // patchType sync → route ke encoder
   const patchTypeSelect = document.getElementById('patchType');
   if (patchTypeSelect) {
     patchTypeSelect.addEventListener('change', (e) => {
@@ -98,7 +95,7 @@ function setMode(mode) {
   if (itsPanel) itsPanel.style.display = (mode === 'its') ? 'block' : 'none';
 
   const patchTypeSelect = document.getElementById('patchType');
-  if (patchTypeSelect && (mode === 'ky60' || mode === 'its')) {
+  if (patchTypeSelect && (mode === 'reyy60' || mode === 'its')) {
     patchTypeSelect.value = 'patch_only';
   }
 
@@ -207,7 +204,7 @@ async function runProcess() {
   const patchType = document.getElementById('patchType')?.value || 'patch_only';
   let featureKey = 'patchOnly';
   if (curMode === 'patch' && patchType === 'encode_patch') featureKey = 'encodePatch';
-  else if (curMode === 'ky60') featureKey = 'ky60';
+  else if (curMode === 'reyy60') featureKey = 'reyy60';
   else if (curMode === 'its') featureKey = 'its';
   else if (curMode === 'encoder') featureKey = 'encodePatch';
 
@@ -227,7 +224,7 @@ async function runProcess() {
 
     try {
       const ab = await selectedFile.arrayBuffer();
-      setProgress(50, 'Applying Shark HD Patch (CF Logic)...');
+      setProgress(50, 'Applying reyy HD Patch (CF Logic)...');
 
       const patch = (typeof patchSharkSampleTableMethod === 'function')
         ? await patchSharkSampleTableMethod(ab)
@@ -253,8 +250,8 @@ async function runProcess() {
     }
   }
 
-  // ═══ MODE 2: KY60 ═══
-  else if (curMode === 'ky60') {
+  // ═══ MODE 2: reyy60 ═══
+  else if (curMode === 'reyy60') {
     setStatus('⏳ reyy tools 60fps Method: Processing...', 'working');
     setProgress(0, 'Reading file...', true);
     try {
