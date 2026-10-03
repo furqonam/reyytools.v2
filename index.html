@@ -47,7 +47,7 @@
       <div class="gate-logo">⚡ reyy.tools</div>
       <p class="gate-sub">Masuk untuk mengakses tools</p>
       <div class="gate-input-wrap">
-        <input type="text" id="gateInput" class="gate-input" placeholder="Username atau Telegram ID" autocomplete="off" maxlength="30">
+        <input type="text" id="gateInput" class="gate-input" placeholder="Username atau Telegram ID" autocomplete="off" maxlength="30" aria-label="Username atau Telegram ID">
       </div>
       <p id="gateError" class="gate-error"></p>
       <button class="gate-btn" id="gateBtn" type="button">Masuk →</button>
@@ -213,7 +213,7 @@
               </div>
               <div class="workspace-panel">
                 <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
-                  <input type="file" id="fileInput" accept="video/mp4" onchange="handleFileSelect(event)" class="sr-only">
+                  <input type="file" id="fileInput" accept="video/mp4" onchange="handleFileSelect(event)" class="sr-only" aria-label="Upload file video MP4">
                   <div class="upload-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
                   <div class="upload-title">Letakkan MP4 di sini</div>
                   <div class="upload-subtitle">atau klik untuk memilih file</div>
@@ -305,7 +305,7 @@
               <div class="tab-content active" id="panelLocalPhoto">
                 <div class="alert-box"><strong>Offline Engine:</strong> Berjalan sepenuhnya di browser kamu menggunakan WebGL.</div>
                 <div class="upload-inline">
-                  <input type="file" id="upscaleInput" accept="image/*" class="sr-only">
+                  <input type="file" id="upscaleInput" accept="image/*" class="sr-only" aria-label="Upload foto untuk AI upscale">
                   <button class="btn-secondary-sm" type="button" onclick="document.getElementById('upscaleInput').click()">Pilih Foto</button>
                   <span id="upscaleFileName" class="file-name-inline">Tidak ada file terpilih</span>
                 </div>
@@ -323,7 +323,7 @@
                <input type="url" id="cloudApiUrl" class="modern-input" placeholder="https://xxxx.ngrok-free.app" aria-label="Ngrok Tunnel URL">
                </div>
                 <div class="upload-inline">
-                  <input type="file" id="cloudVideoInput" accept="video/mp4" class="sr-only">
+                  <input type="file" id="cloudVideoInput" accept="video/mp4" class="sr-only" aria-label="Upload video untuk cloud upscale">
                   <button class="btn-secondary-sm" type="button" onclick="document.getElementById('cloudVideoInput').click()">Pilih Video</button>
                   <span id="cloudVideoFileName" class="file-name-inline">Tidak ada file terpilih</span>
                 </div>
@@ -582,7 +582,7 @@
                 <img id="avatarImg" alt="Avatar">
                 <span id="avatarInitial">G</span>
               </div>
-              <input type="file" id="avatarInput" accept="image/*">
+              <input type="file" id="avatarInput" accept="image/*" aria-label="Upload foto avatar">
               <div class="avatar-edit-hint">Klik untuk ganti</div>
             </div>
             <div>
