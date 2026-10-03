@@ -222,7 +222,7 @@
   <header class="site">
     <div class="container nav">
       <a class="logo" href="#"><span class="logo__box">⚡</span>REYY.TOOLS</a>
-      <button class="nav__burger" id="burger" aria-label="Buka menu">Menu ☰</button>
+      <button class="nav__burger" id="burger" onclick="toggleMenu()" aria-label="Buka menu">Menu ☰</button>
       <ul class="nav__links" id="navLinks">
         <li><a href="#tools-section">Tools</a></li>
         <li><a href="#" onclick="switchMain('analyzer');return false;">Analyzer</a></li>
@@ -1045,11 +1045,11 @@
     results.classList.add('show');
   }
 
-  // ─── BURGER MENU ───
-  var _burger = document.getElementById('burger');
-  if (_burger) _burger.addEventListener('click', function(){
-    document.getElementById('navLinks').classList.toggle('open');
-  });
+// ─── BURGER MENU ───
+function toggleMenu() {
+  var nav = document.getElementById('navLinks');
+  if (nav) nav.classList.toggle('open');
+}
 
   // ─── SWITCH MAIN TAB ───
   function switchMain(tab) {
