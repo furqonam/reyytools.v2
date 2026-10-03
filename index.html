@@ -4,15 +4,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <title>⚡ reyy.tools — Cyber Creator Suite</title>
-  <meta name="description" content="reyy.tools adalah toolkit cyber buat kreator — patch, encode, dan upscale video kayak hacker, langsung dari browser.">
-  <meta name="keywords" content="reyy tools, cyber patch, encode engine, upscale engine, analyzer, cyberpunk">
+  <title>reyy.tools — Creator Suite</title>
+  <meta name="description" content="reyy.tools adalah toolkit kreator untuk patch, encode, dan upscale video langsung di browser.">
+  <meta name="keywords" content="reyy tools, video patcher, encoder, upscaler, tiktok hd">
   <meta name="author" content="reyy.tools">
-  <meta name="theme-color" content="#05070d">
+  <meta name="theme-color" content="#000000">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 
   <style>
@@ -21,28 +21,29 @@
     /* ── FLOATING BOTTOM NAV ── */
     .main-tab-bar{
       position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
-      z-index:9000;display:flex;align-items:center;gap:4px;padding:6px 8px;
-      background:rgba(5,7,13,0.95);
-      backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-      border:1px solid rgba(0,240,255,0.4);border-radius:6px;
-      box-shadow:0 0 30px rgba(0,240,255,0.3),0 8px 40px rgba(0,0,0,0.8);
+      z-index:9000;display:flex;align-items:center;gap:4px;padding:8px 10px;
+      background:rgba(15,17,22,0.75);
+      backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5);
+      border:1px solid rgba(0,217,255,0.15);
+      border-radius:999px;
+      box-shadow:0 8px 40px rgba(0,0,0,0.7),0 0 0 1px rgba(0,217,255,0.05);
       pointer-events:auto;
     }
     .main-tab-bar .container{display:flex;gap:4px;width:auto;margin:0;padding:0;}
     .mtab{
       display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
-      width:76px;height:56px;border:1px solid transparent;background:transparent;
-      color:#008f11;font-family:'Share Tech Mono',monospace;font-weight:700;font-size:9px;
-      text-transform:uppercase;letter-spacing:.1em;border-radius:4px;cursor:pointer;
-      transition:background .2s,color .2s,border-color .2s;
+      width:72px;height:58px;border:1px solid transparent;background:transparent;
+      color:#5a6270;font-family:'Inter',sans-serif;font-weight:600;font-size:10px;
+      text-transform:uppercase;letter-spacing:.05em;border-radius:14px;cursor:pointer;
+      transition:background .2s,color .2s,border-color .2s,transform .12s;
       -webkit-tap-highlight-color:transparent;user-select:none;
     }
-    .mtab svg{width:20px;height:20px;opacity:.6;transition:opacity .2s;flex-shrink:0;}
-    .mtab:hover{background:rgba(0,240,255,0.08);color:#00ff41;}
-    .mtab:hover svg{opacity:.9;}
-    .mtab:active{transform:scale(0.94);}
-    .mtab.active{background:rgba(0,255,65,0.1);color:#00ff41;border-color:#00ff41;box-shadow:0 0 15px rgba(0,255,65,0.4);}
-    .mtab.active svg{opacity:1;}
+    .mtab svg{width:20px;height:20px;opacity:.5;transition:opacity .2s,transform .2s;flex-shrink:0;}
+    .mtab:hover{background:rgba(0,217,255,0.06);color:#f0f4ff;}
+    .mtab:hover svg{opacity:.85;}
+    .mtab:active{transform:scale(0.92);}
+    .mtab.active{background:rgba(0,217,255,0.12);color:#00d9ff;border-color:rgba(0,217,255,0.3);}
+    .mtab.active svg{opacity:1;transform:scale(1.08);}
     .page-view{padding-bottom:110px;display:none;animation:fadeUp .25s ease;}
     .page-view.active{display:block;}
     @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
@@ -52,147 +53,132 @@
       .account-wrap{gap:14px;}
       .meta-grid{grid-template-columns:1fr 1fr;gap:10px;}
       .meta-val{font-size:1rem !important;}
-      .hero__actions .btn{padding:.65rem 1rem;font-size:.78rem;}
+      .hero__actions .btn{padding:.65rem 1rem;font-size:.8rem;}
       .about-quote{transform:none;}
     }
 
     .hero-home{padding:36px 0 28px;position:relative;width:100%;}
     @media(max-width:860px){
-      .hero-home h1{font-size:clamp(1.6rem,6vw,2.6rem);}
-      .hero-home .hero__sub{font-size:.88rem;max-width:100%;}
+      .hero-home h1{font-size:clamp(1.8rem,6vw,2.8rem);}
+      .hero-home .hero__sub{font-size:.9rem;max-width:100%;}
       .hero-home .hero__actions{gap:.4rem;flex-wrap:wrap;}
     }
-    .hero-home h1{font-size:clamp(2rem,5vw,3.6rem);margin:.8rem 0 .9rem;font-family:'Share Tech Mono',monospace;}
-    .hero-home .hero__sub{font-size:1rem;color:#008f11;max-width:min(560px,100%);margin-bottom:1.6rem;font-family:'Fira Code',monospace;}
+    .hero-home h1{font-size:clamp(2.4rem,5.5vw,4rem);margin:.8rem 0 .9rem;font-weight:800;letter-spacing:-.02em;}
+    .hero-home .hero__sub{font-size:1.05rem;color:#8a95a5;max-width:min(560px,100%);margin-bottom:1.6rem;}
     .hero-home .hero__actions{display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:3rem;}
 
-    .home-tool-tabs{display:flex;gap:6px;margin-bottom:0;flex-wrap:wrap;}
+    .home-tool-tabs{display:flex;gap:8px;margin-bottom:0;flex-wrap:wrap;}
     .home-tool-tab{
-      background:rgba(0,255,65,0.03);font-size:12px;font-weight:700;color:#008f11;
-      padding:12px 20px;border:1px solid rgba(0,255,65,0.2);border-bottom:none;
-      border-radius:4px 4px 0 0;text-transform:uppercase;letter-spacing:.08em;
+      background:rgba(255,255,255,0.03);font-size:13px;font-weight:600;color:#8a95a5;
+      padding:13px 24px;border:1px solid rgba(255,255,255,0.06);border-bottom:none;
+      border-radius:16px 16px 0 0;text-transform:uppercase;letter-spacing:.05em;
       cursor:pointer;transition:.2s;transform:translateY(4px);position:relative;z-index:1;
-      font-family:'Share Tech Mono',monospace;
+      font-family:'Inter',sans-serif;backdrop-filter:blur(8px);
     }
-    .home-tool-tab:hover{background:rgba(0,255,65,0.08);color:#00ff41;}
+    .home-tool-tab:hover{background:rgba(0,217,255,0.06);color:#f0f4ff;}
     .home-tool-tab.active{
-      background:rgba(5,7,13,0.9);color:#00ff41;padding-bottom:20px;
-      transform:translateY(4px);border-color:#00ff41;border-bottom:none;z-index:3;
-      box-shadow:0 -4px 15px rgba(0,255,65,0.2);
+      background:rgba(20,22,30,0.75);color:#00d9ff;padding-bottom:20px;
+      transform:translateY(4px);border-color:rgba(0,217,255,0.2);border-bottom:none;z-index:3;
     }
     @media(max-width:600px){
-      .home-tool-tab{border-radius:4px;border-bottom:1px solid rgba(0,255,65,0.2);transform:none;padding-bottom:12px;}
-      .home-tool-tab.active{transform:none;padding-bottom:12px;border-bottom:1px solid #00ff41;}
+      .home-tool-tab{border-radius:12px;border-bottom:1px solid rgba(255,255,255,0.06);transform:none;padding-bottom:13px;}
+      .home-tool-tab.active{transform:none;padding-bottom:13px;border-bottom:1px solid rgba(0,217,255,0.2);}
       .home-tool-tabs{flex-direction:column;gap:4px;margin-bottom:12px;}
     }
 
     .account-wrap{max-width:min(680px,100%);margin:0 auto;display:flex;flex-direction:column;gap:24px;}
     .account-card{
-      background:rgba(10,14,26,0.8);border:1px solid rgba(0,240,255,0.3);
-      border-radius:6px;padding:28px;backdrop-filter:blur(20px);transition:.2s;
-      position:relative;
+      background:rgba(20,22,30,0.6);border:1px solid rgba(255,255,255,0.08);
+      border-radius:20px;padding:28px;backdrop-filter:blur(20px);transition:.2s;
     }
-    .account-card::before{
-      content:'';position:absolute;top:-1px;left:-1px;width:14px;height:14px;
-      border-top:2px solid #00f0ff;border-left:2px solid #00f0ff;
-    }
-    .account-card::after{
-      content:'';position:absolute;bottom:-1px;right:-1px;width:14px;height:14px;
-      border-bottom:2px solid #00f0ff;border-right:2px solid #00f0ff;
-    }
-    .account-card:hover{border-color:#00f0ff;box-shadow:0 0 25px rgba(0,240,255,0.2);}
+    .account-card:hover{border-color:rgba(0,217,255,0.2);}
     .account-card h3{
-      font-family:'Share Tech Mono',monospace;text-transform:uppercase;font-size:.95rem;
-      letter-spacing:.1em;color:#00f0ff;margin-bottom:20px;
+      font-family:'Inter',sans-serif;text-transform:uppercase;font-size:.95rem;
+      letter-spacing:.05em;color:#00d9ff;margin-bottom:20px;font-weight:700;
       display:flex;align-items:center;gap:8px;
     }
     .avatar-row{display:flex;align-items:center;gap:20px;margin-bottom:24px;}
     .avatar-circle{
-      width:72px;height:72px;border-radius:4px;background:rgba(0,255,65,0.05);
-      border:2px solid rgba(0,255,65,0.4);display:flex;align-items:center;justify-content:center;
-      font-family:'Share Tech Mono',monospace;font-size:1.6rem;color:#00ff41;
+      width:72px;height:72px;border-radius:50%;background:rgba(0,217,255,0.08);
+      border:2px solid rgba(0,217,255,0.25);display:flex;align-items:center;justify-content:center;
+      font-family:'Inter',sans-serif;font-size:1.8rem;font-weight:700;color:#00d9ff;
       overflow:hidden;cursor:pointer;transition:.2s;position:relative;
     }
-    .avatar-circle:hover{border-color:#00ff41;box-shadow:0 0 20px rgba(0,255,65,0.4);}
-    .avatar-circle img{width:100%;height:100%;object-fit:cover;display:none;}
+    .avatar-circle:hover{border-color:#00d9ff;box-shadow:0 0 20px rgba(0,217,255,0.3);}
+    .avatar-circle img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:none;}
     .avatar-circle img.loaded{display:block;}
-    .avatar-edit-hint{font-size:.72rem;color:#008f11;margin-top:4px;font-family:'Fira Code',monospace;}
-    .account-name-badge{font-family:'Share Tech Mono',monospace;font-size:1.3rem;font-weight:700;color:#00ff41;}
-    .account-role{font-size:.75rem;color:#008f11;text-transform:uppercase;letter-spacing:.15em;margin-top:2px;font-family:'Fira Code',monospace;}
+    .avatar-edit-hint{font-size:.75rem;color:#5a6270;margin-top:4px;}
+    .account-name-badge{font-family:'Inter',sans-serif;font-size:1.4rem;font-weight:700;color:#f0f4ff;}
+    .account-role{font-size:.8rem;color:#5a6270;text-transform:uppercase;letter-spacing:.08em;margin-top:2px;font-weight:500;}
 
     .tg-status{
-      display:flex;align-items:center;gap:10px;padding:14px 18px;border-radius:4px;
-      font-size:.85rem;font-weight:600;background:rgba(0,255,65,0.03);
-      border:1px solid rgba(0,255,65,0.15);color:#008f11;font-family:'Fira Code',monospace;
+      display:flex;align-items:center;gap:10px;padding:14px 18px;border-radius:12px;
+      font-size:.88rem;font-weight:600;background:rgba(255,255,255,0.02);
+      border:1px solid rgba(255,255,255,0.06);color:#8a95a5;
     }
-    .tg-status.linked{background:rgba(0,255,65,0.08);border-color:rgba(0,255,65,0.4);color:#00ff41;}
-    .tg-dot{width:8px;height:8px;border-radius:50%;background:#008f11;flex:none;}
-    .tg-status.linked .tg-dot{background:#00ff41;box-shadow:0 0 10px #00ff41;}
+    .tg-status.linked{background:rgba(52,211,153,0.08);border-color:rgba(52,211,153,0.25);color:#34d399;}
+    .tg-dot{width:8px;height:8px;border-radius:50%;background:#5a6270;flex:none;}
+    .tg-status.linked .tg-dot{background:#34d399;box-shadow:0 0 8px rgba(52,211,153,0.5);}
 
     .input-group{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
-    .input-group label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:#008f11;font-family:'Share Tech Mono',monospace;}
-    .input-group label::before{content:'> ';color:#00d9ff;}
+    .input-group label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:#5a6270;font-family:'Inter',sans-serif;}
     .ky-input{
-      width:100%;padding:12px 14px;background:rgba(0,0,0,0.5);
-      border:1px solid rgba(0,255,65,0.25);border-radius:4px;color:#00ff41;
-      font-family:'Fira Code',monospace;font-size:13px;font-weight:500;outline:none;transition:.2s;
+      width:100%;padding:12px 14px;background:rgba(255,255,255,0.03);
+      border:1px solid rgba(255,255,255,0.08);border-radius:12px;color:#f0f4ff;
+      font-family:'Inter',sans-serif;font-size:14px;font-weight:500;outline:none;transition:.2s;
     }
-    .ky-input:focus{border-color:#00ff41;box-shadow:0 0 0 2px rgba(0,255,65,0.2);}
-    .ky-input::placeholder{color:#005a0c;}
+    .ky-input:focus{border-color:rgba(0,217,255,0.5);box-shadow:0 0 0 3px rgba(0,217,255,0.08);}
+    .ky-input::placeholder{color:#5a6270;}
 
     .btn-save{
-      padding:12px 28px;background:#00ff41;
-      color:#05070d;border:none;border-radius:4px;font-family:'Share Tech Mono',monospace;
-      font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;
+      padding:13px 28px;background:linear-gradient(135deg,#00d9ff,#00a8cc);
+      color:#000;border:none;border-radius:12px;font-family:'Inter',sans-serif;
+      font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
       cursor:pointer;transition:.2s;
     }
-    .btn-save:hover{box-shadow:0 0 20px rgba(0,255,65,0.6);}
+    .btn-save:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,217,255,0.4);}
 
     .section-label{
-      font-family:'Share Tech Mono',monospace;text-transform:uppercase;font-size:.78rem;
-      letter-spacing:.15em;color:#008f11;margin-bottom:28px;
+      font-family:'Inter',sans-serif;text-transform:uppercase;font-size:.75rem;
+      letter-spacing:.15em;color:#5a6270;margin-bottom:24px;font-weight:600;
       display:flex;align-items:center;gap:12px;
     }
-    .section-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(0,255,65,0.4),transparent);}
+    .section-label::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.06);}
 
     .steps-compact{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:40px;}
     .step-compact{
-      background:rgba(10,14,26,0.6);border:1px solid rgba(0,240,255,0.25);
-      border-radius:4px;padding:20px;position:relative;
+      background:rgba(20,22,30,0.5);border:1px solid rgba(255,255,255,0.06);
+      border-radius:16px;padding:20px;transition:.2s;
     }
-    .step-compact::before{content:'';position:absolute;top:0;left:0;width:20px;height:2px;background:#00f0ff;}
-    .step-compact::after{content:'';position:absolute;top:0;left:0;width:2px;height:20px;background:#00f0ff;}
+    .step-compact:hover{border-color:rgba(0,217,255,0.2);transform:translateY(-2px);}
     .step-compact .num{
-      font-family:'Share Tech Mono',monospace;font-size:2rem;color:#00f0ff;
-      line-height:1;display:block;margin-bottom:10px;text-shadow:0 0 15px rgba(0,240,255,0.5);
+      font-family:'Inter',sans-serif;font-size:1.8rem;font-weight:800;
+      color:rgba(0,217,255,0.3);line-height:1;display:block;margin-bottom:10px;
     }
-    .step-compact h4{font-family:'Share Tech Mono',monospace;text-transform:uppercase;font-size:.9rem;margin-bottom:6px;color:#00ff41;}
-    .step-compact p{font-size:.82rem;color:#008f11;font-family:'Fira Code',monospace;}
+    .step-compact h4{font-family:'Inter',sans-serif;font-size:.95rem;margin-bottom:6px;font-weight:700;color:#f0f4ff;}
+    .step-compact p{font-size:.85rem;color:#8a95a5;line-height:1.5;}
     @media(max-width:860px){.steps-compact{grid-template-columns:1fr 1fr;}}
     @media(max-width:480px){.steps-compact{grid-template-columns:1fr;}}
 
     .about-compact{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center;padding:48px 0;}
-    .about-compact p{color:#008f11;font-size:.95rem;line-height:1.7;font-family:'Fira Code',monospace;}
+    .about-compact p{color:#8a95a5;font-size:.95rem;line-height:1.7;}
     .about-quote{
-      background:rgba(10,14,26,0.8);border:1px solid #ff0080;
-      border-radius:6px;padding:28px;position:relative;
-      box-shadow:0 0 30px rgba(255,0,128,0.2);
+      background:rgba(20,22,30,0.6);border:1px solid rgba(0,217,255,0.2);
+      border-radius:20px;padding:28px;
+      box-shadow:0 0 40px rgba(0,217,255,0.05);
     }
-    .about-quote::before{content:'';position:absolute;top:-1px;left:-1px;width:16px;height:16px;border-top:2px solid #ff0080;border-left:2px solid #ff0080;}
-    .about-quote::after{content:'';position:absolute;bottom:-1px;right:-1px;width:16px;height:16px;border-bottom:2px solid #ff0080;border-right:2px solid #ff0080;}
-    .about-quote p{font-size:1.05rem;font-weight:500;line-height:1.5;color:#ff0080;font-family:'Share Tech Mono',monospace;}
-    .about-quote p::before{content:'> ';color:#00f0ff;}
-    .about-quote small{display:block;margin-top:14px;color:#008f11;letter-spacing:.15em;text-transform:uppercase;font-size:.7rem;font-weight:600;font-family:'Fira Code',monospace;}
+    .about-quote p{font-size:1.1rem;font-weight:500;line-height:1.5;color:#f0f4ff;font-style:italic;}
+    .about-quote p::before{content:'\201C';color:#00d9ff;font-size:1.5em;line-height:0;}
+    .about-quote p::after{content:'\201D';color:#00d9ff;font-size:1.5em;line-height:0;}
+    .about-quote small{display:block;margin-top:14px;color:#5a6270;letter-spacing:.1em;text-transform:uppercase;font-size:.7rem;font-weight:600;}
     @media(max-width:720px){.about-compact{grid-template-columns:1fr;}}
 
     .ky-toast{
       position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);
-      background:rgba(5,7,13,0.95);backdrop-filter:blur(20px);
-      border:1px solid #00ff41;color:#00ff41;padding:12px 24px;
-      border-radius:4px;font-size:.85rem;font-weight:600;z-index:9999;
-      font-family:'Share Tech Mono',monospace;text-transform:uppercase;letter-spacing:.1em;
+      background:rgba(20,22,30,0.95);backdrop-filter:blur(20px);
+      border:1px solid rgba(0,217,255,0.3);color:#f0f4ff;padding:12px 24px;
+      border-radius:999px;font-size:.88rem;font-weight:600;z-index:9999;
       transition:transform .3s ease,opacity .3s;opacity:0;pointer-events:none;
-      box-shadow:0 0 20px rgba(0,255,65,0.5);
     }
     .ky-toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
 
@@ -222,8 +208,8 @@
     <div class="welcome-glow"></div>
     <div class="welcome-card">
       <div class="spinner"></div>
-      <h1 class="welcome-text-2">⚡ reyy.tools ⚡</h1>
-      <p class="welcome-text-3">> Initializing cyber engine_</p>
+      <h1 class="welcome-text-2">reyy.tools</h1>
+      <p class="welcome-text-3">Loading...</p>
     </div>
   </div>
 
@@ -235,13 +221,13 @@
   <header class="site">
     <div class="container nav">
       <a class="logo" href="#"><span class="logo__box">⚡</span> reyy.tools</a>
-      <button class="nav__burger" id="burger" aria-label="Open menu">MENU ☰</button>
+      <button class="nav__burger" id="burger" aria-label="Open menu">Menu ☰</button>
       <ul class="nav__links" id="navLinks">
-        <li><a href="#cyber-section">⚡ Modules</a></li>
-        <li><a href="#" onclick="switchMain('analyzer');return false;">🔍 Analyzer</a></li>
-        <li><a href="#" onclick="switchMain('account');return false;">👤 User</a></li>
+        <li><a href="#tools-section">Tools</a></li>
+        <li><a href="#" onclick="switchMain('analyzer');return false;">Analyzer</a></li>
+        <li><a href="#" onclick="switchMain('account');return false;">Account</a></li>
         <li class="nav__cta">
-          <a class="btn btn--cyan" href="https://sociabuzz.com/reyyofficial/tribe" target="_blank">💎 Tribute</a>
+          <a class="btn btn--cyan" href="https://sociabuzz.com/reyyofficial/tribe" target="_blank">Tribute</a>
         </li>
       </ul>
     </div>
@@ -249,8 +235,8 @@
 
   <div class="main-tab-bar">
       <button class="mtab active" id="mtab-home" onclick="switchMain('home')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-        Modules
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Tools
       </button>
       <button class="mtab" id="mtab-analyzer" onclick="switchMain('analyzer')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -258,7 +244,7 @@
       </button>
       <button class="mtab" id="mtab-account" onclick="switchMain('account')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        User
+        Account
       </button>
   </div>
 
@@ -266,63 +252,59 @@
     <div class="ky-page-wrap">
 
       <div class="hero-home">
-        <span class="kicker">⚡ SYSTEM ONLINE — v2.0</span>
-        <h1>> RAPAL MANTRA_<br><span class="outline">> WUJUDKAN KUALITAS_</span></h1>
-        <p class="hero__sub">> reyy.tools adalah cyber grimoire buat kreator — patch, encode, dan upscale video kayak hacker, langsung dari browser lu.</p>
+        <span class="kicker">Creator Suite</span>
+        <h1>Patch. Encode. Upscale.<br><span class="outline">Semua di browser.</span></h1>
+        <p class="hero__sub">reyy.tools adalah toolkit kreator untuk optimasi video — langsung dari HP lu. Tanpa install, tanpa ribet.</p>
         <div class="hero__actions">
-          <a class="btn btn--green" href="#cyber-section">⚡ Mulai_Hack →</a>
-          <a class="btn btn--cyan" href="https://sociabuzz.com/reyyofficial/tribe" target="_blank">💎 Tribute</a>
+          <a class="btn btn--cyan" href="#tools-section">Mulai →</a>
+          <a class="btn" href="https://sociabuzz.com/reyyofficial/tribe" target="_blank">Tribute</a>
         </div>
       </div>
 
-      <!-- ═══ SYSTEM STATS ═══ -->
-      <div class="section-label">[ SYSTEM_STATS ]</div>
-      <div class="stats-cyber">
-        <div class="stat-cyber">
-          <div class="stat-icon stat-icon--green">⚡</div>
+      <!-- ═══ STATS ═══ -->
+      <div class="section-label">Statistik</div>
+      <div class="stats-simple">
+        <div class="stat-simple">
+          <div class="stat-icon">⚡</div>
           <div class="stat-value">∞</div>
-          <div class="stat-label">MANTRA</div>
+          <div class="stat-label">Mantra</div>
         </div>
-        <div class="stat-cyber">
-          <div class="stat-icon stat-icon--cyan">◉</div>
+        <div class="stat-simple">
+          <div class="stat-icon">👥</div>
           <div class="stat-value">10K+</div>
-          <div class="stat-label">USERS</div>
+          <div class="stat-label">Users</div>
         </div>
-        <div class="stat-cyber">
-          <div class="stat-icon stat-icon--magenta">▲</div>
+        <div class="stat-simple">
+          <div class="stat-icon">✓</div>
           <div class="stat-value">99%</div>
-          <div class="stat-label">PRECISION</div>
+          <div class="stat-label">Presisi</div>
         </div>
-        <div class="stat-cyber">
-          <div class="stat-icon stat-icon--yellow">◈</div>
+        <div class="stat-simple">
+          <div class="stat-icon">🌐</div>
           <div class="stat-value">24/7</div>
-          <div class="stat-label">ONLINE</div>
+          <div class="stat-label">Online</div>
         </div>
       </div>
 
-      <div class="cyber-divider">
-        <span class="cyber-divider-line"></span>
-        <span class="cyber-divider-text">[ SECURE_CHANNEL ]</span>
-        <span class="cyber-divider-line"></span>
-      </div>
+      <div class="divider-soft"></div>
 
-      <!-- ═══ CYBER MODULES ═══ -->
-      <div id="cyber-section">
-        <div class="section-label">[ CYBER_MODULES ]</div>
+      <!-- ═══ TOOLS ═══ -->
+      <div id="tools-section">
+        <div class="section-label">Tools</div>
 
         <div class="home-tool-tabs">
-          <button class="home-tool-tab active" data-section="patcher" onclick="switchSection('patcher')">⚡ PATCH_ENGINE.exe</button>
-          <button class="home-tool-tab" data-section="encoder" onclick="switchSection('encoder')">▲ ENCODE_ENGINE.exe</button>
-          <button class="home-tool-tab" data-section="upscale" onclick="switchSection('upscale')">◈ UPSCALE_ENGINE.exe</button>
+          <button class="home-tool-tab active" data-section="patcher" onclick="switchSection('patcher')">Patch</button>
+          <button class="home-tool-tab" data-section="encoder" onclick="switchSection('encoder')">Encode</button>
+          <button class="home-tool-tab" data-section="upscale" onclick="switchSection('upscale')">Upscale</button>
         </div>
 
         <div class="tool-content">
 
-          <!-- ═══ SECTION 1: PATCH ENGINE ═══ -->
+          <!-- ═══ PATCH ═══ -->
     <section class="section active" id="section-patcher">
-      <div class="workspace-header workspace-header--green">
-        <h2 class="workspace-title">⚡ PATCH_ENGINE.exe</h2>
-        <p class="workspace-desc">> Rapal metadata ke video — bypass kompresi platform tanpa re-encode. Kualitas asli, 0% loss.</p>
+      <div class="workspace-header">
+        <h2 class="workspace-title">Patch Engine</h2>
+        <p class="workspace-desc">Rapal metadata ke video — bypass kompresi platform tanpa re-encode. Kualitas asli, 0% loss.</p>
       </div>
       <div class="workspace-grid">
         <div class="workspace-panel">
@@ -332,24 +314,30 @@
               <option value="patch_only" selected>Patch Only (Instant Metadata)</option>
               <option value="encode_patch">Encode + Patch (HD Optimization)</option>
             </select>
-            <p style="font-size:11px;color:#008f11;margin-top:6px;line-height:1.4;font-family:'Fira Code',monospace;">
-              <b style="color:#00ff41;">> PATCH_ONLY:</b> Rapal metadata instan (1-3 detik).<br>
-              <b style="color:#00f0ff;">> ENCODE_PATCH:</b> Re-encode H.264 CRF 18 (10-60 detik).
+            <p style="font-size:11px;color:#5a6270;margin-top:6px;line-height:1.5;">
+              <b style="color:#00d9ff;">Patch Only:</b> Rapal metadata instan (1-3 detik).<br>
+              <b style="color:#8a95a5;">Encode + Patch:</b> Re-encode H.264 CRF 18 (10-60 detik).
             </p>
           </div>
           <div class="control-group">
             <label>Processing Mode</label>
             <div class="mode-stack">
               <button class="mode-card active" data-mode="patch" onclick="setMode('patch')">
-                <div class="mode-icon">⚡</div>
-                <div class="mode-info"><div class="mode-name">Magic Patch</div><div class="mode-desc">Auto-fix MP4 atom structure</div></div>
+                <div class="mode-icon">
+                  <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+                </div>
+                <div class="mode-info"><div class="mode-name">Patch</div><div class="mode-desc">Auto-fix MP4 atom structure</div></div>
               </button>
               <button class="mode-card" data-mode="ky60" onclick="setMode('ky60')">
-                <div class="mode-icon">◉</div>
-                <div class="mode-info"><div class="mode-name">reyy 60fps</div><div class="mode-desc">Inject HD metadata stamp</div></div>
+                <div class="mode-icon">
+                  <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                </div>
+                <div class="mode-info"><div class="mode-name">60fps Boost</div><div class="mode-desc">Inject HD metadata stamp</div></div>
               </button>
               <button class="mode-card" data-mode="its" onclick="setMode('its')">
-                <div class="mode-icon">◈</div>
+                <div class="mode-icon">
+                  <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
                 <div class="mode-info"><div class="mode-name">Speed Booster</div><div class="mode-desc">Frame timing optimization</div></div>
               </button>
             </div>
@@ -366,45 +354,40 @@
           <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
             <input type="file" id="fileInput" accept="video/mp4" onchange="handleFileSelect(event)" class="sr-only">
             <div class="upload-icon">
-              <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="4" y="4" width="40" height="40" stroke="#00ff41" stroke-width="1.5"/>
-                <path d="M24 14 L24 34 M14 24 L34 24" stroke="#00f0ff" stroke-width="2"/>
-                <rect x="4" y="4" width="8" height="8" stroke="#ff0080" stroke-width="2" fill="none"/>
-                <rect x="36" y="36" width="8" height="8" stroke="#ff0080" stroke-width="2" fill="none"/>
-              </svg>
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
             </div>
-            <div class="upload-title">> DROP_MP4_HERE</div>
-            <div class="upload-subtitle">// or click to browse</div>
+            <div class="upload-title">Drop your MP4 here</div>
+            <div class="upload-subtitle">or click to browse files</div>
           </div>
-          <div class="file-display" id="fileDisplay"><span id="fileName">// no file selected</span></div>
+          <div class="file-display" id="fileDisplay"><span id="fileName">No file selected</span></div>
           <div class="preview-box" id="previewBox">
             <video id="videoPreview" controls></video>
-            <div class="preview-placeholder" id="previewPlaceholder">// PREVIEW</div>
+            <div class="preview-placeholder" id="previewPlaceholder">Preview Video</div>
           </div>
-          <div class="status-indicator" id="statusBox"><div class="status-dot"></div><span id="statusText">// system ready</span></div>
+          <div class="status-indicator" id="statusBox"><div class="status-dot"></div><span id="statusText">System Ready</span></div>
           <div class="progress-wrap" id="progressWrap">
             <div class="progress-bg"><div class="progress-fill" id="progressFill"></div></div>
             <div class="progress-info"><span id="progressLabel"></span><span id="progressEta">0%</span></div>
           </div>
           <div class="result-card" id="resultCard">
-            <div class="result-title">[ EXECUTION_COMPLETE ]</div>
+            <div class="result-title">Complete</div>
             <div class="res-grid">
-              <div class="res-label">// File:</div><div class="res-val" id="resFileName"></div>
-              <div class="res-label">// Time:</div><div class="res-val" id="resTime"></div>
-              <div class="res-label">// Original:</div><div class="res-val" id="resBefore"></div>
-              <div class="res-label">// Patched:</div><div class="res-val" id="resAfter"></div>
+              <div class="res-label">File:</div><div class="res-val" id="resFileName"></div>
+              <div class="res-label">Time:</div><div class="res-val" id="resTime"></div>
+              <div class="res-label">Original:</div><div class="res-val" id="resBefore"></div>
+              <div class="res-label">Patched:</div><div class="res-val" id="resAfter"></div>
             </div>
           </div>
-          <button class="btn-glow-primary btn-glow-green" id="patchBtn" onclick="runProcess()" disabled>[ EXECUTE_PATCH ]</button>
+          <button class="btn-glow-primary" id="patchBtn" onclick="runProcess()" disabled>Start Processing</button>
         </div>
       </div>
     </section>
 
-    <!-- ═══ SECTION 2: ENCODE ENGINE ═══ -->
+    <!-- ═══ ENCODE ═══ -->
     <section class="section" id="section-encoder">
-      <div class="workspace-header workspace-header--cyan">
-        <h2 class="workspace-title">▲ ENCODE_ENGINE.exe</h2>
-        <p class="workspace-desc">> Sulap video lu jadi H.264 HD dengan FFmpeg.wasm — langsung di browser, tanpa upload.</p>
+      <div class="workspace-header">
+        <h2 class="workspace-title">Encoder</h2>
+        <p class="workspace-desc">Sulap video lu jadi H.264 HD dengan FFmpeg.wasm — langsung di browser.</p>
       </div>
       <div class="workspace-grid">
         <div class="workspace-panel">
@@ -413,7 +396,7 @@
             <select class="modern-select" id="encCodec"><option value="libx264" selected>H.264 (libx264)</option></select>
           </div>
           <div class="control-group">
-            <label for="encCrf">Constant Quality Factor (CRF)</label>
+            <label for="encCrf">Quality (CRF)</label>
             <select class="modern-select" id="encCrf">
               <option value="16">16 — Ultra High</option>
               <option value="18" selected>18 — Lossless</option>
@@ -440,67 +423,62 @@
         <div class="workspace-panel">
           <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
             <div class="upload-icon">
-              <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="4" y="4" width="40" height="40" stroke="#00f0ff" stroke-width="1.5"/>
-                <polygon points="20,14 20,34 34,24" fill="none" stroke="#00ff41" stroke-width="2"/>
-                <rect x="4" y="4" width="8" height="8" stroke="#ff0080" stroke-width="2" fill="none"/>
-                <rect x="36" y="36" width="8" height="8" stroke="#ff0080" stroke-width="2" fill="none"/>
-              </svg>
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
             </div>
-            <div class="upload-title">> SELECT_VIDEO_TO_ENCODE</div>
+            <div class="upload-title">Select Video to Encode</div>
           </div>
-          <div class="status-indicator" id="encStatusBox"><div class="status-dot"></div><span id="encStatusText">// ready</span></div>
+          <div class="status-indicator" id="encStatusBox"><div class="status-dot"></div><span id="encStatusText">Ready</span></div>
           <div class="progress-wrap" id="encProgressWrap">
             <div class="progress-bg"><div class="progress-fill" id="encProgressFill"></div></div>
             <div class="progress-info"><span id="encProgressLabel"></span><span id="encProgressEta">0%</span></div>
           </div>
-          <button class="btn-glow-primary btn-glow-cyan" id="encBtn" onclick="runProcess()" disabled>[ EXECUTE_ENCODE ]</button>
+          <button class="btn-glow-primary" id="encBtn" onclick="runProcess()" disabled>Start Encoding</button>
         </div>
       </div>
     </section>
 
-    <!-- ═══ SECTION 3: UPSCALE ENGINE ═══ -->
+    <!-- ═══ UPSCALE ═══ -->
     <section class="section" id="section-upscale">
-      <div class="workspace-header workspace-header--magenta">
-        <h2 class="workspace-title">◈ UPSCALE_ENGINE.exe</h2>
-        <p class="workspace-desc">> Perbesar resolusi foto &amp; video dengan AI lokal (ONNX WASM) atau cloud GPU.</p>
+      <div class="workspace-header">
+        <h2 class="workspace-title">AI Upscaler</h2>
+        <p class="workspace-desc">Perbesar resolusi foto &amp; video dengan AI lokal (ONNX) atau cloud GPU.</p>
       </div>
       <div class="workspace-panel full-width">
         <div class="tabs-modern">
-          <button class="tab-btn active" id="tabLocalPhoto" onclick="switchUpscaleTab('local')">◉ LOCAL_AI</button>
-          <button class="tab-btn" id="tabCloudVideo" onclick="switchUpscaleTab('cloud')">☁ CLOUD_API</button>
+          <button class="tab-btn active" id="tabLocalPhoto" onclick="switchUpscaleTab('local')">Local AI</button>
+          <button class="tab-btn" id="tabCloudVideo" onclick="switchUpscaleTab('cloud')">Cloud API</button>
         </div>
         <div class="tab-content active" id="panelLocalPhoto">
-          <div class="alert-box"><strong>[ OFFLINE_ENGINE ]</strong> // Runs entirely in your browser using WebGL</div>
+          <div class="alert-box"><strong>Offline Engine:</strong> Runs entirely in your browser using WebGL.</div>
           <div class="upload-inline">
             <input type="file" id="upscaleInput" accept="image/*" class="sr-only">
-            <button class="btn-secondary-sm" onclick="document.getElementById('upscaleInput').click()">[ BROWSE_PHOTO ]</button>
-            <span id="upscaleFileName" class="file-name-inline">// no file selected</span>
+            <button class="btn-secondary-sm" onclick="document.getElementById('upscaleInput').click()">Browse Photo</button>
+            <span id="upscaleFileName" class="file-name-inline">No file selected</span>
           </div>
           <img id="upscalePreview" class="preview-image">
           <div class="progress-wrap" id="upscaleStatusBox" style="display:none;margin-top:24px;">
-            <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span id="upscaleStatusText">// ready</span></div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span id="upscaleStatusText">Ready</span></div>
             <div class="progress-bg"><div id="upscaleProgressFill" class="progress-fill"></div></div>
           </div>
-          <button id="btnStartUpscale" class="btn-glow-primary btn-glow-magenta" disabled style="margin-top:24px;">[ EXECUTE_UPSCALE ]</button>
+          <button id="btnStartUpscale" class="btn-glow-primary" disabled style="margin-top:24px;">Start Upscale</button>
         </div>
         <div class="tab-content" id="panelCloudVideo">
-          <div class="alert-box"><strong>[ CLOUD_ENGINE ]</strong> // Requires a Google Colab Ngrok API tunnel</div>
+          <div class="alert-box"><strong>Cloud Engine:</strong> Requires a Google Colab Ngrok API tunnel.</div>
           <div class="control-group">
             <label>Ngrok Tunnel URL</label>
             <input type="url" id="cloudApiUrl" class="modern-input" placeholder="https://xxxx.ngrok-free.app">
           </div>
           <div class="upload-inline">
             <input type="file" id="cloudVideoInput" accept="video/mp4" class="sr-only">
-            <button class="btn-secondary-sm" onclick="document.getElementById('cloudVideoInput').click()">[ BROWSE_VIDEO ]</button>
-            <span id="cloudVideoFileName" class="file-name-inline">// no file selected</span>
+            <button class="btn-secondary-sm" onclick="document.getElementById('cloudVideoInput').click()">Browse Video</button>
+            <span id="cloudVideoFileName" class="file-name-inline">No file selected</span>
           </div>
           <video id="cloudVideoPreview" class="preview-video" controls></video>
           <div class="progress-wrap" id="cloudStatusBox" style="display:none;margin-top:24px;">
-            <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span id="cloudStatusText">// ready</span></div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span id="cloudStatusText">Ready</span></div>
             <div class="progress-bg"><div id="cloudProgressFill" class="progress-fill"></div></div>
           </div>
-          <button id="btnStartCloudUpscale" class="btn-glow-primary btn-glow-cyan" disabled style="margin-top:24px;">[ EXECUTE_CLOUD_UPSCALE ]</button>
+          <button id="btnStartCloudUpscale" class="btn-glow-primary" disabled style="margin-top:24px;">Launch Cloud Upscale</button>
         </div>
       </div>
     </section>
@@ -508,124 +486,108 @@
   </div>
 </div>
 
-      <!-- ═══ SVG DIVIDER ═══ -->
-    <div class="cyber-divider">
-      <span class="cyber-divider-line"></span>
-      <span class="cyber-divider-text">[ EXECUTION_FLOW ]</span>
-      <span class="cyber-divider-line"></span>
-    </div>
 
-    <!-- ═══ EXECUTION FLOW ═══ -->
-    <div class="section-label">[ EXECUTION_FLOW ]</div>
+          <div class="divider-soft"></div>
+
+    <!-- ═══ HOW IT WORKS ═══ -->
+    <div class="section-label">Cara Kerja</div>
     <div class="steps-compact">
       <div class="step-compact">
         <span class="num">01</span>
-        <h4>> INPUT_FILE</h4>
-        <p>// Pilih file MP4 yang mau diproses.</p>
+        <h4>Pilih File</h4>
+        <p>Pilih file MP4 yang mau diproses.</p>
       </div>
       <div class="step-compact">
         <span class="num">02</span>
-        <h4>> SELECT_MODE</h4>
-        <p>// Patch metadata instan, atau re-encode penuh.</p>
+        <h4>Pilih Mode</h4>
+        <p>Patch metadata instan, atau re-encode penuh.</p>
       </div>
       <div class="step-compact">
         <span class="num">03</span>
-        <h4>> EXECUTE</h4>
-        <p>// Semua proses di device lu. Zero upload.</p>
+        <h4>Proses</h4>
+        <p>Semua di device lu. Zero upload.</p>
       </div>
       <div class="step-compact">
         <span class="num">04</span>
-        <h4>> OUTPUT_FILE</h4>
-        <p>// Video siap upload. Kualitas maksimal.</p>
+        <h4>Download</h4>
+        <p>Video siap upload. Kualitas maksimal.</p>
       </div>
     </div>
 
-    <!-- ═══ SYSTEM INFO ═══ -->
-    <div class="cyber-divider">
-      <span class="cyber-divider-line"></span>
-      <span class="cyber-divider-text">[ SYSTEM_INFO ]</span>
-      <span class="cyber-divider-line"></span>
-    </div>
+    <div class="divider-soft"></div>
 
+    <!-- ═══ ABOUT ═══ -->
     <div class="about-compact">
       <div>
-        <span class="kicker">[ SYSTEM_INFO ]</span>
-        <h2 style="font-size:clamp(1.6rem,3.5vw,2.4rem);margin:1rem 0 1.2rem;font-family:'Share Tech Mono',monospace;color:#00ff41;">> BUKAN_SEKADAR_TOOLS_</h2>
-        <p>> Kami capek sama platform yang ngerusak kualitas video. reyy.tools lahir dari kegelapan itu — buat ngasih kreator kendali penuh atas pipeline konten mereka, langsung dari browser.</p>
+        <span class="kicker">About</span>
+        <h2 style="font-size:clamp(1.6rem,3.5vw,2.4rem);margin:1rem 0 1.2rem;font-weight:800;letter-spacing:-.02em;">Bukan Sekadar Tools</h2>
+        <p>Kami capek sama platform yang ngerusak kualitas video. reyy.tools lahir dari kegelapan itu — buat ngasih kreator kendali penuh atas pipeline konten mereka, langsung dari browser.</p>
         <div class="about__chips" style="margin-top:1.4rem;">
-          <span class="chip chip--green">⚡ VIDEO_PATCHER</span>
-          <span class="chip chip--cyan">▲ HARDWARE_ENCODE</span>
-          <span class="chip chip--magenta">◈ AI_UPSCALE</span>
-          <span class="chip chip--yellow">◉ 120FPS_READY</span>
+          <span class="chip">Video Patcher</span>
+          <span class="chip">Hardware Encode</span>
+          <span class="chip">AI Upscale</span>
+          <span class="chip">120FPS Ready</span>
         </div>
       </div>
       <div class="about-quote">
-        <p>Hentikan menyalahkan algoritma. Rapal mantra dari sumbernya, sebelum video lu mengudara.</p>
-        <small>// reyy.tools Archmage</small>
+        <p>Hentikan menyalahkan algoritma. Optimasi video lu dari sumbernya, sebelum upload.</p>
+        <small>— reyy.tools</small>
       </div>
     </div>
 
-    <!-- ═══ ACCESS LEVELS ═══ -->
-    <div class="cyber-divider">
-      <span class="cyber-divider-line"></span>
-      <span class="cyber-divider-text">[ ACCESS_LEVELS ]</span>
-      <span class="cyber-divider-line"></span>
-    </div>
+    <div class="divider-soft"></div>
 
-    <div class="section-label">[ ACCESS_LEVELS ]</div>
+    <!-- ═══ PRICING ═══ -->
+    <div class="section-label">Pricing</div>
     <div class="pact-grid">
-      <div class="pact-card pact-card--novice">
-        <div class="pact-icon">◉</div>
-        <div class="pact-name">NOVICE</div>
-        <div class="pact-desc">// Level 1 — Entry Access</div>
+      <div class="pact-card">
+        <div class="pact-icon">🎁</div>
+        <div class="pact-name">Novice</div>
+        <div class="pact-desc">Buat pemula</div>
         <ul class="pact-features">
-          <li>> 2 mantra/hari</li>
-          <li>> Akses Patch Engine</li>
-          <li>> Analyzer</li>
-          <li>> Free forever</li>
+          <li>2 mantra/hari</li>
+          <li>Akses Patch</li>
+          <li>Analyzer</li>
+          <li>Free forever</li>
         </ul>
-        <div class="pact-price">FREE</div>
-        <a class="pact-btn pact-btn--novice" href="https://t.me/reyystecuu_bot" target="_blank">[ ACTIVATE ]</a>
+        <div class="pact-price">Gratis</div>
+        <a class="pact-btn" href="https://t.me/reyystecuu_bot" target="_blank">Mulai</a>
       </div>
 
-      <div class="pact-card pact-card--adept pact-popular">
-        <div class="pact-badge">▲ POPULAR</div>
-        <div class="pact-icon">▲</div>
-        <div class="pact-name">ADEPT</div>
-        <div class="pact-desc">// Level 2 — Active Access</div>
+      <div class="pact-card pact-popular">
+        <div class="pact-badge">POPULER</div>
+        <div class="pact-icon">⭐</div>
+        <div class="pact-name">Adept</div>
+        <div class="pact-desc">Buat kreator aktif</div>
         <ul class="pact-features">
-          <li>> 20 mantra/hari</li>
-          <li>> Akses semua Modules</li>
-          <li>> Prioritas rendering</li>
-          <li>> Support via bot</li>
+          <li>20 mantra/hari</li>
+          <li>Akses semua tools</li>
+          <li>Prioritas rendering</li>
+          <li>Support via bot</li>
         </ul>
         <div class="pact-price">Rp 15.000 <span>/ 30 hari</span></div>
-        <a class="pact-btn pact-btn--adept" href="https://t.me/reyystecuu_bot" target="_blank">[ ACTIVATE ]</a>
+        <a class="pact-btn pact-btn-primary" href="https://t.me/reyystecuu_bot" target="_blank">Ambil</a>
       </div>
 
-      <div class="pact-card pact-card--archmage">
-        <div class="pact-icon">◈</div>
-        <div class="pact-name">ARCHMAGE</div>
-        <div class="pact-desc">// Level 3 — Root Access</div>
+      <div class="pact-card">
+        <div class="pact-icon">👑</div>
+        <div class="pact-name">Archmage</div>
+        <div class="pact-desc">Buat pro & agensi</div>
         <ul class="pact-features">
-          <li>> Unlimited mantra</li>
-          <li>> Akses semua fitur</li>
-          <li>> Priority support</li>
-          <li>> Early access</li>
+          <li>Unlimited mantra</li>
+          <li>Akses semua fitur</li>
+          <li>Priority support</li>
+          <li>Early access</li>
         </ul>
         <div class="pact-price">Rp 35.000 <span>/ 30 hari</span></div>
-        <a class="pact-btn pact-btn--archmage" href="https://t.me/reyystecuu_bot" target="_blank">[ ACTIVATE ]</a>
+        <a class="pact-btn" href="https://t.me/reyystecuu_bot" target="_blank">Jadi</a>
       </div>
     </div>
 
-    <!-- ═══ HELP.LOG ═══ -->
-    <div class="cyber-divider">
-      <span class="cyber-divider-line"></span>
-      <span class="cyber-divider-text">[ HELP.log ]</span>
-      <span class="cyber-divider-line"></span>
-    </div>
+    <div class="divider-soft"></div>
 
-    <div class="section-label">[ HELP.log ]</div>
+    <!-- ═══ FAQ ═══ -->
+    <div class="section-label">FAQ</div>
     <div class="grimoire-wrap">
       <div class="grimoire-item">
         <button class="grimoire-q" onclick="toggleGrimoire(this)">
@@ -649,7 +611,7 @@
 
       <div class="grimoire-item">
         <button class="grimoire-q" onclick="toggleGrimoire(this)">
-          <span>Apakah mantra ini aman?</span>
+          <span>Apakah ini aman?</span>
           <span class="grimoire-icon">+</span>
         </button>
         <div class="grimoire-a">
@@ -663,7 +625,7 @@
           <span class="grimoire-icon">+</span>
         </button>
         <div class="grimoire-a">
-          <p>Novice (free): 2 mantra/hari. Adept: Rp 15.000/30 hari, 20 mantra/hari. Archmage: Rp 35.000/30 hari, unlimited.</p>
+          <p>Novice (free): 2 mantra/hari. Adept: Rp 15.000/30 hari. Archmage: Rp 35.000/30 hari, unlimited.</p>
         </div>
       </div>
 
@@ -673,41 +635,21 @@
           <span class="grimoire-icon">+</span>
         </button>
         <div class="grimoire-a">
-          <p>Chat Archmage di <a href="https://t.me/reyystecuu_bot" target="_blank" style="color:#00ff41;font-weight:700;">@reyystecuu_bot</a> → kirim /upgrade → scan QRIS → kirim bukti bayar → VIP aktif otomatis.</p>
+          <p>Chat admin di <a href="https://t.me/reyystecuu_bot" target="_blank" style="color:#00d9ff;font-weight:600;">@reyystecuu_bot</a> → kirim /upgrade → scan QRIS → kirim bukti bayar → VIP aktif otomatis.</p>
         </div>
       </div>
     </div>
 
-    <!-- ═══ CTA FINAL ═══ -->
-    <div class="cyber-divider">
-      <span class="cyber-divider-line"></span>
-      <span class="cyber-divider-text">[ ACCESS_GRANTED ]</span>
-      <span class="cyber-divider-line"></span>
-    </div>
+    <div class="divider-soft"></div>
 
+    <!-- ═══ CTA ═══ -->
     <div class="cta-magic">
       <div class="cta-magic-inner">
-        <div class="cta-magic-ornament">
-          <svg viewBox="0 0 400 40" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
-            <line x1="20" y1="20" x2="160" y2="20" stroke="#00ff41" stroke-width="1" opacity="0.4"/>
-            <rect x="180" y="8" width="40" height="24" fill="none" stroke="#00f0ff" stroke-width="1.5"/>
-            <text x="200" y="24" text-anchor="middle" fill="#00f0ff" font-family="monospace" font-size="10">OK</text>
-            <line x1="240" y1="20" x2="380" y2="20" stroke="#00ff41" stroke-width="1" opacity="0.4"/>
-          </svg>
-        </div>
-        <h2>Ready to Execute?</h2>
-        <p>> Gabung sama ribuan kreator yang udah ngamalin ilmu reyy.tools buat pertahanin kualitas video mereka.</p>
+        <h2>Siap Mulai?</h2>
+        <p>Gabung sama ribuan kreator yang udah pakai reyy.tools buat pertahanin kualitas video mereka.</p>
         <div class="cta-magic-actions">
-          <a class="btn btn--green btn--big" href="#cyber-section">[ ⚡ START_HACK ]</a>
-          <a class="btn btn--cyan btn--big" href="https://t.me/reyystecuu_bot" target="_blank">[ 💬 CONTACT_ADMIN ]</a>
-        </div>
-        <div class="cta-magic-ornament">
-          <svg viewBox="0 0 400 40" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
-            <line x1="20" y1="20" x2="160" y2="20" stroke="#ff0080" stroke-width="1" opacity="0.4"/>
-            <rect x="180" y="8" width="40" height="24" fill="none" stroke="#ff0080" stroke-width="1.5"/>
-            <text x="200" y="24" text-anchor="middle" fill="#ff0080" font-family="monospace" font-size="10">END</text>
-            <line x1="240" y1="20" x2="380" y2="20" stroke="#ff0080" stroke-width="1" opacity="0.4"/>
-          </svg>
+          <a class="btn btn--cyan btn--big" href="#tools-section">Mulai Sekarang</a>
+          <a class="btn btn--big" href="https://t.me/reyystecuu_bot" target="_blank">Hubungi Admin</a>
         </div>
       </div>
     </div>
@@ -715,22 +657,16 @@
     <!-- ═══ FOOTER ═══ -->
     <footer class="site">
       <div class="footer-magic">
-        <div class="footer-brand">⚡ reyy.tools ⚡</div>
-        <p class="footer-tagline">// cyber grimoire buat kreator yang pengen kualitas maksimal</p>
+        <div class="footer-brand">reyy.tools</div>
+        <p class="footer-tagline">Toolkit kreator untuk optimasi video.</p>
         <div class="footer-links">
-          <a href="#cyber-section">> MODULES</a>
-          <a href="#" onclick="switchMain('analyzer');return false;">> ANALYZER</a>
-          <a href="#" onclick="switchMain('account');return false;">> USER</a>
-          <a href="https://sociabuzz.com/reyyofficial/tribe" target="_blank">> TRIBUTE</a>
+          <a href="#tools-section">Tools</a>
+          <a href="#" onclick="switchMain('analyzer');return false;">Analyzer</a>
+          <a href="#" onclick="switchMain('account');return false;">Account</a>
+          <a href="https://sociabuzz.com/reyyofficial/tribe" target="_blank">Tribute</a>
         </div>
-        <div class="footer-divider">
-          <svg viewBox="0 0 300 30" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
-            <line x1="0" y1="15" x2="110" y2="15" stroke="#00ff41" stroke-width="1" opacity="0.3"/>
-            <rect x="130" y="8" width="40" height="14" fill="none" stroke="#00f0ff" stroke-width="1"/>
-            <line x1="190" y1="15" x2="300" y2="15" stroke="#00ff41" stroke-width="1" opacity="0.3"/>
-          </svg>
-        </div>
-        <p class="footer-copy">© 2026 reyy.tools // crafted with ⚡ by the Archmage</p>
+        <div class="footer-divider"></div>
+        <p class="footer-copy">© 2026 reyy.tools. All rights reserved.</p>
       </div>
     </footer>
 
@@ -742,9 +678,9 @@
   <!-- ══════════════════════════════════════ -->
   <div class="page-view" id="page-analyzer">
     <div class="ky-page-wrap" style="padding-top:48px;padding-bottom:80px;">
-      <div class="section-label">[ ANALYZER.exe ]</div>
-      <h2 style="font-family:'Share Tech Mono',monospace;text-transform:uppercase;font-size:clamp(1.6rem,4vw,2.6rem);margin-bottom:8px;color:#00ff41;">> Ramal_Kualitas_Upload_</h2>
-      <p style="color:#008f11;margin-bottom:36px;font-family:'Fira Code',monospace;">> Tempel link TikTok — Analyzer bakal ramal apakah video lu HD atau dikompres.</p>
+      <div class="section-label">Analyzer</div>
+      <h2 style="font-size:clamp(1.8rem,4vw,2.8rem);margin-bottom:8px;font-weight:800;letter-spacing:-.02em;">Cek Kualitas Upload</h2>
+      <p style="color:#8a95a5;margin-bottom:36px;">Tempel link TikTok — kami cek apakah video lu HD atau dikompres platform.</p>
 
       <div class="analyzer-wrap">
 
@@ -755,22 +691,22 @@
               <input class="ky-input" id="tiktokUrlInput" type="url"
                 placeholder="https://www.tiktok.com/@user/video/1234567890">
               <button class="btn-save" id="analyzeBtn" onclick="analyzeTikTok()" style="white-space:nowrap;flex:none;">
-                [ SCAN ]
+                Analyze
               </button>
             </div>
           </div>
-          <p style="font-size:.78rem;color:#008f11;font-family:'Fira Code',monospace;">
-            // supports tiktok.com links and short vm.tiktok.com links
+          <p style="font-size:.8rem;color:#5a6270;">
+            Support tiktok.com dan short vm.tiktok.com links
           </p>
         </div>
 
         <div id="analyzerLoading" style="display:none;text-align:center;padding:40px;">
           <div class="spinner" style="margin:0 auto 16px;"></div>
-          <p style="color:#008f11;font-size:.85rem;text-transform:uppercase;letter-spacing:.15em;font-family:'Share Tech Mono',monospace;">> scanning..._</p>
+          <p style="color:#8a95a5;font-size:.9rem;text-transform:uppercase;letter-spacing:.1em;">Fetching metadata...</p>
         </div>
 
         <div id="analyzerError" style="display:none;" class="alert-box">
-          <strong>[ ERROR ]</strong> <span id="analyzerErrorMsg"></span>
+          <strong>Error:</strong> <span id="analyzerErrorMsg"></span>
         </div>
 
         <div class="analyzer-results" id="analyzerResults">
@@ -778,15 +714,15 @@
           <div class="analyzer-info-row" id="videoInfoRow" style="display:none;">
             <img id="analyzerThumb" class="analyzer-thumb" alt="thumbnail">
             <div class="analyzer-meta-text">
-              <div class="analyzer-caption-label">// CAPTION</div>
+              <div class="analyzer-caption-label">Caption</div>
               <div id="videoCaption" class="analyzer-caption"></div>
-              <div class="analyzer-caption-label">// AUTHOR</div>
+              <div class="analyzer-caption-label">Author</div>
               <div id="videoAuthor" class="analyzer-author"></div>
             </div>
           </div>
           <h3 style="margin-bottom:16px;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-            [ VIDEO_METADATA ]
+            Video Metadata
           </h3>
           <div class="meta-grid" id="metaGrid"></div>
         </div>
@@ -796,20 +732,20 @@
   </div>
 
   <!-- ══════════════════════════════════════ -->
-  <!-- USER PROFILE PAGE                       -->
+  <!-- ACCOUNT PAGE                            -->
   <!-- ══════════════════════════════════════ -->
   <div class="page-view" id="page-account">
     <div class="ky-page-wrap" style="padding-top:48px;padding-bottom:80px;">
-      <div class="section-label">[ USER_PROFILE.dat ]</div>
-      <h2 style="font-family:'Share Tech Mono',monospace;text-transform:uppercase;font-size:clamp(1.6rem,4vw,2.6rem);margin-bottom:8px;color:#00ff41;">> Profil_Cyber_Lu_</h2>
-      <p style="color:#008f11;margin-bottom:36px;font-family:'Fira Code',monospace;">> Customize your identity. Telegram link is optional.</p>
+      <div class="section-label">Account</div>
+      <h2 style="font-size:clamp(1.8rem,4vw,2.8rem);margin-bottom:8px;font-weight:800;letter-spacing:-.02em;">Profil Lu</h2>
+      <p style="color:#8a95a5;margin-bottom:36px;">Customize your identity. Telegram link optional.</p>
 
       <div class="account-wrap">
 
         <div class="account-card">
           <h3>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            [ PROFILE ]
+            Profile
           </h3>
           <div class="avatar-row">
             <div>
@@ -818,29 +754,29 @@
                 <span id="avatarInitial">G</span>
               </div>
               <input type="file" id="avatarInput" accept="image/*">
-              <div class="avatar-edit-hint">// click to change</div>
+              <div class="avatar-edit-hint">Click to change</div>
             </div>
             <div>
               <div class="account-name-badge" id="displayNameBadge">Guest</div>
-              <div class="account-role" id="accountRoleBadge">// GUEST_USER</div>
+              <div class="account-role" id="accountRoleBadge">Guest User</div>
             </div>
           </div>
           <div class="input-group">
             <label>Display Name</label>
             <input class="ky-input" id="inputDisplayName" type="text" placeholder="Enter your display name" maxlength="32">
           </div>
-          <button class="btn-save" onclick="saveProfile()">[ SAVE_CHANGES ]</button>
+          <button class="btn-save" onclick="saveProfile()">Save Changes</button>
         </div>
 
         <div class="account-card">
           <h3>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            [ TELEGRAM_LINK ]
-            <span style="margin-left:auto;font-size:.68rem;background:rgba(0,240,255,0.08);border:1px solid rgba(0,240,255,0.3);padding:2px 10px;border-radius:4px;color:#00f0ff;letter-spacing:.1em;font-family:'Share Tech Mono',monospace;">OPTIONAL</span>
+            Telegram Link
+            <span style="margin-left:auto;font-size:.68rem;background:rgba(0,217,255,0.08);border:1px solid rgba(0,217,255,0.25);padding:2px 10px;border-radius:999px;color:#00d9ff;letter-spacing:.05em;font-weight:600;">Optional</span>
           </h3>
           <div class="tg-status" id="tgStatus">
             <div class="tg-dot"></div>
-            <span id="tgStatusText">// no telegram linked</span>
+            <span id="tgStatusText">No Telegram linked — running as Guest</span>
           </div>
           <div class="input-group" style="margin-top:20px;">
             <label>Telegram User ID</label>
@@ -851,8 +787,8 @@
             <input class="ky-input" id="inputTgUsername" type="text" placeholder="@yourusername">
           </div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            <button class="btn-save" onclick="saveTelegram()">[ LINK_TELEGRAM ]</button>
-            <button class="btn-save" style="background:rgba(255,0,64,0.15);color:#ff0040;border:1px solid rgba(255,0,64,0.4);" onclick="unlinkTelegram()">[ UNLINK ]</button>
+            <button class="btn-save" onclick="saveTelegram()">Link Telegram</button>
+            <button class="btn-save" style="background:rgba(248,113,113,0.12);color:#f87171;border:1px solid rgba(248,113,113,0.25);" onclick="unlinkTelegram()">Unlink</button>
           </div>
         </div>
 
@@ -872,8 +808,8 @@
     var errMsg  = document.getElementById('analyzerErrorMsg');
     var results = document.getElementById('analyzerResults');
 
-    if (!rawUrl) { showToast('// paste a TikTok URL first'); return; }
-    if (!rawUrl.match(/tiktok\.com/i)) { showToast('// must be a TikTok link'); return; }
+    if (!rawUrl) { showToast('Paste a TikTok URL first'); return; }
+    if (!rawUrl.match(/tiktok\.com/i)) { showToast('Must be a TikTok link'); return; }
 
     loading.style.display = 'block';
     errBox.style.display  = 'none';
@@ -926,7 +862,7 @@
       if (i >= attempts.length) {
         loading.style.display = 'none';
         document.getElementById('analyzeBtn').disabled = false;
-        errMsg.textContent = '// all methods failed. Check the URL and try again.';
+        errMsg.textContent = 'Semua metode gagal. Pastikan link benar dan video tidak privat.';
         errBox.style.display = 'block';
         return;
       }
@@ -980,14 +916,14 @@
     var hdBadge = document.getElementById('hdBadgeWrap');
     if (isHD) {
       hdBadge.innerHTML = '<div class="hd-badge hd-ok">'
-        + '<span class="hd-badge-icon">[OK]</span>'
-        + '<div><div class="hd-badge-title">> HD_UPLOAD_DETECTED</div>'
-        + '<div class="hd-badge-sub">// processed in high definition</div></div></div>';
+        + '<span class="hd-badge-icon">✓</span>'
+        + '<div><div class="hd-badge-title">HD Upload Detected</div>'
+        + '<div class="hd-badge-sub">Your video was processed in high definition by TikTok.</div></div></div>';
     } else {
       hdBadge.innerHTML = '<div class="hd-badge hd-no">'
-        + '<span class="hd-badge-icon">[!!]</span>'
-        + '<div><div class="hd-badge-title">> STANDARD_QUALITY</div>'
-        + '<div class="hd-badge-sub">// compressed by TikTok. Try re-uploading with Patch Engine.</div></div></div>';
+        + '<span class="hd-badge-icon">!</span>'
+        + '<div><div class="hd-badge-title">Standard Quality</div>'
+        + '<div class="hd-badge-sub">TikTok compressed this video. Try re-uploading with Patch Engine.</div></div></div>';
     }
 
     var thumb = document.getElementById('analyzerThumb');
@@ -1021,26 +957,26 @@
 
     var resStr, resCls;
     if (w && h) {
-      resStr = w + ' x ' + h;
+      resStr = w + ' × ' + h;
       resCls = (w >= 1080 || h >= 1080) ? 'green' : (w >= 720 || h >= 720) ? 'yellow' : '';
     } else if (d.ratio) {
       resStr = 'Ratio ' + d.ratio; resCls = '';
     } else {
-      resStr = isHD ? '>=1080p (HD)' : '720p or lower';
+      resStr = isHD ? '≥1080p (HD)' : '720p or lower';
       resCls = isHD ? 'green' : 'yellow';
     }
 
     var items = [
-      { label: 'RESOLUTION',    val: resStr,                                              cls: resCls   },
-      { label: 'DURATION',      val: d.duration ? fmtDur(d.duration) : 'N/A',            cls: 'yellow' },
-      { label: 'EST_FPS',       val: fpsHint,                                             cls: ''       },
-      { label: 'HD_STREAM',     val: isHD ? 'Available' : 'Not Available',                cls: isHD ? 'green' : '', style: isHD ? '' : 'color:#ff0040' },
-      { label: 'FILE_SIZE',     val: fmtSize(d.size),                                    cls: ''       },
-      { label: 'HD_FILE_SIZE',  val: fmtSize(d.hd_size),                                 cls: ''       },
-      { label: 'LIKES',         val: d.digg_count    ? Number(d.digg_count).toLocaleString()    : 'N/A', cls: 'accent' },
-      { label: 'VIEWS',         val: d.play_count    ? Number(d.play_count).toLocaleString()    : 'N/A', cls: 'accent' },
-      { label: 'COMMENTS',      val: d.comment_count ? Number(d.comment_count).toLocaleString() : 'N/A', cls: '' },
-      { label: 'SHARES',        val: d.share_count   ? Number(d.share_count).toLocaleString()   : 'N/A', cls: '' },
+      { label: 'Resolution',    val: resStr,                                              cls: resCls   },
+      { label: 'Duration',      val: d.duration ? fmtDur(d.duration) : 'N/A',            cls: 'yellow' },
+      { label: 'Est. FPS',      val: fpsHint,                                             cls: ''       },
+      { label: 'HD Stream',     val: isHD ? 'Available ✓' : 'Not Available ✗', cls: isHD ? 'green' : '', style: isHD ? '' : 'color:#f87171' },
+      { label: 'File Size',     val: fmtSize(d.size),                                    cls: ''       },
+      { label: 'HD File Size',  val: fmtSize(d.hd_size),                                 cls: ''       },
+      { label: 'Likes',         val: d.digg_count    ? Number(d.digg_count).toLocaleString()    : 'N/A', cls: 'accent' },
+      { label: 'Views',         val: d.play_count    ? Number(d.play_count).toLocaleString()    : 'N/A', cls: 'accent' },
+      { label: 'Comments',      val: d.comment_count ? Number(d.comment_count).toLocaleString() : 'N/A', cls: '' },
+      { label: 'Shares',        val: d.share_count   ? Number(d.share_count).toLocaleString()   : 'N/A', cls: '' },
     ];
 
     metaGrid.innerHTML = items.map(function(it) {
@@ -1088,7 +1024,7 @@
     setTimeout(function(){ t.classList.remove('show'); }, dur || 2600);
   }
 
-  // ─── GRIMOIRE FAQ TOGGLE ───
+  // ─── FAQ TOGGLE ───
   function toggleGrimoire(btn) {
     var item = btn.parentElement;
     item.classList.toggle('open');
@@ -1096,7 +1032,7 @@
     if (icon) icon.textContent = item.classList.contains('open') ? '−' : '+';
   }
 
-  // ─── PARTICLES (MATRIX GREEN + CYAN) ───
+  // ─── PARTICLES (CYAN + SUBTLE) ───
   (function initParticles(){
     var c = document.getElementById('kyParticles');
     if (!c) return;
@@ -1106,10 +1042,9 @@
     window.addEventListener('resize', resize); resize();
     function Particle(){
       this.x = Math.random()*W; this.y = Math.random()*H;
-      this.r = 0.6 + Math.random()*1.6;
-      this.dx = (Math.random()-.5)*.2; this.dy = (Math.random()-.5)*.2;
-      this.opa = 0.15 + Math.random()*.5;
-      this.color = Math.random();
+      this.r = 0.5 + Math.random()*1.2;
+      this.dx = (Math.random()-.5)*.15; this.dy = (Math.random()-.5)*.15;
+      this.opa = 0.1 + Math.random()*.3;
     }
     Particle.prototype.update = function(){
       this.x += this.dx; this.y += this.dy;
@@ -1117,12 +1052,10 @@
     };
     Particle.prototype.draw = function(){
       ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
-      if (this.color > 0.7) ctx.fillStyle = 'rgba(0,255,65,'+this.opa+')';        // green
-      else if (this.color > 0.4) ctx.fillStyle = 'rgba(0,240,255,'+this.opa+')';  // cyan
-      else ctx.fillStyle = 'rgba(255,0,128,'+this.opa+')';                         // magenta
+      ctx.fillStyle = 'rgba(0,217,255,'+this.opa+')';
       ctx.fill();
     };
-    for(var i=0;i<80;i++) particles.push(new Particle());
+    for(var i=0;i<50;i++) particles.push(new Particle());
     (function loop(){ ctx.clearRect(0,0,W,H); particles.forEach(function(p){p.update();p.draw();}); requestAnimationFrame(loop); })();
   })();
 
@@ -1140,7 +1073,7 @@
     var el5 = document.getElementById('inputTgId');
     var el6 = document.getElementById('inputTgUsername');
     if (el1) el1.textContent = name;
-    if (el2) el2.textContent = tgId ? '// TELEGRAM_LINKED' : '// GUEST_USER';
+    if (el2) el2.textContent = tgId ? 'Telegram Linked' : 'Guest User';
     if (el3) el3.textContent = name.charAt(0).toUpperCase();
     if (el4) el4.value = name !== 'Guest' ? name : '';
     if (el5) el5.value = tgId;
@@ -1150,10 +1083,10 @@
     if (tgEl && tgTxt) {
       if (tgId) {
         tgEl.classList.add('linked');
-        tgTxt.textContent = '// linked: ' + (tgUser ? tgUser + ' (' + tgId + ')' : tgId);
+        tgTxt.textContent = 'Linked: ' + (tgUser ? tgUser + ' (' + tgId + ')' : tgId);
       } else {
         tgEl.classList.remove('linked');
-        tgTxt.textContent = '// no telegram linked';
+        tgTxt.textContent = 'No Telegram linked — running as Guest';
       }
     }
     if (profile.avatar) {
@@ -1173,26 +1106,26 @@
     profile.name = name;
     localStorage.setItem('kyProfile', JSON.stringify(profile));
     applyProfile();
-    showToast('// profile saved');
+    showToast('Profile saved');
   }
 
   function saveTelegram() {
     var id   = (document.getElementById('inputTgId') || {}).value || '';
     var user = (document.getElementById('inputTgUsername') || {}).value || '';
     id = id.trim(); user = user.trim();
-    if (!id) { showToast('// enter telegram ID first'); return; }
+    if (!id) { showToast('Enter a Telegram ID first'); return; }
     profile.tgId   = id;
     profile.tgUser = user;
     localStorage.setItem('kyProfile', JSON.stringify(profile));
     applyProfile();
-    showToast('// telegram linked');
+    showToast('Telegram linked');
   }
 
   function unlinkTelegram() {
     profile.tgId = ''; profile.tgUser = '';
     localStorage.setItem('kyProfile', JSON.stringify(profile));
     applyProfile();
-    showToast('// telegram unlinked');
+    showToast('Telegram unlinked');
   }
 
   var _avatarInput = document.getElementById('avatarInput');
@@ -1207,7 +1140,7 @@
         var el3 = document.getElementById('avatarInitial');
         if (img) { img.src = ev.target.result; img.classList.add('loaded'); }
         if (el3) el3.style.display = 'none';
-        showToast('// avatar updated');
+        showToast('Avatar updated');
       };
       reader.readAsDataURL(file);
     });
