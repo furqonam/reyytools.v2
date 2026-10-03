@@ -1,7 +1,6 @@
 // api/cf-worker.js
 // Vercel serverless function — serve cf-worker JS as text
 // Adapted for reyy tools
-// FIXED: double-append udta (BUG #9)
 
 const CF_WORKER_SOURCE = `(function(){
   const CONTAINER_BOXES = new Set(['moov','trak','mdia','minf','stbl','edts','dinf','udta','meta','ilst']);
@@ -168,7 +167,7 @@ const CF_WORKER_SOURCE = `(function(){
     return udta;
   }
 
-  window.kyPatchMP4 = function(srcBuf){
+  function reyyPatchMP4(srcBuf){
     const buf = srcBuf instanceof ArrayBuffer ? srcBuf : srcBuf.buffer;
     const arr = new Uint8Array(buf.slice(0));
     const dv  = new DataView(arr.buffer);
@@ -227,7 +226,6 @@ const CF_WORKER_SOURCE = `(function(){
     const ftypBytes = ftypBox ? rawOf(arr,ftypBox) : new Uint8Array(0);
     const moov1     = rebuildMoov(arr,moovBox,repl);
 
-    // FIX: hapus append marker biar nggak double di pass 2
     repl.delete('__appendUdta__');
 
     const newMdatDataStart = ftypBytes.length + moov1.length + 8;
@@ -241,7 +239,11 @@ const CF_WORKER_SOURCE = `(function(){
 
     const output = concat([ftypBytes, moovFinal, mdatFull]);
     return { output: output.buffer, realSamples: 0, fakeSamples: 0 };
-  };
+  }
+
+  // Expose with both new name and legacy alias
+  window.reyyPatchMP4 = reyyPatchMP4;
+  window.kyPatchMP4   = reyyPatchMP4;
 })();`;
 
 module.exports = (req, res) => {
