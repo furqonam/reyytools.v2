@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════
-   profile.js — Profile & Avatar
+   profile.js — Profile & Avatar v7.0
    Dipecah dari inline <script> index.html
    ══════════════════════════════════════ */
 
