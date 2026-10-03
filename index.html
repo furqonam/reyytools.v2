@@ -15,100 +15,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 
-  <style>
-    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-
-    /* ── FLOATING BOTTOM NAV ── */
-    .main-tab-bar{
-      position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
-      z-index:9000;display:flex;align-items:center;gap:4px;padding:8px 10px;
-      background:rgba(15,17,22,0.75);
-      backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5);
-      border:1px solid rgba(0,217,255,0.15);
-      border-radius:999px;
-      box-shadow:0 8px 40px rgba(0,0,0,0.7),0 0 0 1px rgba(0,217,255,0.05);
-      pointer-events:auto;
-    }
-    .main-tab-bar .container{display:flex;gap:4px;width:auto;margin:0;padding:0;}
-    .mtab{
-      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
-      width:72px;height:58px;border:1px solid transparent;background:transparent;
-      color:#5a6270;font-family:'Inter',sans-serif;font-weight:600;font-size:10px;
-      text-transform:uppercase;letter-spacing:.05em;border-radius:14px;cursor:pointer;
-      transition:background .2s,color .2s,border-color .2s,transform .12s;
-      -webkit-tap-highlight-color:transparent;user-select:none;
-    }
-    .mtab svg{width:20px;height:20px;opacity:.5;transition:opacity .2s,transform .2s;flex-shrink:0;}
-    .mtab:hover{background:rgba(0,217,255,0.06);color:#f0f4ff;}
-    .mtab:hover svg{opacity:.85;}
-    .mtab:active{transform:scale(0.92);}
-    .mtab.active{background:rgba(0,217,255,0.12);color:#00d9ff;border-color:rgba(0,217,255,0.3);}
-    .mtab.active svg{opacity:1;transform:scale(1.08);}
-    .page-view{padding-bottom:110px;display:none;animation:fadeUp .25s ease;}
-    .page-view.active{display:block;}
-    @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-
-    @media(max-width:600px){
-      .account-card{padding:18px;}
-      .account-wrap{gap:14px;}
-      .meta-grid{grid-template-columns:1fr 1fr;gap:10px;}
-      .meta-val{font-size:1rem !important;}
-      .hero__actions .btn{padding:.65rem 1rem;font-size:.8rem;}
-      .about-quote{transform:none;}
-    }
-
-    .hero-home{padding:36px 0 28px;position:relative;width:100%;}
-    @media(max-width:860px){
-      .hero-home h1{font-size:clamp(1.8rem,6vw,2.8rem);}
-      .hero-home .hero__sub{font-size:.9rem;max-width:100%;}
-      .hero-home .hero__actions{gap:.4rem;flex-wrap:wrap;}
-    }
-    .hero-home h1{font-size:clamp(2.4rem,5.5vw,4rem);margin:.8rem 0 .9rem;font-weight:800;letter-spacing:-.02em;}
-    .hero-home .hero__sub{font-size:1.05rem;color:#8a95a5;max-width:min(560px,100%);margin-bottom:1.6rem;}
-    .hero-home .hero__actions{display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:3rem;}
-
-    .home-tool-tabs{display:flex;gap:8px;margin-bottom:0;flex-wrap:wrap;}
-    .home-tool-tab{
-      background:rgba(255,255,255,0.03);font-size:13px;font-weight:600;color:#8a95a5;
-      padding:13px 24px;border:1px solid rgba(255,255,255,0.06);border-bottom:none;
-      border-radius:16px 16px 0 0;text-transform:uppercase;letter-spacing:.05em;
-      cursor:pointer;transition:.2s;transform:translateY(4px);position:relative;z-index:1;
-      font-family:'Inter',sans-serif;backdrop-filter:blur(8px);
-    }
-    .home-tool-tab:hover{background:rgba(0,217,255,0.06);color:#f0f4ff;}
-    .home-tool-tab.active{
-      background:rgba(20,22,30,0.75);color:#00d9ff;padding-bottom:20px;
-      transform:translateY(4px);border-color:rgba(0,217,255,0.2);border-bottom:none;z-index:3;
-    }
-    @media(max-width:600px){
-      .home-tool-tab{border-radius:12px;border-bottom:1px solid rgba(255,255,255,0.06);transform:none;padding-bottom:13px;}
-      .home-tool-tab.active{transform:none;padding-bottom:13px;border-bottom:1px solid rgba(0,217,255,0.2);}
-      .home-tool-tabs{flex-direction:column;gap:4px;margin-bottom:12px;}
-    }
-
-    .ky-toast{
-      position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);
-      background:rgba(20,22,30,0.95);backdrop-filter:blur(20px);
-      border:1px solid rgba(0,217,255,0.3);color:#f0f4ff;padding:12px 24px;
-      border-radius:999px;font-size:.88rem;font-weight:600;z-index:9999;
-      transition:transform .3s ease,opacity .3s;opacity:0;pointer-events:none;
-    }
-    .ky-toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
-
-    #analyzerInput,#avatarInput{display:none;}
-
-    @media(max-width:860px){
-      #page-home,#page-analyzer,#page-account{width:100%;}
-      .home-tool-tabs{width:100%;}
-      #workspace-panel{width:100%;}
-    }
-  </style>
-
   <script src="js/atom-utils.js" defer></script>
   <script src="js/patcher.js" defer></script>
   <script src="js/ffmpeg-engine.js" defer></script>
   <script src="js/auth.js" defer></script>
   <script src="js/limits.js" defer></script>
+  <script src="js/analyzer.js" defer></script>
+  <script src="js/profile.js" defer></script>
   <script src="js/main.js" defer></script>
   <script src="js/ui.js" defer></script>
 </head>
@@ -137,7 +50,7 @@
         <input type="text" id="gateInput" class="gate-input" placeholder="Username atau Telegram ID" autocomplete="off" maxlength="30">
       </div>
       <p id="gateError" class="gate-error"></p>
-      <button class="gate-btn" id="gateBtn" onclick="doLogin()">Masuk →</button>
+      <button class="gate-btn" id="gateBtn" type="button">Masuk →</button>
       <p class="gate-hint">
         Belum punya username?<br>
         <a href="https://t.me/reyystecuu_bot" target="_blank">Daftar di @reyystecuu_bot</a>
@@ -152,8 +65,8 @@
       <h2 class="modal-title">Quota Habis</h2>
       <p class="modal-desc" id="limitModalDesc"></p>
       <div class="modal-actions">
-        <button class="modal-btn modal-btn-secondary" onclick="closeLimitModal()">Tunggu Besok</button>
-        <button class="modal-btn modal-btn-primary" onclick="goToBot()">Upgrade VIP</button>
+        <button class="modal-btn modal-btn-secondary" type="button" onclick="closeLimitModal()">Tunggu Besok</button>
+        <button class="modal-btn modal-btn-primary" type="button" onclick="goToBot()">Upgrade VIP</button>
       </div>
       <p class="modal-hint">
         Chat bot: <a href="https://t.me/reyystecuu_bot" target="_blank">@reyystecuu_bot</a>
@@ -171,7 +84,7 @@
   <header class="site">
     <div class="container nav">
       <a class="logo" href="#"><span class="logo__box">⚡</span> REYY.TOOLS</a>
-      <button class="nav__burger" id="burger" onclick="toggleMenu()" aria-label="Buka menu">Menu ☰</button>
+      <button class="nav__burger" id="burger" type="button" aria-label="Buka menu">Menu ☰</button>
       <ul class="nav__links" id="navLinks">
         <li><a href="#tools-section">Tools</a></li>
         <li><a href="#" onclick="switchMain('analyzer');return false;">Analyzer</a></li>
@@ -185,15 +98,15 @@
 
   <!-- BOTTOM NAV -->
   <div class="main-tab-bar">
-    <button class="mtab active" id="mtab-home" onclick="switchMain('home')">
+    <button class="mtab active" id="mtab-home" type="button" onclick="switchMain('home')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
       Tools
     </button>
-    <button class="mtab" id="mtab-analyzer" onclick="switchMain('analyzer')">
+    <button class="mtab" id="mtab-analyzer" type="button" onclick="switchMain('analyzer')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       Analyzer
     </button>
-    <button class="mtab" id="mtab-account" onclick="switchMain('account')">
+    <button class="mtab" id="mtab-account" type="button" onclick="switchMain('account')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       Akun
     </button>
@@ -247,9 +160,9 @@
         <div class="section-label">Tools</div>
 
         <div class="home-tool-tabs">
-          <button class="home-tool-tab active" data-section="patcher" onclick="switchSection('patcher')">MAGIC PATCH</button>
-          <button class="home-tool-tab" data-section="encoder" onclick="switchSection('encoder')">ADVANCED ENCODE</button>
-          <button class="home-tool-tab" data-section="upscale" onclick="switchSection('upscale')">AI UPSCALE</button>
+          <button class="home-tool-tab active" type="button" data-section="patcher" onclick="switchSection('patcher')">MAGIC PATCH</button>
+          <button class="home-tool-tab" type="button" data-section="encoder" onclick="switchSection('encoder')">ADVANCED ENCODE</button>
+          <button class="home-tool-tab" type="button" data-section="upscale" onclick="switchSection('upscale')">AI UPSCALE</button>
         </div>
 
         <div class="tool-content">
@@ -276,15 +189,15 @@
                 <div class="control-group">
                   <label>Processing Mode</label>
                   <div class="mode-stack">
-                    <button class="mode-card active" data-mode="patch" onclick="setMode('patch')">
+                    <button class="mode-card active" type="button" data-mode="patch" onclick="setMode('patch')">
                       <div class="mode-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></div>
                       <div class="mode-info"><div class="mode-name">MAGIC PATCH</div><div class="mode-desc">Perbaiki struktur MP4 otomatis</div></div>
                     </button>
-                    <button class="mode-card" data-mode="ky60" onclick="setMode('ky60')">
+                    <button class="mode-card" type="button" data-mode="ky60" onclick="setMode('ky60')">
                       <div class="mode-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
                       <div class="mode-info"><div class="mode-name">60 FPS OPTIMASI</div><div class="mode-desc">Menambahkan HD metadata stamp</div></div>
                     </button>
-                    <button class="mode-card" data-mode="its" onclick="setMode('its')">
+                    <button class="mode-card" type="button" data-mode="its" onclick="setMode('its')">
                       <div class="mode-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
                       <div class="mode-info"><div class="mode-name">SPEED BOOSTER</div><div class="mode-desc">Optimasi frame timing</div></div>
                     </button>
@@ -293,8 +206,8 @@
                 <div class="control-group its-panel" id="itsPanel">
                   <label>Timing Multiplier</label>
                   <div class="its-grid">
-                    <button class="its-pill active" data-scale="2" data-iscale="2" onclick="selectItsScale(this)">x2 (120fps)</button>
-                    <button class="its-pill" data-scale="4" data-iscale="4" onclick="selectItsScale(this)">x4 (240fps)</button>
+                    <button class="its-pill active" type="button" data-scale="2" data-iscale="2" onclick="selectItsScale(this)">x2 (120fps)</button>
+                    <button class="its-pill" type="button" data-scale="4" data-iscale="4" onclick="selectItsScale(this)">x4 (240fps)</button>
                   </div>
                 </div>
               </div>
@@ -324,7 +237,7 @@
                     <div class="res-label">Hasil:</div><div class="res-val" id="resAfter"></div>
                   </div>
                 </div>
-                <button class="btn-glow-primary" id="patchBtn" onclick="runProcess()" disabled>Mulai Proses</button>
+                <button class="btn-glow-primary" id="patchBtn" type="button" onclick="runProcess()" disabled>Mulai Proses</button>
               </div>
             </div>
           </section>
@@ -373,7 +286,7 @@
                   <div class="progress-bg"><div class="progress-fill" id="encProgressFill"></div></div>
                   <div class="progress-info"><span id="encProgressLabel"></span><span id="encProgressEta">0%</span></div>
                 </div>
-                <button class="btn-glow-primary" id="encBtn" onclick="runProcess()" disabled>Mulai Encoding</button>
+                <button class="btn-glow-primary" id="encBtn" type="button" onclick="runProcess()" disabled>Mulai Encoding</button>
               </div>
             </div>
           </section>
@@ -386,22 +299,22 @@
             </div>
             <div class="workspace-panel full-width">
               <div class="tabs-modern">
-                <button class="tab-btn active" id="tabLocalPhoto" onclick="switchUpscaleTab('local')">Local AI</button>
-                <button class="tab-btn" id="tabCloudVideo" onclick="switchUpscaleTab('cloud')">Cloud API</button>
+                <button class="tab-btn active" type="button" id="tabLocalPhoto" onclick="switchUpscaleTab('local')">Local AI</button>
+                <button class="tab-btn" type="button" id="tabCloudVideo" onclick="switchUpscaleTab('cloud')">Cloud API</button>
               </div>
               <div class="tab-content active" id="panelLocalPhoto">
                 <div class="alert-box"><strong>Offline Engine:</strong> Berjalan sepenuhnya di browser kamu menggunakan WebGL.</div>
                 <div class="upload-inline">
                   <input type="file" id="upscaleInput" accept="image/*" class="sr-only">
-                  <button class="btn-secondary-sm" onclick="document.getElementById('upscaleInput').click()">Pilih Foto</button>
+                  <button class="btn-secondary-sm" type="button" onclick="document.getElementById('upscaleInput').click()">Pilih Foto</button>
                   <span id="upscaleFileName" class="file-name-inline">Tidak ada file terpilih</span>
                 </div>
-                <img id="upscalePreview" class="preview-image">
+                <img id="upscalePreview" class="preview-image" alt="">
                 <div class="progress-wrap" id="upscaleStatusBox" style="display:none;margin-top:24px;">
                   <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span id="upscaleStatusText">Siap</span></div>
                   <div class="progress-bg"><div id="upscaleProgressFill" class="progress-fill"></div></div>
                 </div>
-                <button id="btnStartUpscale" class="btn-glow-primary" disabled style="margin-top:24px;">Mulai Upscale</button>
+                <button id="btnStartUpscale" type="button" class="btn-glow-primary" disabled style="margin-top:24px;">Mulai Upscale</button>
               </div>
               <div class="tab-content" id="panelCloudVideo">
                 <div class="alert-box"><strong>Cloud Engine:</strong> Membutuhkan Google Colab Ngrok API tunnel.</div>
@@ -411,7 +324,7 @@
                 </div>
                 <div class="upload-inline">
                   <input type="file" id="cloudVideoInput" accept="video/mp4" class="sr-only">
-                  <button class="btn-secondary-sm" onclick="document.getElementById('cloudVideoInput').click()">Pilih Video</button>
+                  <button class="btn-secondary-sm" type="button" onclick="document.getElementById('cloudVideoInput').click()">Pilih Video</button>
                   <span id="cloudVideoFileName" class="file-name-inline">Tidak ada file terpilih</span>
                 </div>
                 <video id="cloudVideoPreview" class="preview-video" controls></video>
@@ -419,7 +332,7 @@
                   <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span id="cloudStatusText">Siap</span></div>
                   <div class="progress-bg"><div id="cloudProgressFill" class="progress-fill"></div></div>
                 </div>
-                <button id="btnStartCloudUpscale" class="btn-glow-primary" disabled style="margin-top:24px;">Mulai Cloud Upscale</button>
+                <button id="btnStartCloudUpscale" type="button" class="btn-glow-primary" disabled style="margin-top:24px;">Mulai Cloud Upscale</button>
               </div>
             </div>
           </section>
@@ -429,7 +342,7 @@
 
       <div class="divider-soft"></div>
 
-            <!-- CARA KERJA -->
+      <!-- CARA KERJA -->
       <div class="section-label">Cara Kerja</div>
       <div class="steps-compact">
         <div class="step-compact"><span class="num">01</span><h4>Pilih File</h4><p>Pilih file MP4 yang ingin diproses.</p></div>
@@ -514,7 +427,7 @@
       <div class="section-label">FAQ</div>
       <div class="grimoire-wrap">
         <div class="grimoire-item">
-          <button class="grimoire-q" onclick="toggleGrimoire(this)">
+          <button class="grimoire-q" type="button" onclick="toggleGrimoire(this)">
             <span>Apakah file saya di-upload ke server?</span>
             <span class="grimoire-icon">+</span>
           </button>
@@ -524,7 +437,7 @@
         </div>
 
         <div class="grimoire-item">
-          <button class="grimoire-q" onclick="toggleGrimoire(this)">
+          <button class="grimoire-q" type="button" onclick="toggleGrimoire(this)">
             <span>Mengapa TikTok mengompres video saya?</span>
             <span class="grimoire-icon">+</span>
           </button>
@@ -534,7 +447,7 @@
         </div>
 
         <div class="grimoire-item">
-          <button class="grimoire-q" onclick="toggleGrimoire(this)">
+          <button class="grimoire-q" type="button" onclick="toggleGrimoire(this)">
             <span>Apakah ini aman?</span>
             <span class="grimoire-icon">+</span>
           </button>
@@ -544,7 +457,7 @@
         </div>
 
         <div class="grimoire-item">
-          <button class="grimoire-q" onclick="toggleGrimoire(this)">
+          <button class="grimoire-q" type="button" onclick="toggleGrimoire(this)">
             <span>Berapa biaya fitur-fitur ini?</span>
             <span class="grimoire-icon">+</span>
           </button>
@@ -554,7 +467,7 @@
         </div>
 
         <div class="grimoire-item">
-          <button class="grimoire-q" onclick="toggleGrimoire(this)">
+          <button class="grimoire-q" type="button" onclick="toggleGrimoire(this)">
             <span>Bagaimana cara upgrade ke VIP?</span>
             <span class="grimoire-icon">+</span>
           </button>
@@ -612,7 +525,7 @@
             <label>TikTok Video URL</label>
             <div style="display:flex;gap:10px;">
               <input class="ky-input" id="tiktokUrlInput" type="url" placeholder="https://www.tiktok.com/@user/video/1234567890">
-              <button class="btn-save" id="analyzeBtn" onclick="analyzeTikTok()" style="white-space:nowrap;flex:none;">Analyze</button>
+              <button class="btn-save" id="analyzeBtn" type="button" style="white-space:nowrap;flex:none;">Analyze</button>
             </div>
           </div>
           <p style="font-size:.8rem;color:#5a6270;">Mendukung link tiktok.com dan short link vm.tiktok.com.</p>
@@ -681,7 +594,7 @@
             <label>Display Name</label>
             <input class="ky-input" id="inputDisplayName" type="text" placeholder="Masukkan nama tampilan kamu" maxlength="32">
           </div>
-          <button class="btn-save" onclick="saveProfile()">Simpan Perubahan</button>
+          <button class="btn-save" id="saveProfileBtn" type="button">Simpan Perubahan</button>
         </div>
 
         <div class="account-card">
@@ -703,365 +616,13 @@
             <input class="ky-input" id="inputTgUsername" type="text" placeholder="@usernamekamu">
           </div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            <button class="btn-save" onclick="saveTelegram()">Link Telegram</button>
-            <button class="btn-save" style="background:rgba(248,113,113,0.12);color:#f87171;border:1px solid rgba(248,113,113,0.25);" onclick="unlinkTelegram()">Unlink</button>
+            <button class="btn-save" id="saveTelegramBtn" type="button">Link Telegram</button>
+            <button class="btn-save" id="unlinkTelegramBtn" type="button" style="background:rgba(248,113,113,0.12);color:#f87171;border:1px solid rgba(248,113,113,0.25);">Unlink</button>
           </div>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- ══════════════════════════════════════ -->
-  <!-- SCRIPT (INLINE)                         -->
-  <!-- ══════════════════════════════════════ -->
-  <script>
-  // ─── ANALYZER ───
-  function analyzeTikTok() {
-    if (typeof checkQuota === 'function' && !checkQuota('analyzer')) return;
-    var rawUrl = document.getElementById('tiktokUrlInput').value.trim();
-    var loading = document.getElementById('analyzerLoading');
-    var errBox  = document.getElementById('analyzerError');
-    var errMsg  = document.getElementById('analyzerErrorMsg');
-    var results = document.getElementById('analyzerResults');
-
-    if (!rawUrl) { showToast('Tempelkan link TikTok terlebih dahulu'); return; }
-    if (!rawUrl.match(/tiktok\.com/i)) { showToast('Harus berupa link TikTok'); return; }
-
-    loading.style.display = 'block';
-    errBox.style.display  = 'none';
-    results.classList.remove('show');
-    document.getElementById('analyzeBtn').disabled = true;
-
-    var encoded = encodeURIComponent(rawUrl);
-
-    var attempts = [
-      function() {
-        var t = 'https://www.tikwm.com/api/?url=' + encoded + '&hd=1';
-        return fetch('https://api.allorigins.win/get?url=' + encodeURIComponent(t))
-          .then(function(r){ return r.json(); })
-          .then(function(p){
-            var d = JSON.parse(p.contents);
-            if (!d || d.code !== 0 || !d.data) throw new Error(d.msg || 'no data');
-            return d.data;
-          });
-      },
-      function() {
-        var t = 'https://www.tikwm.com/api/?url=' + encoded + '&hd=1';
-        return fetch('https://corsproxy.io/?' + encodeURIComponent(t))
-          .then(function(r){ return r.json(); })
-          .then(function(d){
-            if (!d || d.code !== 0 || !d.data) throw new Error(d.msg || 'no data');
-            return d.data;
-          });
-      },
-      function() {
-        var t = 'https://tikwm.com/api/?url=' + encoded + '&hd=1&web=1';
-        return fetch('https://api.allorigins.win/get?url=' + encodeURIComponent(t))
-          .then(function(r){ return r.json(); })
-          .then(function(p){
-            var d = JSON.parse(p.contents);
-            if (!d || d.code !== 0 || !d.data) throw new Error(d.msg || 'no data');
-            return d.data;
-          });
-      },
-      function() {
-        return fetch('https://www.tikwm.com/api/?url=' + encoded + '&hd=1', {mode:'cors'})
-          .then(function(r){ return r.json(); })
-          .then(function(d){
-            if (!d || d.code !== 0 || !d.data) throw new Error(d.msg || 'no data');
-            return d.data;
-          });
-      }
-    ];
-
-    function tryNext(i) {
-      if (i >= attempts.length) {
-        loading.style.display = 'none';
-        document.getElementById('analyzeBtn').disabled = false;
-        errMsg.textContent = 'Semua metode gagal. Pastikan link benar dan video tidak privat.';
-        errBox.style.display = 'block';
-        return;
-      }
-      attempts[i]()
-        .then(function(data) {
-          loading.style.display = 'none';
-          document.getElementById('analyzeBtn').disabled = false;
-          renderAnalyzerResults(data, 'tikwm');
-        })
-        .catch(function() { tryNext(i + 1); });
-    }
-
-    tryNext(0);
-  }
-
-  document.addEventListener('DOMContentLoaded', function(){
-    var inp = document.getElementById('tiktokUrlInput');
-    if (inp) inp.addEventListener('keydown', function(e){ if(e.key==='Enter') analyzeTikTok(); });
-  });
-
-  function renderAnalyzerResults(d, src) {
-    var results  = document.getElementById('analyzerResults');
-    var metaGrid = document.getElementById('metaGrid');
-
-    var isHD = !!(d.hdplay && d.hdplay.length > 10);
-    var w = parseInt(d.width)  || 0;
-    var h = parseInt(d.height) || 0;
-
-    if (!w || !h) {
-      var urlsToCheck = [d.hdplay||'', d.play||'', d.wmplay||'', d.origin_cover||'', d.cover||''];
-      for (var ui = 0; ui < urlsToCheck.length; ui++) {
-        var pu = urlsToCheck[ui];
-        var rm = pu.match(/[_~\/=]([0-9]{3,4})x([0-9]{3,4})/)
-              || pu.match(/ratio[_=]([0-9]{3,4})[x%]([0-9]{3,4})/i)
-              || pu.match(/([0-9]{3,4})%[xX]([0-9]{3,4})/);
-        if (rm) {
-          var pw = parseInt(rm[1]), ph = parseInt(rm[2]);
-          w = Math.min(pw, ph); h = Math.max(pw, ph);
-          break;
-        }
-      }
-    }
-
-    if ((!w || !h) && d.ratio) {
-      var ratioMatch = String(d.ratio).match(/([0-9]+)[xX:]([0-9]+)/);
-      if (ratioMatch) { w = 0; h = 0; }
-    }
-
-    if (w >= 1080 || h >= 1080) isHD = true;
-
-    var hdBadge = document.getElementById('hdBadgeWrap');
-    if (isHD) {
-      hdBadge.innerHTML = '<div class="hd-badge hd-ok">'
-        + '<span class="hd-badge-icon">✓</span>'
-        + '<div><div class="hd-badge-title">HD Upload Terdeteksi</div>'
-        + '<div class="hd-badge-sub">Video kamu diproses dalam kualitas HD oleh TikTok.</div></div></div>';
-    } else {
-      hdBadge.innerHTML = '<div class="hd-badge hd-no">'
-        + '<span class="hd-badge-icon">!</span>'
-        + '<div><div class="hd-badge-title">Kualitas Standard</div>'
-        + '<div class="hd-badge-sub">Video kamu dikompres oleh TikTok. Coba re-upload dengan Magic Patch Engine.</div></div></div>';
-    }
-
-    var thumb = document.getElementById('analyzerThumb');
-    var coverUrl = d.cover || d.origin_cover || '';
-    if (coverUrl) {
-      thumb.src = 'https://wsrv.nl/?url=' + encodeURIComponent(coverUrl) + '&w=120&h=160&fit=cover';
-      thumb.onload  = function(){ thumb.classList.add('loaded'); };
-      thumb.onerror = function(){ thumb.style.display = 'none'; };
-    }
-
-    document.getElementById('videoCaption').textContent = d.title || '(tanpa caption)';
-    var authorName = (d.author && d.author.nickname)
-      ? d.author.nickname + (d.author.unique_id ? ' (@' + d.author.unique_id + ')' : '')
-      : 'Unknown';
-    document.getElementById('videoAuthor').textContent = authorName;
-    document.getElementById('videoInfoRow').style.display = 'flex';
-
-    function fmtDur(s) {
-      s = parseInt(s) || 0;
-      var m = Math.floor(s / 60), sec = s % 60;
-      return m + 'm ' + (sec < 10 ? '0' : '') + sec + 's';
-    }
-    function fmtSize(bytes) {
-      if (!bytes || bytes <= 0) return 'N/A';
-      if (bytes > 1048576) return (bytes / 1048576).toFixed(1) + ' MB';
-      return (bytes / 1024).toFixed(0) + ' KB';
-    }
-
-    var fpsHint = 'N/A';
-    if (d.duration && d.duration <= 60) fpsHint = isHD ? '30-60 fps' : '30 fps';
-
-    var resStr, resCls;
-    if (w && h) {
-      resStr = w + ' × ' + h;
-      resCls = (w >= 1080 || h >= 1080) ? 'green' : (w >= 720 || h >= 720) ? 'yellow' : '';
-    } else if (d.ratio) {
-      resStr = 'Ratio ' + d.ratio; resCls = '';
-    } else {
-      resStr = isHD ? '≥1080p (HD)' : '720p atau lebih rendah';
-      resCls = isHD ? 'green' : 'yellow';
-    }
-
-    var items = [
-      { label: 'Resolution',    val: resStr,                                              cls: resCls   },
-      { label: 'Duration',      val: d.duration ? fmtDur(d.duration) : 'N/A',            cls: 'yellow' },
-      { label: 'Est. FPS',      val: fpsHint,                                             cls: ''       },
-      { label: 'HD Stream',     val: isHD ? 'Tersedia ✓' : 'Tidak Tersedia ✗', cls: isHD ? 'green' : '', style: isHD ? '' : 'color:#f87171' },
-      { label: 'File Size',     val: fmtSize(d.size),                                    cls: ''       },
-      { label: 'HD File Size',  val: fmtSize(d.hd_size),                                 cls: ''       },
-      { label: 'Likes',         val: d.digg_count    ? Number(d.digg_count).toLocaleString()    : 'N/A', cls: 'accent' },
-      { label: 'Views',         val: d.play_count    ? Number(d.play_count).toLocaleString()    : 'N/A', cls: 'accent' },
-      { label: 'Comments',      val: d.comment_count ? Number(d.comment_count).toLocaleString() : 'N/A', cls: '' },
-      { label: 'Shares',        val: d.share_count   ? Number(d.share_count).toLocaleString()   : 'N/A', cls: '' },
-    ];
-
-    metaGrid.innerHTML = items.map(function(it) {
-      var extraStyle = it.style || '';
-      return '<div class="meta-item">'
-        + '<div class="meta-label">' + it.label + '</div>'
-        + '<div class="meta-val ' + it.cls + '" style="' + extraStyle + '">' + it.val + '</div>'
-        + '</div>';
-    }).join('');
-
-    results.classList.add('show');
-  }
-
-  // ─── BURGER MENU ───
-  function toggleMenu() {
-    var nav = document.getElementById('navLinks');
-    if (nav) nav.classList.toggle('open');
-  }
-
-  // ─── SWITCH MAIN TAB ───
-  function switchMain(tab) {
-    document.querySelectorAll('.page-view').forEach(function(p){ p.classList.remove('active'); });
-    document.querySelectorAll('.mtab').forEach(function(b){ b.classList.remove('active'); });
-    var page = document.getElementById('page-' + tab);
-    var btn  = document.getElementById('mtab-' + tab);
-    if (page) page.classList.add('active');
-    if (btn)  btn.classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  }
-
-  // ─── HOME TOOL TABS ───
-  document.querySelectorAll('.home-tool-tab').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('.home-tool-tab').forEach(function(b){ b.classList.remove('active'); });
-      btn.classList.add('active');
-    });
-  });
-
-  // ─── TOAST ───
-  function showToast(msg, dur) {
-    var t = document.getElementById('kyToast');
-    if (!t) return;
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(function(){ t.classList.remove('show'); }, dur || 2600);
-  }
-
-  // ─── FAQ TOGGLE ───
-  function toggleGrimoire(btn) {
-    var item = btn.parentElement;
-    item.classList.toggle('open');
-    var icon = btn.querySelector('.grimoire-icon');
-    if (icon) icon.textContent = item.classList.contains('open') ? '−' : '+';
-  }
-
-  // ─── PARTICLES ───
-  (function initParticles(){
-    var c = document.getElementById('kyParticles');
-    if (!c) return;
-    var ctx = c.getContext('2d');
-    var W, H, particles = [];
-    function resize(){ W = c.width = window.innerWidth; H = c.height = window.innerHeight; }
-    window.addEventListener('resize', resize); resize();
-    function Particle(){
-      this.x = Math.random()*W; this.y = Math.random()*H;
-      this.r = 0.5 + Math.random()*1.2;
-      this.dx = (Math.random()-.5)*.15; this.dy = (Math.random()-.5)*.15;
-      this.opa = 0.1 + Math.random()*.3;
-    }
-    Particle.prototype.update = function(){
-      this.x += this.dx; this.y += this.dy;
-      if(this.x<0||this.x>W||this.y<0||this.y>H){ this.x=Math.random()*W; this.y=Math.random()*H; }
-    };
-    Particle.prototype.draw = function(){
-      ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
-      ctx.fillStyle = 'rgba(0,217,255,'+this.opa+')';
-      ctx.fill();
-    };
-    for(var i=0;i<50;i++) particles.push(new Particle());
-    (function loop(){ ctx.clearRect(0,0,W,H); particles.forEach(function(p){p.update();p.draw();}); requestAnimationFrame(loop); })();
-  })();
-
-  // ─── PROFILE ───
-  var profile = JSON.parse(localStorage.getItem('kyProfile') || '{}');
-
-  function applyProfile() {
-    var name = profile.name || 'Guest';
-    var tgId  = profile.tgId  || '';
-    var tgUser= profile.tgUser|| '';
-    var el1 = document.getElementById('displayNameBadge');
-    var el2 = document.getElementById('accountRoleBadge');
-    var el3 = document.getElementById('avatarInitial');
-    var el4 = document.getElementById('inputDisplayName');
-    var el5 = document.getElementById('inputTgId');
-    var el6 = document.getElementById('inputTgUsername');
-    if (el1) el1.textContent = name;
-    if (el2) el2.textContent = tgId ? 'Telegram Linked' : 'Guest User';
-    if (el3) el3.textContent = name.charAt(0).toUpperCase();
-    if (el4) el4.value = name !== 'Guest' ? name : '';
-    if (el5) el5.value = tgId;
-    if (el6) el6.value = tgUser;
-    var tgEl = document.getElementById('tgStatus');
-    var tgTxt = document.getElementById('tgStatusText');
-    if (tgEl && tgTxt) {
-      if (tgId) {
-        tgEl.classList.add('linked');
-        tgTxt.textContent = 'Terhubung: ' + (tgUser ? tgUser + ' (' + tgId + ')' : tgId);
-      } else {
-        tgEl.classList.remove('linked');
-        tgTxt.textContent = 'Tidak ada Telegram yang terhubung — berjalan sebagai Guest';
-      }
-    }
-    if (profile.avatar) {
-      var img = document.getElementById('avatarImg');
-      if (img) {
-        img.src = profile.avatar;
-        img.classList.add('loaded');
-        if (el3) el3.style.display = 'none';
-      }
-    }
-  }
-  applyProfile();
-
-  function saveProfile() {
-    var el = document.getElementById('inputDisplayName');
-    var name = el ? el.value.trim() || 'Guest' : 'Guest';
-    profile.name = name;
-    localStorage.setItem('kyProfile', JSON.stringify(profile));
-    applyProfile();
-    showToast('Profil berhasil disimpan');
-  }
-
-  function saveTelegram() {
-    var id   = (document.getElementById('inputTgId') || {}).value || '';
-    var user = (document.getElementById('inputTgUsername') || {}).value || '';
-    id = id.trim(); user = user.trim();
-    if (!id) { showToast('Masukkan Telegram ID terlebih dahulu'); return; }
-    profile.tgId   = id;
-    profile.tgUser = user;
-    localStorage.setItem('kyProfile', JSON.stringify(profile));
-    applyProfile();
-    showToast('Telegram berhasil terhubung');
-  }
-
-  function unlinkTelegram() {
-    profile.tgId = ''; profile.tgUser = '';
-    localStorage.setItem('kyProfile', JSON.stringify(profile));
-    applyProfile();
-    showToast('Telegram telah di-unlink');
-  }
-
-  var _avatarInput = document.getElementById('avatarInput');
-  if (_avatarInput) {
-    _avatarInput.addEventListener('change', function(e){
-      var file = e.target.files[0]; if(!file) return;
-      var reader = new FileReader();
-      reader.onload = function(ev){
-        profile.avatar = ev.target.result;
-        localStorage.setItem('kyProfile', JSON.stringify(profile));
-        var img = document.getElementById('avatarImg');
-        var el3 = document.getElementById('avatarInitial');
-        if (img) { img.src = ev.target.result; img.classList.add('loaded'); }
-        if (el3) el3.style.display = 'none';
-        showToast('Avatar berhasil diupdate');
-      };
-      reader.readAsDataURL(file);
-    });
-  }
-  </script>
 
 </body>
 </html>
