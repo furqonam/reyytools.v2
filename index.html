@@ -86,92 +86,6 @@
       .home-tool-tabs{flex-direction:column;gap:4px;margin-bottom:12px;}
     }
 
-    .account-wrap{max-width:min(680px,100%);margin:0 auto;display:flex;flex-direction:column;gap:24px;}
-    .account-card{
-      background:rgba(20,22,30,0.6);border:1px solid rgba(255,255,255,0.08);
-      border-radius:20px;padding:28px;backdrop-filter:blur(20px);transition:.2s;
-    }
-    .account-card:hover{border-color:rgba(0,217,255,0.2);}
-    .account-card h3{
-      font-family:'Inter',sans-serif;text-transform:uppercase;font-size:.95rem;
-      letter-spacing:.05em;color:#00d9ff;margin-bottom:20px;font-weight:700;
-      display:flex;align-items:center;gap:8px;
-    }
-    .avatar-row{display:flex;align-items:center;gap:20px;margin-bottom:24px;}
-    .avatar-circle{
-      width:72px;height:72px;border-radius:50%;background:rgba(0,217,255,0.08);
-      border:2px solid rgba(0,217,255,0.25);display:flex;align-items:center;justify-content:center;
-      font-family:'Inter',sans-serif;font-size:1.8rem;font-weight:700;color:#00d9ff;
-      overflow:hidden;cursor:pointer;transition:.2s;position:relative;
-    }
-    .avatar-circle:hover{border-color:#00d9ff;box-shadow:0 0 20px rgba(0,217,255,0.3);}
-    .avatar-circle img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:none;}
-    .avatar-circle img.loaded{display:block;}
-    .avatar-edit-hint{font-size:.75rem;color:#5a6270;margin-top:4px;}
-    .account-name-badge{font-family:'Inter',sans-serif;font-size:1.4rem;font-weight:700;color:#f0f4ff;}
-    .account-role{font-size:.8rem;color:#5a6270;text-transform:uppercase;letter-spacing:.08em;margin-top:2px;font-weight:500;}
-
-    .tg-status{
-      display:flex;align-items:center;gap:10px;padding:14px 18px;border-radius:12px;
-      font-size:.88rem;font-weight:600;background:rgba(255,255,255,0.02);
-      border:1px solid rgba(255,255,255,0.06);color:#8a95a5;
-    }
-    .tg-status.linked{background:rgba(52,211,153,0.08);border-color:rgba(52,211,153,0.25);color:#34d399;}
-    .tg-dot{width:8px;height:8px;border-radius:50%;background:#5a6270;flex:none;}
-    .tg-status.linked .tg-dot{background:#34d399;box-shadow:0 0 8px rgba(52,211,153,0.5);}
-
-    .input-group{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
-    .input-group label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:#5a6270;font-family:'Inter',sans-serif;}
-    .ky-input{
-      width:100%;padding:12px 14px;background:rgba(255,255,255,0.03);
-      border:1px solid rgba(255,255,255,0.08);border-radius:12px;color:#f0f4ff;
-      font-family:'Inter',sans-serif;font-size:14px;font-weight:500;outline:none;transition:.2s;
-    }
-    .ky-input:focus{border-color:rgba(0,217,255,0.5);box-shadow:0 0 0 3px rgba(0,217,255,0.08);}
-    .ky-input::placeholder{color:#5a6270;}
-
-    .btn-save{
-      padding:13px 28px;background:linear-gradient(135deg,#00d9ff,#00a8cc);
-      color:#000;border:none;border-radius:12px;font-family:'Inter',sans-serif;
-      font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
-      cursor:pointer;transition:.2s;
-    }
-    .btn-save:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,217,255,0.4);}
-
-    .section-label{
-      font-family:'Inter',sans-serif;text-transform:uppercase;font-size:.75rem;
-      letter-spacing:.15em;color:#5a6270;margin-bottom:24px;font-weight:600;
-      display:flex;align-items:center;gap:12px;
-    }
-    .section-label::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.06);}
-
-    .steps-compact{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:40px;}
-    .step-compact{
-      background:rgba(20,22,30,0.5);border:1px solid rgba(255,255,255,0.06);
-      border-radius:16px;padding:20px;transition:.2s;
-    }
-    .step-compact:hover{border-color:rgba(0,217,255,0.2);transform:translateY(-2px);}
-    .step-compact .num{
-      font-family:'Inter',sans-serif;font-size:1.8rem;font-weight:800;
-      color:rgba(0,217,255,0.3);line-height:1;display:block;margin-bottom:10px;
-    }
-    .step-compact h4{font-family:'Inter',sans-serif;font-size:.95rem;margin-bottom:6px;font-weight:700;color:#f0f4ff;}
-    .step-compact p{font-size:.85rem;color:#8a95a5;line-height:1.5;}
-    @media(max-width:860px){.steps-compact{grid-template-columns:1fr 1fr;}}
-    @media(max-width:480px){.steps-compact{grid-template-columns:1fr;}}
-
-    .about-compact{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center;padding:48px 0;}
-    .about-compact p{color:#8a95a5;font-size:.95rem;line-height:1.7;}
-    .about-quote{
-      background:rgba(20,22,30,0.6);border:1px solid rgba(0,217,255,0.2);
-      border-radius:20px;padding:28px;box-shadow:0 0 40px rgba(0,217,255,0.05);
-    }
-    .about-quote p{font-size:1.1rem;font-weight:500;line-height:1.5;color:#f0f4ff;font-style:italic;}
-    .about-quote p::before{content:'\201C';color:#00d9ff;font-size:1.5em;line-height:0;}
-    .about-quote p::after{content:'\201D';color:#00d9ff;font-size:1.5em;line-height:0;}
-    .about-quote small{display:block;margin-top:14px;color:#5a6270;letter-spacing:.1em;text-transform:uppercase;font-size:.7rem;font-weight:600;}
-    @media(max-width:720px){.about-compact{grid-template-columns:1fr;}}
-
     .ky-toast{
       position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);
       background:rgba(20,22,30,0.95);backdrop-filter:blur(20px);
@@ -190,38 +104,73 @@
     }
   </style>
 
-<script src="js/atom-utils.js" defer></script>
-<script src="js/patcher.js" defer></script>
-<script src="js/ffmpeg-engine.js" defer></script>
-<script src="js/auth.js" defer></script>      
-<script src="js/limits.js" defer></script>     
-<script src="js/main.js" defer></script>
-<script src="js/ui.js" defer></script>
+  <script src="js/atom-utils.js" defer></script>
+  <script src="js/patcher.js" defer></script>
+  <script src="js/ffmpeg-engine.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/limits.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/ui.js" defer></script>
 </head>
 
 <body>
 
   <canvas id="kyParticles"></canvas>
-
   <div class="ky-toast" id="kyToast"></div>
 
+  <!-- SPLASH -->
   <div id="welcomeOverlay" class="welcome-overlay" role="dialog" aria-modal="true">
     <div class="welcome-glow"></div>
     <div class="welcome-card">
       <div class="spinner"></div>
-      <h1 class="welcome-text-2">REYY TOOLS </h1>
+      <h1 class="welcome-text-2">REYY.TOOLS</h1>
       <p class="welcome-text-3">Memuat...</p>
     </div>
   </div>
 
+  <!-- GATE SCREEN -->
+  <div id="gateScreen" class="gate-screen">
+    <div class="gate-card">
+      <div class="gate-logo">⚡ reyy.tools</div>
+      <p class="gate-sub">Masuk untuk mengakses tools</p>
+      <div class="gate-input-wrap">
+        <input type="text" id="gateInput" class="gate-input" placeholder="Username atau Telegram ID" autocomplete="off" maxlength="30">
+      </div>
+      <p id="gateError" class="gate-error"></p>
+      <button class="gate-btn" id="gateBtn" onclick="doLogin()">Masuk →</button>
+      <p class="gate-hint">
+        Belum punya username?<br>
+        <a href="https://t.me/reyystecuu_bot" target="_blank">Daftar di @reyystecuu_bot</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- LIMIT MODAL -->
+  <div id="limitModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-icon">⚠️</div>
+      <h2 class="modal-title">Quota Habis</h2>
+      <p class="modal-desc" id="limitModalDesc"></p>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-secondary" onclick="closeLimitModal()">Tunggu Besok</button>
+        <button class="modal-btn modal-btn-primary" onclick="goToBot()">Upgrade VIP</button>
+      </div>
+      <p class="modal-hint">
+        Chat bot: <a href="https://t.me/reyystecuu_bot" target="_blank">@reyystecuu_bot</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- AMBIENT BG -->
   <div class="ambient-bg">
     <div class="glow-orb orb-1"></div>
     <div class="glow-orb orb-2"></div>
   </div>
 
+  <!-- NAVBAR -->
   <header class="site">
     <div class="container nav">
-      <a class="logo" href="#"><span class="logo__box">⚡</span>REYY.TOOLS</a>
+      <a class="logo" href="#"><span class="logo__box">⚡</span> REYY.TOOLS</a>
       <button class="nav__burger" id="burger" onclick="toggleMenu()" aria-label="Buka menu">Menu ☰</button>
       <ul class="nav__links" id="navLinks">
         <li><a href="#tools-section">Tools</a></li>
@@ -234,77 +183,26 @@
     </div>
   </header>
 
+  <!-- BOTTOM NAV -->
   <div class="main-tab-bar">
-      <button class="mtab active" id="mtab-home" onclick="switchMain('home')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-        Tools
-      </button>
-      <button class="mtab" id="mtab-analyzer" onclick="switchMain('analyzer')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        Analyzer
-      </button>
-      <button class="mtab" id="mtab-account" onclick="switchMain('account')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        Akun
-      </button>
-  </div>
-
-  <div class="page-view active" id="page-home">
-
-<!-- ══════════════════════════════════════ -->
-<!-- GATE SCREEN                             -->
-<!-- ══════════════════════════════════════ -->
-<div id="gateScreen" class="gate-screen">
-  <div class="gate-card">
-    <div class="gate-logo">⚡ reyy.tools</div>
-    <p class="gate-sub">Masuk untuk mengakses tools</p>
-    
-    <div class="gate-input-wrap">
-      <input 
-        type="text" 
-        id="gateInput" 
-        class="gate-input" 
-        placeholder="Username atau Telegram ID"
-        autocomplete="off"
-        maxlength="30"
-      >
-    </div>
-    
-    <p id="gateError" class="gate-error"></p>
-    
-    <button class="gate-btn" id="gateBtn" onclick="doLogin()">
-      Masuk →
+    <button class="mtab active" id="mtab-home" onclick="switchMain('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Tools
     </button>
-    
-    <p class="gate-hint">
-      Belum punya username?<br>
-      <a href="https://t.me/reyystecuu_bot" target="_blank">Daftar di @reyystecuu_bot</a>
-    </p>
+    <button class="mtab" id="mtab-analyzer" onclick="switchMain('analyzer')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Analyzer
+    </button>
+    <button class="mtab" id="mtab-account" onclick="switchMain('account')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Akun
+    </button>
   </div>
-</div>
 
-<!-- ══════════════════════════════════════ -->
-<!-- LIMIT MODAL                             -->
-<!-- ══════════════════════════════════════ -->
-<div id="limitModal" class="modal-overlay">
-  <div class="modal-card">
-    <div class="modal-icon">⚠️</div>
-    <h2 class="modal-title">Quota Habis</h2>
-    <p class="modal-desc" id="limitModalDesc"></p>
-    <div class="modal-actions">
-      <button class="modal-btn modal-btn-secondary" onclick="closeLimitModal()">
-        Tunggu Besok
-      </button>
-      <button class="modal-btn modal-btn-primary" onclick="goToBot()">
-        Upgrade VIP
-      </button>
-    </div>
-    <p class="modal-hint">
-      Chat bot: <a href="https://t.me/reyystecuu_bot" target="_blank">@reyystecuu_bot</a>
-    </p>
-  </div>
-</div>
-    
+  <!-- ══════════════════════════════════════ -->
+  <!-- PAGE HOME                               -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="page-view active" id="page-home">
     <div class="ky-page-wrap">
 
       <div class="hero-home">
@@ -317,7 +215,7 @@
         </div>
       </div>
 
-      <!-- ═══ STATISTIK ═══ -->
+      <!-- STATISTIK -->
       <div class="section-label">Statistik</div>
       <div class="stats-simple">
         <div class="stat-simple">
@@ -344,7 +242,7 @@
 
       <div class="divider-soft"></div>
 
-      <!-- ═══ TOOLS ═══ -->
+      <!-- TOOLS -->
       <div id="tools-section">
         <div class="section-label">Tools</div>
 
@@ -356,377 +254,348 @@
 
         <div class="tool-content">
 
-              <!-- ═══ PATCH ═══ -->
-    <section class="section active" id="section-patcher">
-      <div class="workspace-header">
-        <h2 class="workspace-title">MAGIC PATCH ENGINE</h2>
-        <p class="workspace-desc">Perbaiki metadata video — lewati kompresi platform tanpa re-encode. Kualitas asli, 0% loss.</p>
-      </div>
-      <div class="workspace-grid">
-        <div class="workspace-panel">
-          <div class="control-group">
-            <label>Execution Method</label>
-            <select class="modern-select" id="patchType">
-              <option value="patch_only" selected>Patch Only (Instant Metadata)</option>
-              <option value="encode_patch">Encode + Patch (HD Optimization)</option>
-            </select>
-            <p style="font-size:11px;color:#5a6270;margin-top:6px;line-height:1.5;">
-              <b style="color:#00d9ff;">Patch Only:</b> Perbaikan metadata instan (1-3 detik).<br>
-              <b style="color:#00d9ff;">Encode + Patch:</b> Re-encode H.264 CRF 18 (10-60 detik).
-            </p>
-          </div>
-          <div class="control-group">
-            <label>Processing Mode</label>
-            <div class="mode-stack">
-              <button class="mode-card active" data-mode="patch" onclick="setMode('patch')">
-                <div class="mode-icon">
-                  <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+          <!-- PATCH -->
+          <section class="section active" id="section-patcher">
+            <div class="workspace-header">
+              <h2 class="workspace-title">MAGIC PATCH ENGINE</h2>
+              <p class="workspace-desc">Perbaiki metadata video — lewati kompresi platform tanpa re-encode. Kualitas asli, 0% loss.</p>
+            </div>
+            <div class="workspace-grid">
+              <div class="workspace-panel">
+                <div class="control-group">
+                  <label>Execution Method</label>
+                  <select class="modern-select" id="patchType">
+                    <option value="patch_only" selected>Patch Only (Instant Metadata)</option>
+                    <option value="encode_patch">Encode + Patch (HD Optimization)</option>
+                  </select>
+                  <p style="font-size:11px;color:#5a6270;margin-top:6px;line-height:1.5;">
+                    <b style="color:#00d9ff;">Patch Only:</b> Perbaikan metadata instan (1-3 detik).<br>
+                    <b style="color:#00d9ff;">Encode + Patch:</b> Re-encode H.264 CRF 18 (10-60 detik).
+                  </p>
                 </div>
-                <div class="mode-info"><div class="mode-name">MAGIC PATCH</div><div class="mode-desc">Perbaiki struktur MP4 otomatis</div></div>
-              </button>
-              <button class="mode-card" data-mode="ky60" onclick="setMode('ky60')">
-                <div class="mode-icon">
-                  <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <div class="control-group">
+                  <label>Processing Mode</label>
+                  <div class="mode-stack">
+                    <button class="mode-card active" data-mode="patch" onclick="setMode('patch')">
+                      <div class="mode-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></div>
+                      <div class="mode-info"><div class="mode-name">MAGIC PATCH</div><div class="mode-desc">Perbaiki struktur MP4 otomatis</div></div>
+                    </button>
+                    <button class="mode-card" data-mode="ky60" onclick="setMode('ky60')">
+                      <div class="mode-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+                      <div class="mode-info"><div class="mode-name">60 FPS OPTIMASI</div><div class="mode-desc">Menambahkan HD metadata stamp</div></div>
+                    </button>
+                    <button class="mode-card" data-mode="its" onclick="setMode('its')">
+                      <div class="mode-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                      <div class="mode-info"><div class="mode-name">SPEED BOOSTER</div><div class="mode-desc">Optimasi frame timing</div></div>
+                    </button>
+                  </div>
                 </div>
-                <div class="mode-info"><div class="mode-name">60 FPS OPTIMASI</div><div class="mode-desc">Menambahkan HD metadata stamp</div></div>
-              </button>
-              <button class="mode-card" data-mode="its" onclick="setMode('its')">
-                <div class="mode-icon">
-                  <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <div class="control-group its-panel" id="itsPanel">
+                  <label>Timing Multiplier</label>
+                  <div class="its-grid">
+                    <button class="its-pill active" data-scale="2" data-iscale="2" onclick="selectItsScale(this)">x2 (120fps)</button>
+                    <button class="its-pill" data-scale="4" data-iscale="4" onclick="selectItsScale(this)">x4 (240fps)</button>
+                  </div>
                 </div>
-                <div class="mode-info"><div class="mode-name">SPEED BOOSTER</div><div class="mode-desc">Optimasi frame timing</div></div>
-              </button>
+              </div>
+              <div class="workspace-panel">
+                <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+                  <input type="file" id="fileInput" accept="video/mp4" onchange="handleFileSelect(event)" class="sr-only">
+                  <div class="upload-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+                  <div class="upload-title">Letakkan MP4 di sini</div>
+                  <div class="upload-subtitle">atau klik untuk memilih file</div>
+                </div>
+                <div class="file-display" id="fileDisplay"><span id="fileName">Tidak ada file terpilih</span></div>
+                <div class="preview-box" id="previewBox">
+                  <video id="videoPreview" controls></video>
+                  <div class="preview-placeholder" id="previewPlaceholder">Preview Video</div>
+                </div>
+                <div class="status-indicator" id="statusBox"><div class="status-dot"></div><span id="statusText">Sistem Siap</span></div>
+                <div class="progress-wrap" id="progressWrap">
+                  <div class="progress-bg"><div class="progress-fill" id="progressFill"></div></div>
+                  <div class="progress-info"><span id="progressLabel"></span><span id="progressEta">0%</span></div>
+                </div>
+                <div class="result-card" id="resultCard">
+                  <div class="result-title">Selesai</div>
+                  <div class="res-grid">
+                    <div class="res-label">File:</div><div class="res-val" id="resFileName"></div>
+                    <div class="res-label">Waktu:</div><div class="res-val" id="resTime"></div>
+                    <div class="res-label">Original:</div><div class="res-val" id="resBefore"></div>
+                    <div class="res-label">Hasil:</div><div class="res-val" id="resAfter"></div>
+                  </div>
+                </div>
+                <button class="btn-glow-primary" id="patchBtn" onclick="runProcess()" disabled>Mulai Proses</button>
+              </div>
             </div>
-          </div>
-          <div class="control-group its-panel" id="itsPanel">
-            <label>Timing Multiplier</label>
-            <div class="its-grid">
-              <button class="its-pill active" data-scale="2" data-iscale="2" onclick="selectItsScale(this)">x2 (120fps)</button>
-              <button class="its-pill" data-scale="4" data-iscale="4" onclick="selectItsScale(this)">x4 (240fps)</button>
-            </div>
-          </div>
-        </div>
-        <div class="workspace-panel">
-          <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
-            <input type="file" id="fileInput" accept="video/mp4" onchange="handleFileSelect(event)" class="sr-only">
-            <div class="upload-icon">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-            </div>
-            <div class="upload-title">Letakkan MP4 di sini</div>
-            <div class="upload-subtitle">atau klik untuk memilih file</div>
-          </div>
-          <div class="file-display" id="fileDisplay"><span id="fileName">Tidak ada file terpilih</span></div>
-          <div class="preview-box" id="previewBox">
-            <video id="videoPreview" controls></video>
-            <div class="preview-placeholder" id="previewPlaceholder">Preview Video</div>
-          </div>
-          <div class="status-indicator" id="statusBox"><div class="status-dot"></div><span id="statusText">Sistem Siap</span></div>
-          <div class="progress-wrap" id="progressWrap">
-            <div class="progress-bg"><div class="progress-fill" id="progressFill"></div></div>
-            <div class="progress-info"><span id="progressLabel"></span><span id="progressEta">0%</span></div>
-          </div>
-          <div class="result-card" id="resultCard">
-            <div class="result-title">Selesai</div>
-            <div class="res-grid">
-              <div class="res-label">File:</div><div class="res-val" id="resFileName"></div>
-              <div class="res-label">Waktu:</div><div class="res-val" id="resTime"></div>
-              <div class="res-label">Original:</div><div class="res-val" id="resBefore"></div>
-              <div class="res-label">Hasil:</div><div class="res-val" id="resAfter"></div>
-            </div>
-          </div>
-          <button class="btn-glow-primary" id="patchBtn" onclick="runProcess()" disabled>Mulai Proses</button>
-        </div>
-      </div>
-    </section>
+          </section>
 
-    <!-- ═══ ENCODE ═══ -->
-    <section class="section" id="section-encoder">
-      <div class="workspace-header">
-        <h2 class="workspace-title">ADVANCED ENCODER</h2>
-        <p class="workspace-desc">Ubah video kamu menjadi H.264 HD menggunakan FFmpeg.wasm — langsung di browser.</p>
-      </div>
-      <div class="workspace-grid">
-        <div class="workspace-panel">
-          <div class="control-group">
-            <label for="encCodec">Video Codec</label>
-            <select class="modern-select" id="encCodec"><option value="libx264" selected>H.264 (libx264)</option></select>
-          </div>
-          <div class="control-group">
-            <label for="encCrf">Kualitas (CRF)</label>
-            <select class="modern-select" id="encCrf">
-              <option value="16">16 — Ultra High</option>
-              <option value="18" selected>18 — Lossless</option>
-              <option value="20">20 — High</option>
-              <option value="23">23 — Standard</option>
-            </select>
-          </div>
-          <div class="control-group">
-            <label for="encPreset">Kecepatan Encoding</label>
-            <select class="modern-select" id="encPreset">
-              <option value="ultrafast">ultrafast</option>
-              <option value="medium" selected>medium</option>
-              <option value="slow">slow</option>
-            </select>
-          </div>
-          <div class="control-group switch-group">
-            <span>Terapkan TikTok HD Stamp</span>
-            <label class="switch">
-              <input type="checkbox" id="encApplyStamp" checked>
-              <span class="slider round"></span>
-            </label>
-          </div>
-        </div>
-        <div class="workspace-panel">
-          <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
-            <div class="upload-icon">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <!-- ENCODE -->
+          <section class="section" id="section-encoder">
+            <div class="workspace-header">
+              <h2 class="workspace-title">ADVANCED ENCODER</h2>
+              <p class="workspace-desc">Ubah video kamu menjadi H.264 HD menggunakan FFmpeg.wasm — langsung di browser.</p>
             </div>
-            <div class="upload-title">Pilih Video untuk di-Encode</div>
-          </div>
-          <div class="status-indicator" id="encStatusBox"><div class="status-dot"></div><span id="encStatusText">Siap</span></div>
-          <div class="progress-wrap" id="encProgressWrap">
-            <div class="progress-bg"><div class="progress-fill" id="encProgressFill"></div></div>
-            <div class="progress-info"><span id="encProgressLabel"></span><span id="encProgressEta">0%</span></div>
-          </div>
-          <button class="btn-glow-primary" id="encBtn" onclick="runProcess()" disabled>Mulai Encoding</button>
-        </div>
-      </div>
-    </section>
+            <div class="workspace-grid">
+              <div class="workspace-panel">
+                <div class="control-group">
+                  <label for="encCodec">Video Codec</label>
+                  <select class="modern-select" id="encCodec"><option value="libx264" selected>H.264 (libx264)</option></select>
+                </div>
+                <div class="control-group">
+                  <label for="encCrf">Kualitas (CRF)</label>
+                  <select class="modern-select" id="encCrf">
+                    <option value="16">16 — Ultra High</option>
+                    <option value="18" selected>18 — Lossless</option>
+                    <option value="20">20 — High</option>
+                    <option value="23">23 — Standard</option>
+                  </select>
+                </div>
+                <div class="control-group">
+                  <label for="encPreset">Kecepatan Encoding</label>
+                  <select class="modern-select" id="encPreset">
+                    <option value="ultrafast">ultrafast</option>
+                    <option value="medium" selected>medium</option>
+                    <option value="slow">slow</option>
+                  </select>
+                </div>
+                <div class="control-group switch-group">
+                  <span>Terapkan TikTok HD Stamp</span>
+                  <label class="switch"><input type="checkbox" id="encApplyStamp" checked><span class="slider round"></span></label>
+                </div>
+              </div>
+              <div class="workspace-panel">
+                <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
+                  <div class="upload-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+                  <div class="upload-title">Pilih Video untuk di-Encode</div>
+                </div>
+                <div class="status-indicator" id="encStatusBox"><div class="status-dot"></div><span id="encStatusText">Siap</span></div>
+                <div class="progress-wrap" id="encProgressWrap">
+                  <div class="progress-bg"><div class="progress-fill" id="encProgressFill"></div></div>
+                  <div class="progress-info"><span id="encProgressLabel"></span><span id="encProgressEta">0%</span></div>
+                </div>
+                <button class="btn-glow-primary" id="encBtn" onclick="runProcess()" disabled>Mulai Encoding</button>
+              </div>
+            </div>
+          </section>
 
-    <!-- ═══ UPSCALE ═══ -->
-    <section class="section" id="section-upscale">
-      <div class="workspace-header">
-        <h2 class="workspace-title">AI UPSCALER</h2>
-        <p class="workspace-desc">Perbesar resolusi foto &amp; video dengan AI lokal (ONNX) atau cloud GPU.</p>
-      </div>
-      <div class="workspace-panel full-width">
-        <div class="tabs-modern">
-          <button class="tab-btn active" id="tabLocalPhoto" onclick="switchUpscaleTab('local')">Local AI</button>
-          <button class="tab-btn" id="tabCloudVideo" onclick="switchUpscaleTab('cloud')">Cloud API</button>
-        </div>
-        <div class="tab-content active" id="panelLocalPhoto">
-          <div class="alert-box"><strong>Offline Engine:</strong> Berjalan sepenuhnya di browser kamu menggunakan WebGL.</div>
-          <div class="upload-inline">
-            <input type="file" id="upscaleInput" accept="image/*" class="sr-only">
-            <button class="btn-secondary-sm" onclick="document.getElementById('upscaleInput').click()">Pilih Foto</button>
-            <span id="upscaleFileName" class="file-name-inline">Tidak ada file terpilih</span>
-          </div>
-          <img id="upscalePreview" class="preview-image">
-          <div class="progress-wrap" id="upscaleStatusBox" style="display:none;margin-top:24px;">
-            <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span id="upscaleStatusText">Siap</span></div>
-            <div class="progress-bg"><div id="upscaleProgressFill" class="progress-fill"></div></div>
-          </div>
-          <button id="btnStartUpscale" class="btn-glow-primary" disabled style="margin-top:24px;">Mulai Upscale</button>
-        </div>
-        <div class="tab-content" id="panelCloudVideo">
-          <div class="alert-box"><strong>Cloud Engine:</strong> Membutuhkan Google Colab Ngrok API tunnel.</div>
-          <div class="control-group">
-            <label>Ngrok Tunnel URL</label>
-            <input type="url" id="cloudApiUrl" class="modern-input" placeholder="https://xxxx.ngrok-free.app">
-          </div>
-          <div class="upload-inline">
-            <input type="file" id="cloudVideoInput" accept="video/mp4" class="sr-only">
-            <button class="btn-secondary-sm" onclick="document.getElementById('cloudVideoInput').click()">Pilih Video</button>
-            <span id="cloudVideoFileName" class="file-name-inline">Tidak ada file terpilih</span>
-          </div>
-          <video id="cloudVideoPreview" class="preview-video" controls></video>
-          <div class="progress-wrap" id="cloudStatusBox" style="display:none;margin-top:24px;">
-            <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span id="cloudStatusText">Siap</span></div>
-            <div class="progress-bg"><div id="cloudProgressFill" class="progress-fill"></div></div>
-          </div>
-          <button id="btnStartCloudUpscale" class="btn-glow-primary" disabled style="margin-top:24px;">Mulai Cloud Upscale</button>
-        </div>
-      </div>
-    </section>
+          <!-- UPSCALE -->
+          <section class="section" id="section-upscale">
+            <div class="workspace-header">
+              <h2 class="workspace-title">AI UPSCALER</h2>
+              <p class="workspace-desc">Perbesar resolusi foto &amp; video dengan AI lokal (ONNX) atau cloud GPU.</p>
+            </div>
+            <div class="workspace-panel full-width">
+              <div class="tabs-modern">
+                <button class="tab-btn active" id="tabLocalPhoto" onclick="switchUpscaleTab('local')">Local AI</button>
+                <button class="tab-btn" id="tabCloudVideo" onclick="switchUpscaleTab('cloud')">Cloud API</button>
+              </div>
+              <div class="tab-content active" id="panelLocalPhoto">
+                <div class="alert-box"><strong>Offline Engine:</strong> Berjalan sepenuhnya di browser kamu menggunakan WebGL.</div>
+                <div class="upload-inline">
+                  <input type="file" id="upscaleInput" accept="image/*" class="sr-only">
+                  <button class="btn-secondary-sm" onclick="document.getElementById('upscaleInput').click()">Pilih Foto</button>
+                  <span id="upscaleFileName" class="file-name-inline">Tidak ada file terpilih</span>
+                </div>
+                <img id="upscalePreview" class="preview-image">
+                <div class="progress-wrap" id="upscaleStatusBox" style="display:none;margin-top:24px;">
+                  <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span id="upscaleStatusText">Siap</span></div>
+                  <div class="progress-bg"><div id="upscaleProgressFill" class="progress-fill"></div></div>
+                </div>
+                <button id="btnStartUpscale" class="btn-glow-primary" disabled style="margin-top:24px;">Mulai Upscale</button>
+              </div>
+              <div class="tab-content" id="panelCloudVideo">
+                <div class="alert-box"><strong>Cloud Engine:</strong> Membutuhkan Google Colab Ngrok API tunnel.</div>
+                <div class="control-group">
+                  <label>Ngrok Tunnel URL</label>
+                  <input type="url" id="cloudApiUrl" class="modern-input" placeholder="https://xxxx.ngrok-free.app">
+                </div>
+                <div class="upload-inline">
+                  <input type="file" id="cloudVideoInput" accept="video/mp4" class="sr-only">
+                  <button class="btn-secondary-sm" onclick="document.getElementById('cloudVideoInput').click()">Pilih Video</button>
+                  <span id="cloudVideoFileName" class="file-name-inline">Tidak ada file terpilih</span>
+                </div>
+                <video id="cloudVideoPreview" class="preview-video" controls></video>
+                <div class="progress-wrap" id="cloudStatusBox" style="display:none;margin-top:24px;">
+                  <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span id="cloudStatusText">Siap</span></div>
+                  <div class="progress-bg"><div id="cloudProgressFill" class="progress-fill"></div></div>
+                </div>
+                <button id="btnStartCloudUpscale" class="btn-glow-primary" disabled style="margin-top:24px;">Mulai Cloud Upscale</button>
+              </div>
+            </div>
+          </section>
 
+        </div>
+      </div>
+
+      <div class="divider-soft"></div>
+
+            <!-- CARA KERJA -->
+      <div class="section-label">Cara Kerja</div>
+      <div class="steps-compact">
+        <div class="step-compact"><span class="num">01</span><h4>Pilih File</h4><p>Pilih file MP4 yang ingin diproses.</p></div>
+        <div class="step-compact"><span class="num">02</span><h4>Pilih Mode</h4><p>Patch metadata instan, atau re-encode penuh.</p></div>
+        <div class="step-compact"><span class="num">03</span><h4>Proses</h4><p>Semua diproses di perangkat kamu. Zero upload.</p></div>
+        <div class="step-compact"><span class="num">04</span><h4>Download</h4><p>Video siap di-upload. Kualitas maksimal.</p></div>
+      </div>
+
+      <div class="divider-soft"></div>
+
+      <!-- ABOUT -->
+      <div class="about-compact">
+        <div>
+          <span class="kicker">Tentang</span>
+          <h2 style="font-size:clamp(1.6rem,3.5vw,2.4rem);margin:1rem 0 1.2rem;font-weight:800;letter-spacing:-.02em;">Bukan Sekadar Tools</h2>
+          <p>Kami lelah dengan platform yang merusak kualitas video. reyy.tools hadir untuk memberikan kreator kendali penuh atas pipeline konten mereka — langsung dari browser.</p>
+          <div class="about__chips" style="margin-top:1.4rem;">
+            <span class="chip">Video Patcher</span>
+            <span class="chip">Hardware Encode</span>
+            <span class="chip">AI Upscale</span>
+            <span class="chip">120FPS Ready</span>
+          </div>
+        </div>
+        <div class="about-quote">
+          <p>Berhenti menyalahkan algoritma. Optimasi video kamu dari sumbernya, sebelum upload.</p>
+          <small>— reyy.tools</small>
+        </div>
+      </div>
+
+      <div class="divider-soft"></div>
+
+      <!-- PRICING -->
+      <div class="section-label">Pricing</div>
+      <div class="pact-grid">
+        <div class="pact-card">
+          <div class="pact-icon">🎁</div>
+          <div class="pact-name">Basic</div>
+          <div class="pact-desc">Untuk pemula</div>
+          <ul class="pact-features">
+            <li>2x penggunaan/hari</li>
+            <li>Akses Patch</li>
+            <li>Analyzer</li>
+            <li>Gratis selamanya</li>
+          </ul>
+          <div class="pact-price">GRATIS</div>
+          <a class="pact-btn" href="https://t.me/reyystecuu_bot" target="_blank">Mulai Gratis</a>
+        </div>
+
+        <div class="pact-card pact-popular">
+          <div class="pact-badge">POPULER</div>
+          <div class="pact-icon">⭐</div>
+          <div class="pact-name">Premium</div>
+          <div class="pact-desc">Untuk kreator aktif</div>
+          <ul class="pact-features">
+            <li>20x penggunaan/hari</li>
+            <li>Akses semua tools</li>
+            <li>Prioritas rendering</li>
+            <li>Support via bot</li>
+          </ul>
+          <div class="pact-price">Rp 15.000 <span>/ 30 hari</span></div>
+          <a class="pact-btn pact-btn-primary" href="https://t.me/reyystecuu_bot" target="_blank">Berlangganan</a>
+        </div>
+
+        <div class="pact-card">
+          <div class="pact-icon">👑</div>
+          <div class="pact-name">VIP+</div>
+          <div class="pact-desc">Untuk profesional &amp; agensi</div>
+          <ul class="pact-features">
+            <li>Penggunaan unlimited</li>
+            <li>Akses semua fitur</li>
+            <li>Priority support</li>
+            <li>Early access</li>
+          </ul>
+          <div class="pact-price">Rp 35.000 <span>/ 30 hari</span></div>
+          <a class="pact-btn" href="https://t.me/reyystecuu_bot" target="_blank">Jadi VIP+</a>
+        </div>
+      </div>
+
+      <div class="divider-soft"></div>
+
+      <!-- FAQ -->
+      <div class="section-label">FAQ</div>
+      <div class="grimoire-wrap">
+        <div class="grimoire-item">
+          <button class="grimoire-q" onclick="toggleGrimoire(this)">
+            <span>Apakah file saya di-upload ke server?</span>
+            <span class="grimoire-icon">+</span>
+          </button>
+          <div class="grimoire-a">
+            <p>Tidak. Semua pemrosesan berjalan 100% lokal di perangkat kamu menggunakan WebAssembly. Server hanya digunakan untuk cloud upscale (opsional).</p>
+          </div>
+        </div>
+
+        <div class="grimoire-item">
+          <button class="grimoire-q" onclick="toggleGrimoire(this)">
+            <span>Mengapa TikTok mengompres video saya?</span>
+            <span class="grimoire-icon">+</span>
+          </button>
+          <div class="grimoire-a">
+            <p>Platform sengaja mengompres untuk menghemat bandwidth. reyy.tools memperbaiki ulang struktur MP4 kamu agar algoritma platform lebih menghargai file kamu.</p>
+          </div>
+        </div>
+
+        <div class="grimoire-item">
+          <button class="grimoire-q" onclick="toggleGrimoire(this)">
+            <span>Apakah ini aman?</span>
+            <span class="grimoire-icon">+</span>
+          </button>
+          <div class="grimoire-a">
+            <p>Aman. Tidak ada data pribadi yang dikirim. Semua diproses lokal di browser kamu. File video kamu tidak pernah keluar dari perangkat.</p>
+          </div>
+        </div>
+
+        <div class="grimoire-item">
+          <button class="grimoire-q" onclick="toggleGrimoire(this)">
+            <span>Berapa biaya fitur-fitur ini?</span>
+            <span class="grimoire-icon">+</span>
+          </button>
+          <div class="grimoire-a">
+            <p>Basic (gratis): 2x penggunaan/hari. Premium: Rp 15.000/30 hari, 20x penggunaan/hari. VIP+: Rp 35.000/30 hari, penggunaan unlimited dan unlock semua fitur.</p>
+          </div>
+        </div>
+
+        <div class="grimoire-item">
+          <button class="grimoire-q" onclick="toggleGrimoire(this)">
+            <span>Bagaimana cara upgrade ke VIP?</span>
+            <span class="grimoire-icon">+</span>
+          </button>
+          <div class="grimoire-a">
+            <p>Chat admin di <a href="https://t.me/reyystecuu_bot" target="_blank" style="color:#00d9ff;font-weight:600;">@reyystecuu_bot</a> → kirim /upgrade → scan QRIS → kirim bukti bayar → VIP aktif otomatis.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider-soft"></div>
+
+      <!-- CTA -->
+      <div class="cta-magic">
+        <div class="cta-magic-inner">
+          <h2>Siap Mulai?</h2>
+          <p>Bergabung dengan ribuan kreator yang telah menggunakan reyy.tools untuk mempertahankan kualitas video mereka.</p>
+          <div class="cta-magic-actions">
+            <a class="btn btn--cyan btn--big" href="#tools-section">Mulai Sekarang</a>
+            <a class="btn btn--big" href="https://t.me/reyystecuu_bot" target="_blank">Hubungi Admin</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <footer class="site">
+        <div class="footer-magic">
+          <div class="footer-brand">reyy.tools</div>
+          <p class="footer-tagline">Toolkit kreator untuk optimasi video.</p>
+          <div class="footer-links">
+            <a href="#tools-section">Tools</a>
+            <a href="#" onclick="switchMain('analyzer');return false;">Analyzer</a>
+            <a href="#" onclick="switchMain('account');return false;">Akun</a>
+            <a href="https://sociabuzz.com/reyyofficial/tribe" target="_blank">Donate</a>
+          </div>
+          <div class="footer-divider"></div>
+          <p class="footer-copy">© 2026 reyy.tools. All rights reserved.</p>
+        </div>
+      </footer>
+
+    </div>
   </div>
-</div>
-
-  <div class="divider-soft"></div>
-  
-   <!-- ═══ CARA KERJA ═══ -->
-    <div class="section-label">Cara Kerja</div>
-    <div class="steps-compact">
-      <div class="step-compact">
-        <span class="num">01</span>
-        <h4>Pilih File</h4>
-        <p>Pilih file MP4 yang ingin diproses.</p>
-      </div>
-      <div class="step-compact">
-        <span class="num">02</span>
-        <h4>Pilih Mode</h4>
-        <p>Patch metadata instan, atau re-encode penuh.</p>
-      </div>
-      <div class="step-compact">
-        <span class="num">03</span>
-        <h4>Proses</h4>
-        <p>Semua diproses di perangkat kamu. Zero upload.</p>
-      </div>
-      <div class="step-compact">
-        <span class="num">04</span>
-        <h4>Download</h4>
-        <p>Video siap di-upload. Kualitas maksimal.</p>
-      </div>
-    </div>
-
-    <div class="divider-soft"></div>
-
-    <!-- ═══ ABOUT ═══ -->
-    <div class="about-compact">
-      <div>
-        <span class="kicker">Tentang</span>
-        <h2 style="font-size:clamp(1.6rem,3.5vw,2.4rem);margin:1rem 0 1.2rem;font-weight:800;letter-spacing:-.02em;">Bukan Sekadar Tools</h2>
-        <p>Kami lelah dengan platform yang merusak kualitas video. reyy.tools hadir untuk memberikan kreator kendali penuh atas pipeline konten mereka — langsung dari browser.</p>
-        <div class="about__chips" style="margin-top:1.4rem;">
-          <span class="chip">Video Patcher</span>
-          <span class="chip">Hardware Encode</span>
-          <span class="chip">AI Upscale</span>
-          <span class="chip">120FPS Ready</span>
-        </div>
-      </div>
-      <div class="about-quote">
-        <p>Berhenti menyalahkan algoritma. Optimasi video kamu dari sumbernya, sebelum upload.</p>
-        <small>— reyy.tools</small>
-      </div>
-    </div>
-
-    <div class="divider-soft"></div>
-
-    <!-- ═══ PRICING ═══ -->
-    <div class="section-label">Pricing</div>
-    <div class="pact-grid">
-      <div class="pact-card">
-        <div class="pact-icon">🎁</div>
-        <div class="pact-name">Basic</div>
-        <div class="pact-desc">Untuk pemula</div>
-        <ul class="pact-features">
-          <li>2x penggunaan/hari</li>
-          <li>Akses Patch</li>
-          <li>Analyzer</li>
-          <li>Gratis selamanya</li>
-        </ul>
-        <div class="pact-price">GRATIS</div>
-        <a class="pact-btn" href="https://t.me/reyystecuu_bot" target="_blank">Mulai Gratis</a>
-      </div>
-
-      <div class="pact-card pact-popular">
-        <div class="pact-badge">POPULER</div>
-        <div class="pact-icon">⭐</div>
-        <div class="pact-name">Premium</div>
-        <div class="pact-desc">Untuk kreator aktif</div>
-        <ul class="pact-features">
-          <li>20x penggunaan/hari</li>
-          <li>Akses semua tools</li>
-          <li>Prioritas rendering</li>
-          <li>Support via bot</li>
-        </ul>
-        <div class="pact-price">Rp 15.000 <span>/ 30 hari</span></div>
-        <a class="pact-btn pact-btn-primary" href="https://t.me/reyystecuu_bot" target="_blank">Berlangganan</a>
-      </div>
-
-      <div class="pact-card">
-        <div class="pact-icon">👑</div>
-        <div class="pact-name">VIP+</div>
-        <div class="pact-desc">Untuk profesional &amp; agensi</div>
-        <ul class="pact-features">
-          <li>Penggunaan unlimited</li>
-          <li>Akses semua fitur</li>
-          <li>Priority support</li>
-          <li>Early access</li>
-        </ul>
-        <div class="pact-price">Rp 35.000 <span>/ 30 hari</span></div>
-        <a class="pact-btn" href="https://t.me/reyystecuu_bot" target="_blank">Jadi VIP+</a>
-      </div>
-    </div>
-
-    <div class="divider-soft"></div>
-
-    <!-- ═══ FAQ ═══ -->
-    <div class="section-label">FAQ</div>
-    <div class="grimoire-wrap">
-      <div class="grimoire-item">
-        <button class="grimoire-q" onclick="toggleGrimoire(this)">
-          <span>Apakah file saya di-upload ke server?</span>
-          <span class="grimoire-icon">+</span>
-        </button>
-        <div class="grimoire-a">
-          <p>Tidak. Semua pemrosesan berjalan 100% lokal di perangkat kamu menggunakan WebAssembly. Server hanya digunakan untuk cloud upscale (opsional).</p>
-        </div>
-      </div>
-
-      <div class="grimoire-item">
-        <button class="grimoire-q" onclick="toggleGrimoire(this)">
-          <span>Mengapa TikTok mengompres video saya?</span>
-          <span class="grimoire-icon">+</span>
-        </button>
-        <div class="grimoire-a">
-          <p>Platform sengaja mengompres untuk menghemat bandwidth. reyy.tools memperbaiki ulang struktur MP4 kamu agar algoritma platform lebih menghargai file kamu.</p>
-        </div>
-      </div>
-
-      <div class="grimoire-item">
-        <button class="grimoire-q" onclick="toggleGrimoire(this)">
-          <span>Apakah ini aman?</span>
-          <span class="grimoire-icon">+</span>
-        </button>
-        <div class="grimoire-a">
-          <p>Aman. Tidak ada data pribadi yang dikirim. Semua diproses lokal di browser kamu. File video kamu tidak pernah keluar dari perangkat.</p>
-        </div>
-      </div>
-
-      <div class="grimoire-item">
-        <button class="grimoire-q" onclick="toggleGrimoire(this)">
-          <span>Berapa biaya fitur-fitur ini?</span>
-          <span class="grimoire-icon">+</span>
-        </button>
-        <div class="grimoire-a">
-          <p>Basic (gratis): 2x penggunaan/hari. Premium: Rp 15.000/30 hari, 20x penggunaan/hari. VIP+: Rp 35.000/30 hari, penggunaan unlimited dan unlock semua fitur.</p>
-        </div>
-      </div>
-
-      <div class="grimoire-item">
-        <button class="grimoire-q" onclick="toggleGrimoire(this)">
-          <span>Bagaimana cara upgrade ke VIP?</span>
-          <span class="grimoire-icon">+</span>
-        </button>
-        <div class="grimoire-a">
-          <p>Chat admin di <a href="https://t.me/reyystecuu_bot" target="_blank" style="color:#00d9ff;font-weight:600;">@reyystecuu_bot</a> → kirim /upgrade → scan QRIS → kirim bukti bayar → VIP aktif otomatis.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="divider-soft"></div>
-
-    <!-- ═══ CTA ═══ -->
-    <div class="cta-magic">
-      <div class="cta-magic-inner">
-        <h2>Siap Mulai?</h2>
-        <p>Bergabung dengan ribuan kreator yang telah menggunakan reyy.tools untuk mempertahankan kualitas video mereka.</p>
-        <div class="cta-magic-actions">
-          <a class="btn btn--cyan btn--big" href="#tools-section">Mulai Sekarang</a>
-          <a class="btn btn--big" href="https://t.me/reyystecuu_bot" target="_blank">Hubungi Admin</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══ FOOTER ═══ -->
-    <footer class="site">
-      <div class="footer-magic">
-        <div class="footer-brand">reyy.tools</div>
-        <p class="footer-tagline">Toolkit kreator untuk optimasi video.</p>
-        <div class="footer-links">
-          <a href="#tools-section">Tools</a>
-          <a href="#" onclick="switchMain('analyzer');return false;">Analyzer</a>
-          <a href="#" onclick="switchMain('account');return false;">Akun</a>
-          <a href="https://sociabuzz.com/reyyofficial/tribe" target="_blank">Donate</a>
-        </div>
-        <div class="footer-divider"></div>
-        <p class="footer-copy">© 2026 reyy.tools. All rights reserved.</p>
-      </div>
-    </footer>
-
-  </div>
-</div>
 
   <!-- ══════════════════════════════════════ -->
   <!-- ANALYZER PAGE                           -->
@@ -738,21 +607,15 @@
       <p style="color:#8a95a5;margin-bottom:36px;">Tempelkan link TikTok — kami akan memeriksa apakah video kamu HD atau terkompresi oleh platform.</p>
 
       <div class="analyzer-wrap">
-
         <div class="account-card" style="padding:28px;">
           <div class="input-group" style="margin-bottom:16px;">
             <label>TikTok Video URL</label>
             <div style="display:flex;gap:10px;">
-              <input class="ky-input" id="tiktokUrlInput" type="url"
-                placeholder="https://www.tiktok.com/@user/video/1234567890">
-              <button class="btn-save" id="analyzeBtn" onclick="analyzeTikTok()" style="white-space:nowrap;flex:none;">
-                Analyze
-              </button>
+              <input class="ky-input" id="tiktokUrlInput" type="url" placeholder="https://www.tiktok.com/@user/video/1234567890">
+              <button class="btn-save" id="analyzeBtn" onclick="analyzeTikTok()" style="white-space:nowrap;flex:none;">Analyze</button>
             </div>
           </div>
-          <p style="font-size:.8rem;color:#5a6270;">
-            Mendukung link tiktok.com dan short link vm.tiktok.com.
-          </p>
+          <p style="font-size:.8rem;color:#5a6270;">Mendukung link tiktok.com dan short link vm.tiktok.com.</p>
         </div>
 
         <div id="analyzerLoading" style="display:none;text-align:center;padding:40px;">
@@ -781,7 +644,6 @@
           </h3>
           <div class="meta-grid" id="metaGrid"></div>
         </div>
-
       </div>
     </div>
   </div>
@@ -796,7 +658,6 @@
       <p style="color:#8a95a5;margin-bottom:36px;">Kustomisasi identitas kamu. Link Telegram bersifat opsional.</p>
 
       <div class="account-wrap">
-
         <div class="account-card">
           <h3>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -846,13 +707,13 @@
             <button class="btn-save" style="background:rgba(248,113,113,0.12);color:#f87171;border:1px solid rgba(248,113,113,0.25);" onclick="unlinkTelegram()">Unlink</button>
           </div>
         </div>
-
       </div>
     </div>
   </div>
 
   <!-- ══════════════════════════════════════ -->
-  <!-- SCRIPT                                  -->
+  <!-- SCRIPT (INLINE)                         -->
+  <!-- ══════════════════════════════════════ -->
   <script>
   // ─── ANALYZER ───
   function analyzeTikTok() {
@@ -1045,11 +906,11 @@
     results.classList.add('show');
   }
 
-// ─── BURGER MENU ───
-function toggleMenu() {
-  var nav = document.getElementById('navLinks');
-  if (nav) nav.classList.toggle('open');
-}
+  // ─── BURGER MENU ───
+  function toggleMenu() {
+    var nav = document.getElementById('navLinks');
+    if (nav) nav.classList.toggle('open');
+  }
 
   // ─── SWITCH MAIN TAB ───
   function switchMain(tab) {
@@ -1201,7 +1062,6 @@ function toggleMenu() {
     });
   }
   </script>
-  <!-- ══════════════════════════════════════ -->
 
 </body>
 </html>
