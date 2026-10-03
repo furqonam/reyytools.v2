@@ -853,10 +853,10 @@
 
   <!-- ══════════════════════════════════════ -->
   <!-- SCRIPT                                  -->
-  <!-- ══════════════════════════════════════ -->
   <script>
   // ─── ANALYZER ───
   function analyzeTikTok() {
+    if (typeof checkQuota === 'function' && !checkQuota('analyzer')) return;
     var rawUrl = document.getElementById('tiktokUrlInput').value.trim();
     var loading = document.getElementById('analyzerLoading');
     var errBox  = document.getElementById('analyzerError');
@@ -1201,6 +1201,7 @@
     });
   }
   </script>
+  <!-- ══════════════════════════════════════ -->
 
 </body>
 </html>
