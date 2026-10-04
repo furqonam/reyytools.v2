@@ -1,32 +1,46 @@
-/* ══════════════════════════════════════════════════════════════
-   main.js — reyy tools v7.0
-   Clean : mode reyy60
-   ══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════
+   js/main.js — reyy tools v2.1
+   ─────────────────────────────────────────────────────────────────
+   Core application logic — video processing pipeline, section nav,
+   AI upscale init, cloud upscale.
 
-let selectedFile = null;
-let curMode = 'patch';
+   FIX:
+   - Bug #3: encode_patch sekarang route ke encoder (bukan cuma ganti featureKey)
+   - Bug #5: setMode('encoder') nggak clear visual mode-card lagi
+   - Bug #7: ort undefined guard di runLocalAIUpscale
+   - Bug #8: recordSuccess() dipanggil di local upscale
+   ═══════════════════════════════════════════════════════════════════ */
 
-// ==========================================
-// 1. STATS & LOCAL STORAGE
-// ==========================================
+/* ─── Module State ─── */
+let selectedFile          = null;
+let curMode               = 'patch';
+let selectedUpscaleFile   = null;
+let selectedCloudVideoFile = null;
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 1 — STATS & LOCAL STORAGE
+   ═══════════════════════════════════════════════════════════════ */
+
 function updateLocalStats() {
   const el = document.getElementById('statFiles');
   if (el) el.textContent = localStorage.getItem('reyy_processed_count') || '0';
 }
 
 function recordSuccess() {
-  let count = parseInt(localStorage.getItem('reyy_processed_count') || '0');
+  let count = parseInt(localStorage.getItem('reyy_processed_count') || '0', 10);
   count++;
   localStorage.setItem('reyy_processed_count', count);
   updateLocalStats();
 }
 
-// ==========================================
-// 2. INIT ON DOM LOAD
-// ==========================================
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 2 — INIT ON DOM LOAD
+   ═══════════════════════════════════════════════════════════════ */
+
 document.addEventListener('DOMContentLoaded', () => {
   updateLocalStats();
 
+  // Splash cleanup (fallback kalau ui.js nggak jalan)
   setTimeout(() => {
     const overlay = document.getElementById('welcomeOverlay');
     if (overlay) {
@@ -35,11 +49,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, 2200);
 
+  // Upload zone drag & drop
   const uploadZone = document.getElementById('uploadZone');
   if (uploadZone) {
-    uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('over'); });
-    uploadZone.addEventListener('dragleave', () => { uploadZone.classList.remove('over'); });
-    uploadZone.addEventListener('drop', (e) => {
+    uploadZone.addEventListener('dragover', e => {
+      e.preventDefault();
+      uploadZone.classList.add('over');
+    });
+    uploadZone.addEventListener('dragleave', () => {
+      uploadZone.classList.remove('over');
+    });
+    uploadZone.addEventListener('drop', e => {
       e.preventDefault();
       uploadZone.classList.remove('over');
       const file = e.dataTransfer.files[0];
@@ -49,10 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // patchType sync → route ke encoder
+  // patchType sync — route ke encoder kalau encode_patch dipilih
   const patchTypeSelect = document.getElementById('patchType');
   if (patchTypeSelect) {
-    patchTypeSelect.addEventListener('change', (e) => {
+    patchTypeSelect.addEventListener('change', e => {
       const val = e.target.value;
       if (val === 'encode_patch') {
         curMode = 'encoder';
@@ -65,13 +85,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Init AI upscale engines
   initLocalAIUpscale();
   initCloudVideoUpscale();
 });
 
-// ==========================================
-// 3. SECTION NAVIGATION & MODES
-// ==========================================
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 3 — SECTION NAVIGATION & MODES
+   ═══════════════════════════════════════════════════════════════ */
+
 function switchSection(sectionName) {
   document.querySelectorAll('.tool-content .section').forEach(s => s.classList.remove('active'));
   const target = document.getElementById('section-' + sectionName);
@@ -86,14 +108,24 @@ function switchSection(sectionName) {
 
 function setMode(mode) {
   curMode = mode;
+
+  /* ─── Update visual active mode-card ─── */
   document.querySelectorAll('.mode-card').forEach(card => {
     card.classList.remove('active');
     if (card.dataset.mode === mode) card.classList.add('active');
   });
 
+  /* ─── FIX #5: kalau mode 'encoder', fallback visual ke 'patch' ─── */
+  if (mode === 'encoder') {
+    const patchCard = document.querySelector('.mode-card[data-mode="patch"]');
+    if (patchCard) patchCard.classList.add('active');
+  }
+
+  /* ─── Show/hide ITS panel ─── */
   const itsPanel = document.getElementById('itsPanel');
   if (itsPanel) itsPanel.style.display = (mode === 'its') ? 'block' : 'none';
 
+  /* ─── Reset patchType kalau mode reyy60/its ─── */
   const patchTypeSelect = document.getElementById('patchType');
   if (patchTypeSelect && (mode === 'reyy60' || mode === 'its')) {
     patchTypeSelect.value = 'patch_only';
@@ -107,6 +139,10 @@ function selectItsScale(el) {
   el.classList.add('active');
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 4 — FILE HANDLING
+   ═══════════════════════════════════════════════════════════════ */
+
 function handleFileSelect(event) {
   const file = event.target.files[0];
   if (!file) return;
@@ -117,16 +153,16 @@ function processSelectedFile(file) {
   selectedFile = file;
 
   const fileDisplay = document.getElementById('fileDisplay');
-  const fileName = document.getElementById('fileName');
+  const fileName    = document.getElementById('fileName');
   if (fileDisplay) fileDisplay.classList.add('ok');
-  if (fileName) fileName.textContent = file.name;
+  if (fileName)    fileName.textContent = file.name;
 
-  const video = document.getElementById('videoPreview');
+  const video       = document.getElementById('videoPreview');
   const placeholder = document.getElementById('previewPlaceholder');
-  const previewBox = document.getElementById('previewBox');
+  const previewBox  = document.getElementById('previewBox');
   if (video && placeholder && previewBox) {
-    video.src = URL.createObjectURL(file);
-    video.style.display = 'block';
+    video.src               = URL.createObjectURL(file);
+    video.style.display     = 'block';
     previewBox.style.display = 'block';
     placeholder.style.display = 'none';
   }
@@ -135,44 +171,50 @@ function processSelectedFile(file) {
 }
 
 function updateProcessButton() {
-  const btn = document.getElementById('patchBtn');
+  const btn    = document.getElementById('patchBtn');
   const encBtn = document.getElementById('encBtn');
-  if (btn) btn.disabled = !selectedFile;
+  if (btn)    btn.disabled    = !selectedFile;
   if (encBtn) encBtn.disabled = !selectedFile;
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 5 — UI STATUS HELPERS
+   ═══════════════════════════════════════════════════════════════ */
+
 function setStatus(msg, type) {
-  const statusBox = document.getElementById('statusBox');
+  const statusBox  = document.getElementById('statusBox');
   const statusText = document.getElementById('statusText');
   if (statusBox && statusText) {
     statusText.textContent = msg;
-    statusBox.className = 'status-indicator';
+    statusBox.className    = 'status-indicator';
     if (type) statusBox.classList.add(type);
   }
 }
 
 function setProgress(percent, label, show) {
   const isEnc = (curMode === 'encoder');
-  const wrap = document.getElementById(isEnc ? 'encProgressWrap' : 'progressWrap');
-  const fill = document.getElementById(isEnc ? 'encProgressFill' : 'progressFill');
-  const lbl = document.getElementById(isEnc ? 'encProgressLabel' : 'progressLabel');
-  const eta = document.getElementById(isEnc ? 'encProgressEta' : 'progressEta');
+  const wrap  = document.getElementById(isEnc ? 'encProgressWrap' : 'progressWrap');
+  const fill  = document.getElementById(isEnc ? 'encProgressFill' : 'progressFill');
+  const lbl   = document.getElementById(isEnc ? 'encProgressLabel' : 'progressLabel');
+  const eta   = document.getElementById(isEnc ? 'encProgressEta' : 'progressEta');
 
-  if (show && wrap) wrap.classList.add('show');
-  if (!show && wrap) wrap.classList.remove('show');
+  if (show && wrap)   wrap.classList.add('show');
+  if (!show && wrap)  wrap.classList.remove('show');
   if (fill) fill.style.width = percent + '%';
-  if (lbl) lbl.textContent = label || '';
-  if (eta) eta.textContent = Math.round(percent) + '%';
+  if (lbl)  lbl.textContent  = label || '';
+  if (eta)  eta.textContent  = Math.round(percent) + '%';
   if (percent >= 100 && wrap) setTimeout(() => wrap.classList.remove('show'), 2000);
 }
 
 function showResult(fileName, elapsed, sizeBefore, sizeAfter) {
   const card = document.getElementById('resultCard');
   if (!card) return;
+
   const rf = document.getElementById('resFileName');
   const rt = document.getElementById('resTime');
   const rb = document.getElementById('resBefore');
   const ra = document.getElementById('resAfter');
+
   if (rf) rf.textContent = fileName;
   if (rt) rt.textContent = elapsed.toFixed(1) + 's';
   if (rb) rb.textContent = formatBytes(sizeBefore);
@@ -181,32 +223,41 @@ function showResult(fileName, elapsed, sizeBefore, sizeAfter) {
 }
 
 function formatBytes(bytes) {
-  if (bytes < 1024) return bytes + ' B';
-  if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+  if (bytes < 1024)     return bytes + ' B';
+  if (bytes < 1048576)  return (bytes / 1024).toFixed(1) + ' KB';
   return (bytes / 1048576).toFixed(2) + ' MB';
 }
 
 function buildEncoderArgs() {
-  const codec = document.getElementById('encCodec')?.value || 'libx264';
-  const crf = document.getElementById('encCrf')?.value || '18';
+  const codec  = document.getElementById('encCodec')?.value  || 'libx264';
+  const crf    = document.getElementById('encCrf')?.value    || '18';
   const preset = document.getElementById('encPreset')?.value || 'medium';
+
   const ffmpegArgs = ['-c:v', codec, '-crf', crf, '-preset', preset];
   ffmpegArgs.push('-c:a', 'copy');
   return { ffmpegArgs, codec, crf, preset };
 }
 
-// ==========================================
-// 4. VIDEO ENGINE PIPELINE
-// ==========================================
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 6 — VIDEO ENGINE PIPELINE (MAIN PROCESSOR)
+   ═══════════════════════════════════════════════════════════════ */
+
 async function runProcess() {
   if (!selectedFile) return;
 
   const patchType = document.getElementById('patchType')?.value || 'patch_only';
+
+  /* ─── FIX #3: Route ke encoder kalau encode_patch dipilih ─── */
+  if (curMode === 'patch' && patchType === 'encode_patch') {
+    curMode = 'encoder';
+  }
+
+  /* ─── Determine feature key for quota ─── */
   let featureKey = 'patchOnly';
   if (curMode === 'patch' && patchType === 'encode_patch') featureKey = 'encodePatch';
-  else if (curMode === 'reyy60') featureKey = 'reyy60';
-  else if (curMode === 'its') featureKey = 'its';
-  else if (curMode === 'encoder') featureKey = 'encodePatch';
+  else if (curMode === 'reyy60')                          featureKey = 'reyy60';
+  else if (curMode === 'its')                             featureKey = 'its';
+  else if (curMode === 'encoder')                         featureKey = 'encodePatch';
 
   if (typeof checkQuota === 'function' && !checkQuota(featureKey)) return;
 
@@ -214,15 +265,15 @@ async function runProcess() {
   if (btn) btn.disabled = true;
 
   const tStart = Date.now();
-  const sb = selectedFile.size;
-  const base = selectedFile.name.replace(/\.[^/.]+$/, '');
+  const sb     = selectedFile.size;
+  const base   = selectedFile.name.replace(/\.[^/.]+$/, '');
 
-  // ═══ MODE 1: PATCH ONLY ═══
-  if (curMode === 'patch') {
-    setStatus('⚙️ reyy tools Engine: Applying Sample Table Patch...', 'working');
-    setProgress(10, 'Reading file...', true);
+  try {
+    /* ═══ MODE 1: PATCH ONLY ═══ */
+    if (curMode === 'patch') {
+      setStatus('⚙️ reyy tools Engine: Applying Sample Table Patch...', 'working');
+      setProgress(10, 'Reading file...', true);
 
-    try {
       const ab = await selectedFile.arrayBuffer();
       setProgress(50, 'Applying reyy HD Patch (CF Logic)...');
 
@@ -233,7 +284,7 @@ async function runProcess() {
       if (!patch || !patch.output) throw new Error('Patch gagal: output kosong.');
 
       setProgress(90, 'Preparing download...');
-      const outBuf = patch.output instanceof Uint8Array ? patch.output.buffer : patch.output;
+      const outBuf  = patch.output instanceof Uint8Array ? patch.output.buffer : patch.output;
       const outSize = outBuf.byteLength || 0;
 
       downloadBlob(outBuf, base + '_reyy_smart.mp4');
@@ -244,77 +295,80 @@ async function runProcess() {
       showResult(selectedFile.name, elapsed, sb, outSize);
       recordSuccess();
       setTimeout(() => setProgress(0, '', false), 3000);
-    } catch (err) {
-      setStatus('❌ Error: ' + err.message, 'error');
-      setProgress(0, '', false);
     }
-  }
 
-  // ═══ MODE 2: reyy60 ═══
-  else if (curMode === 'reyy60') {
-    setStatus('⏳ reyy tools 60fps Method: Processing...', 'working');
-    setProgress(0, 'Reading file...', true);
-    try {
+    /* ═══ MODE 2: reyy60 (60fps Method) ═══ */
+    else if (curMode === 'reyy60') {
+      setStatus('⏳ reyy tools 60fps Method: Processing...', 'working');
+      setProgress(0, 'Reading file...', true);
+
       const ab = await selectedFile.arrayBuffer();
       setProgress(30, 'Analyzing structure...');
       setProgress(55, 'Embedding metadata stamp...');
+
       const data = new Uint8Array(ab.slice(0));
       patchZPayload(data);
       const buf = data.buffer;
+
       setProgress(95, 'Downloading...');
       downloadBlob(buf, base + '_reyy60.mp4');
       setProgress(100, 'Complete!');
+
       const elapsed = (Date.now() - tStart) / 1000;
       setStatus('✅ reyy tools 60fps Method Complete!', 'success');
       showResult(selectedFile.name, elapsed, sb, buf.byteLength);
       recordSuccess();
       setTimeout(() => setProgress(0, '', false), 3000);
-    } catch (err) {
-      setStatus('❌ Error: ' + err.message, 'error');
-      setProgress(0, '', false);
     }
-  }
 
-  // ═══ MODE 3: ITS ═══
-  else if (curMode === 'its') {
-    const scale = document.querySelector('.its-pill.active')?.dataset.scale || '2';
-    setStatus(`⏳ Speed Booster x${scale}: Processing video...`, 'working');
-    setProgress(0, 'Loading engine...', true);
-    try {
+    /* ═══ MODE 3: ITS (Speed Booster) ═══ */
+    else if (curMode === 'its') {
+      const scale = document.querySelector('.its-pill.active')?.dataset.scale || '2';
+
+      setStatus(`⏳ Speed Booster x${scale}: Processing video...`, 'working');
+      setProgress(0, 'Loading engine...', true);
+
       const ff = await loadFFmpeg();
       setProgress(20, 'Writing input...', true);
       ff.FS('writeFile', 'input.mp4', await ff._fetchFile(selectedFile));
+
       setProgress(40, 'Processing frame timing...', true);
       await ff.run('-itsscale', scale, '-i', 'input.mp4', '-c', 'copy', 'its_out.mp4');
+
       setProgress(72, 'Finalizing output...', true);
       const itsData = ff.FS('readFile', 'its_out.mp4');
-      const ab = itsData.buffer.slice(itsData.byteOffset, itsData.byteOffset + itsData.byteLength);
+      const ab      = itsData.buffer.slice(itsData.byteOffset, itsData.byteOffset + itsData.byteLength);
       const patched = (typeof applyMetadataStamp === 'function') ? applyMetadataStamp(ab) : ab;
+
       setProgress(95, 'Downloading...', true);
       downloadBlob(patched, base + `_its${scale}_patched.mp4`);
+
       try { ff.FS('unlink', 'input.mp4'); ff.FS('unlink', 'its_out.mp4'); } catch (e) {}
       setProgress(100, 'Complete!', true);
+
       const elapsed = (Date.now() - tStart) / 1000;
       setStatus(`✅ Speed Booster x${scale} Complete!`, 'success');
       showResult(selectedFile.name, elapsed, sb, patched.byteLength);
       recordSuccess();
       setTimeout(() => setProgress(0, '', false), 3000);
-    } catch (err) {
-      setStatus('❌ Error: ' + err.message, 'error');
-      setProgress(0, '', false);
     }
-  }
 
-  // ═══ MODE 4: ENCODER ═══
-  else if (curMode === 'encoder') {
-    const args = buildEncoderArgs();
-    const applyStamp = document.getElementById('encApplyStamp')?.checked;
-    setStatus('⏳ Advanced Encoder: Encoding video...', 'working');
-    setProgress(0, 'Loading engine...', true);
-    try {
+    /* ═══ MODE 4: ENCODER ═══ */
+    else if (curMode === 'encoder') {
+      const args       = buildEncoderArgs();
+      const applyStamp = document.getElementById('encApplyStamp')?.checked;
+
+      setStatus('⏳ Advanced Encoder: Encoding video...', 'working');
+      setProgress(0, 'Loading engine...', true);
+
       const ff = await loadFFmpeg();
-      args.ffmpegArgs.push('-threads', String(ff._multiThread ? (typeof ffmpegThreadCount === 'function' ? ffmpegThreadCount() : 1) : 1));
-      args.ffmpegArgs.push('-metadata', 'copyright=reyy tools', '-metadata', 'encoded_by=Encoder by reyy tools');
+      args.ffmpegArgs.push('-threads', String(
+        ff._multiThread ? (typeof ffmpegThreadCount === 'function' ? ffmpegThreadCount() : 1) : 1
+      ));
+      args.ffmpegArgs.push(
+        '-metadata', 'copyright=reyy tools',
+        '-metadata', 'encoded_by=Encoder by reyy tools'
+      );
 
       setProgress(15, 'Writing input file...', true);
       ff.FS('writeFile', 'input.mp4', await ff._fetchFile(selectedFile));
@@ -335,36 +389,42 @@ async function runProcess() {
       setProgress(75, 'Finalizing output buffer...', true);
       const encData = ff.FS('readFile', 'enc_out.mp4');
       let ab = encData.buffer.slice(encData.byteOffset, encData.byteOffset + encData.byteLength);
+
       if (applyStamp && typeof applyMetadataStamp === 'function') {
         setProgress(88, 'Embedding TikTok HD stamp...', true);
         ab = applyMetadataStamp(ab);
       }
+
       setProgress(95, 'Downloading...', true);
       downloadBlob(ab, base + `_encoded_crf${args.crf}` + (applyStamp ? '_reyy' : '') + '.mp4');
+
       try { ff.FS('unlink', 'input.mp4'); ff.FS('unlink', 'enc_out.mp4'); } catch (e) {}
       setProgress(100, 'Complete!', true);
+
       const elapsed = (Date.now() - tStart) / 1000;
       setStatus('✅ Advanced Encoder Complete!', 'success');
       showResult(selectedFile.name, elapsed, sb, ab.byteLength);
       recordSuccess();
       setTimeout(() => setProgress(0, '', false), 3000);
-    } catch (err) {
-      setStatus('❌ Error: ' + err.message, 'error');
-      setProgress(0, '', false);
     }
+  } catch (err) {
+    setStatus('❌ Error: ' + err.message, 'error');
+    setProgress(0, '', false);
   }
 
   if (btn) btn.disabled = false;
 }
 
-// ==========================================
-// 5. DOWNLOAD HELPERS
-// ==========================================
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 7 — DOWNLOAD HELPERS
+   ═══════════════════════════════════════════════════════════════ */
+
 function downloadBlob(data, filename) {
   const blob = new Blob([data], { type: 'video/mp4' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+
+  a.href     = url;
   a.download = filename;
   document.body.appendChild(a);
   a.click();
@@ -374,8 +434,9 @@ function downloadBlob(data, filename) {
 
 function downloadImageBlob(blob, filename) {
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
+  const a   = document.createElement('a');
+
+  a.href     = url;
   a.download = filename;
   document.body.appendChild(a);
   a.click();
@@ -383,50 +444,49 @@ function downloadImageBlob(blob, filename) {
   URL.revokeObjectURL(url);
 }
 
-// ==========================================
-// 6. LOCAL AI PHOTO UPSCALE (ONNX WAIFU2X)
-// ==========================================
-let selectedUpscaleFile = null;
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 8 — LOCAL AI PHOTO UPSCALE (ONNX WAIFU2X)
+   ═══════════════════════════════════════════════════════════════ */
 
 function switchUpscaleTab(tabMode) {
-  const tabLocal = document.getElementById('tabLocalPhoto');
-  const tabCloud = document.getElementById('tabCloudVideo');
+  const tabLocal   = document.getElementById('tabLocalPhoto');
+  const tabCloud   = document.getElementById('tabCloudVideo');
   const panelLocal = document.getElementById('panelLocalPhoto');
   const panelCloud = document.getElementById('panelCloudVideo');
 
   if (tabMode === 'local') {
-    if (tabLocal) { tabLocal.classList.add('active'); tabLocal.setAttribute('aria-selected', 'true'); }
-    if (tabCloud) { tabCloud.classList.remove('active'); tabCloud.setAttribute('aria-selected', 'false'); }
+    if (tabLocal)   { tabLocal.classList.add('active');    tabLocal.setAttribute('aria-selected', 'true'); }
+    if (tabCloud)   { tabCloud.classList.remove('active'); tabCloud.setAttribute('aria-selected', 'false'); }
     if (panelLocal) panelLocal.classList.add('active');
     if (panelCloud) panelCloud.classList.remove('active');
   } else {
-    if (tabCloud) { tabCloud.classList.add('active'); tabCloud.setAttribute('aria-selected', 'true'); }
-    if (tabLocal) { tabLocal.classList.remove('active'); tabLocal.setAttribute('aria-selected', 'false'); }
+    if (tabCloud)   { tabCloud.classList.add('active');    tabCloud.setAttribute('aria-selected', 'true'); }
+    if (tabLocal)   { tabLocal.classList.remove('active'); tabLocal.setAttribute('aria-selected', 'false'); }
     if (panelCloud) panelCloud.classList.add('active');
     if (panelLocal) panelLocal.classList.remove('active');
   }
 }
 
 function initLocalAIUpscale() {
-  const upscaleInput = document.getElementById('upscaleInput');
-  const upscaleFileName = document.getElementById('upscaleFileName');
-  const upscalePreview = document.getElementById('upscalePreview');
-  const btnStartUpscale = document.getElementById('btnStartUpscale');
+  const upscaleInput     = document.getElementById('upscaleInput');
+  const upscaleFileName  = document.getElementById('upscaleFileName');
+  const upscalePreview   = document.getElementById('upscalePreview');
+  const btnStartUpscale  = document.getElementById('btnStartUpscale');
   const upscaleStatusBox = document.getElementById('upscaleStatusBox');
 
   if (upscaleInput) {
-    upscaleInput.addEventListener('change', (e) => {
+    upscaleInput.addEventListener('change', e => {
       selectedUpscaleFile = e.target.files[0];
-      if (selectedUpscaleFile) {
-        if (upscaleFileName) upscaleFileName.textContent = 'Selected: ' + selectedUpscaleFile.name;
-        if (btnStartUpscale) btnStartUpscale.disabled = false;
-        if (upscalePreview) {
-          upscalePreview.src = URL.createObjectURL(selectedUpscaleFile);
-          upscalePreview.style.display = 'block';
-        }
-        if (upscaleStatusBox) upscaleStatusBox.style.display = 'none';
-        if (btnStartUpscale) btnStartUpscale.innerHTML = '<span>🚀 Start Local AI Photo Upscale</span>';
+      if (!selectedUpscaleFile) return;
+
+      if (upscaleFileName) upscaleFileName.textContent = 'Selected: ' + selectedUpscaleFile.name;
+      if (btnStartUpscale) btnStartUpscale.disabled = false;
+      if (upscalePreview) {
+        upscalePreview.src = URL.createObjectURL(selectedUpscaleFile);
+        upscalePreview.style.display = 'block';
       }
+      if (upscaleStatusBox) upscaleStatusBox.style.display = 'none';
+      if (btnStartUpscale)  btnStartUpscale.innerHTML = '<span>🚀 Start Local AI Photo Upscale</span>';
     });
   }
 
@@ -438,28 +498,36 @@ function initLocalAIUpscale() {
 }
 
 function setUpscaleProgress(percent, text) {
-  const fill = document.getElementById('upscaleProgressFill');
+  const fill       = document.getElementById('upscaleProgressFill');
   const statusText = document.getElementById('upscaleStatusText');
-  if (fill) fill.style.width = percent + '%';
+  if (fill)       fill.style.width       = percent + '%';
   if (statusText) statusText.textContent = text;
 }
 
 async function runLocalAIUpscale(imageFile) {
   if (typeof checkQuota === 'function' && !checkQuota('aiUpscale')) return;
-  const btnStartUpscale = document.getElementById('btnStartUpscale');
+
+  const btnStartUpscale  = document.getElementById('btnStartUpscale');
   const upscaleStatusBox = document.getElementById('upscaleStatusBox');
 
+  /* ─── FIX #7: ort undefined guard ─── */
+  if (typeof ort === 'undefined') {
+    if (typeof showToast === 'function') showToast('AI Engine belum ready. Tunggu beberapa detik, coba lagi.');
+    return;
+  }
+
   try {
-    if (btnStartUpscale) btnStartUpscale.disabled = true;
+    if (btnStartUpscale)  btnStartUpscale.disabled = true;
     if (upscaleStatusBox) upscaleStatusBox.style.display = 'block';
+
     const fill = document.getElementById('upscaleProgressFill');
     if (fill) fill.style.background = 'var(--cyan)';
 
     setUpscaleProgress(15, 'Preparing ONNX WASM Super-Resolution Engine...');
 
-    if (typeof ort !== 'undefined' && ort.env && ort.env.wasm) {
+    if (ort.env && ort.env.wasm) {
       ort.env.wasm.numThreads = 4;
-      ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/';
+      ort.env.wasm.wasmPaths  = 'https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/';
     }
 
     const session = await ort.InferenceSession.create('/noise2_scale2.0x_model.onnx', {
@@ -470,9 +538,10 @@ async function runLocalAIUpscale(imageFile) {
 
     const img = new Image();
     img.src = URL.createObjectURL(imageFile);
-    await new Promise(r => img.onload = r);
+    await new Promise(r => { img.onload = r; });
 
-    let targetW = Math.floor(img.width / 4) * 4;
+    /* ─── Resize ke maksimal 1080p, multiple of 4 ─── */
+    let targetW = Math.floor(img.width  / 4) * 4;
     let targetH = Math.floor(img.height / 4) * 4;
     if (targetW > 1080 || targetH > 1080) {
       const ratio = Math.min(1080 / targetW, 1080 / targetH);
@@ -481,55 +550,60 @@ async function runLocalAIUpscale(imageFile) {
     }
 
     const canvas = document.createElement('canvas');
-    canvas.width = targetW;
+    canvas.width  = targetW;
     canvas.height = targetH;
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
     ctx.drawImage(img, 0, 0, targetW, targetH);
     const imgData = ctx.getImageData(0, 0, targetW, targetH).data;
 
+    /* ─── Convert to CHW float32 tensor ─── */
     const floatData = new Float32Array(3 * targetH * targetW);
     for (let i = 0; i < targetH * targetW; i++) {
-      floatData[i] = imgData[i * 4] / 255.0;
-      floatData[targetH * targetW + i] = imgData[i * 4 + 1] / 255.0;
-      floatData[2 * targetH * targetW + i] = imgData[i * 4 + 2] / 255.0;
+      floatData[i]                              = imgData[i * 4]     / 255.0;
+      floatData[targetH * targetW + i]          = imgData[i * 4 + 1] / 255.0;
+      floatData[2 * targetH * targetW + i]      = imgData[i * 4 + 2] / 255.0;
     }
 
     const inputTensor = new ort.Tensor('float32', floatData, [1, 3, targetH, targetW]);
-    const feeds = {};
+    const feeds       = {};
     feeds[session.inputNames[0]] = inputTensor;
 
     setUpscaleProgress(65, '🔥 AI Engine rendering Ultra HD pixels...');
     await new Promise(resolve => setTimeout(resolve, 50));
 
-    const results = await session.run(feeds);
+    const results      = await session.run(feeds);
     const outputTensor = results[session.outputNames[0]];
-    const outData = outputTensor.data;
-    const dims = outputTensor.dims;
+    const outData      = outputTensor.data;
+    const dims         = outputTensor.dims;
 
     let outH, outWidth, isNCHW;
     if (dims[1] === 3) {
-      isNCHW = true; outH = dims[2]; outWidth = dims[3];
+      isNCHW   = true;
+      outH     = dims[2];
+      outWidth = dims[3];
     } else {
-      isNCHW = false; outH = dims[1]; outWidth = dims[2];
+      isNCHW   = false;
+      outH     = dims[1];
+      outWidth = dims[2];
     }
     const pixels = outH * outWidth;
 
     setUpscaleProgress(85, '✨ Reconstructing high-resolution image...');
 
     const outCanvas = document.createElement('canvas');
-    outCanvas.width = outWidth;
+    outCanvas.width  = outWidth;
     outCanvas.height = outH;
-    const outCtx = outCanvas.getContext('2d');
+    const outCtx     = outCanvas.getContext('2d');
     const outImgData = outCtx.createImageData(outWidth, outH);
 
     for (let i = 0; i < pixels; i++) {
       let r, g, b;
       if (isNCHW) {
-        r = outData[i] * 255;
-        g = outData[i + pixels] * 255;
+        r = outData[i]              * 255;
+        g = outData[i + pixels]     * 255;
         b = outData[i + 2 * pixels] * 255;
       } else {
-        r = outData[i * 3] * 255;
+        r = outData[i * 3]     * 255;
         g = outData[i * 3 + 1] * 255;
         b = outData[i * 3 + 2] * 255;
       }
@@ -542,51 +616,52 @@ async function runLocalAIUpscale(imageFile) {
     outCtx.putImageData(outImgData, 0, 0);
     setUpscaleProgress(100, '🎉 Complete! Downloading image...');
 
-    outCanvas.toBlob((blob) => {
+    outCanvas.toBlob(blob => {
       downloadImageBlob(blob, 'reyy_Waifu2x_UltraHD_' + Date.now() + '.png');
       if (upscaleStatusBox) upscaleStatusBox.className = 'status-box success';
       if (btnStartUpscale) {
-        btnStartUpscale.disabled = false;
+        btnStartUpscale.disabled  = false;
         btnStartUpscale.innerHTML = '<span>🚀 Start AI Upscale Again</span>';
       }
+      recordSuccess(); /* FIX #8 */
     });
   } catch (error) {
     console.error('AI Error:', error);
     if (upscaleStatusBox) upscaleStatusBox.style.display = 'block';
     setUpscaleProgress(100, '❌ Failed: Model ONNX is missing or failed to load.');
+
     const fill = document.getElementById('upscaleProgressFill');
     if (fill) fill.style.background = 'red';
     if (btnStartUpscale) {
-      btnStartUpscale.disabled = false;
+      btnStartUpscale.disabled  = false;
       btnStartUpscale.innerHTML = '<span>Try Again</span>';
     }
   }
 }
 
-// ==========================================
-// 7. CLOUD VIDEO UPSCALE (COLAB / NGROK API)
-// ==========================================
-let selectedCloudVideoFile = null;
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 9 — CLOUD VIDEO UPSCALE (COLAB / NGROK API)
+   ═══════════════════════════════════════════════════════════════ */
 
 function initCloudVideoUpscale() {
-  const cloudVideoInput = document.getElementById('cloudVideoInput');
-  const cloudVideoFileName = document.getElementById('cloudVideoFileName');
-  const cloudVideoPreview = document.getElementById('cloudVideoPreview');
+  const cloudVideoInput      = document.getElementById('cloudVideoInput');
+  const cloudVideoFileName   = document.getElementById('cloudVideoFileName');
+  const cloudVideoPreview    = document.getElementById('cloudVideoPreview');
   const btnStartCloudUpscale = document.getElementById('btnStartCloudUpscale');
-  const cloudStatusBox = document.getElementById('cloudStatusBox');
+  const cloudStatusBox       = document.getElementById('cloudStatusBox');
 
   if (cloudVideoInput) {
-    cloudVideoInput.addEventListener('change', (e) => {
+    cloudVideoInput.addEventListener('change', e => {
       selectedCloudVideoFile = e.target.files[0];
-      if (selectedCloudVideoFile) {
-        if (cloudVideoFileName) cloudVideoFileName.textContent = 'Selected: ' + selectedCloudVideoFile.name;
-        if (btnStartCloudUpscale) btnStartCloudUpscale.disabled = false;
-        if (cloudVideoPreview) {
-          cloudVideoPreview.src = URL.createObjectURL(selectedCloudVideoFile);
-          cloudVideoPreview.style.display = 'block';
-        }
-        if (cloudStatusBox) cloudStatusBox.style.display = 'block';
+      if (!selectedCloudVideoFile) return;
+
+      if (cloudVideoFileName)   cloudVideoFileName.textContent = 'Selected: ' + selectedCloudVideoFile.name;
+      if (btnStartCloudUpscale) btnStartCloudUpscale.disabled = false;
+      if (cloudVideoPreview) {
+        cloudVideoPreview.src = URL.createObjectURL(selectedCloudVideoFile);
+        cloudVideoPreview.style.display = 'block';
       }
+      if (cloudStatusBox) cloudStatusBox.style.display = 'block';
     });
   }
 
@@ -598,17 +673,18 @@ function initCloudVideoUpscale() {
 }
 
 function setCloudProgress(percent, text) {
-  const fill = document.getElementById('cloudProgressFill');
+  const fill       = document.getElementById('cloudProgressFill');
   const statusText = document.getElementById('cloudStatusText');
-  if (fill) fill.style.width = percent + '%';
+  if (fill)       fill.style.width       = percent + '%';
   if (statusText) statusText.textContent = text;
 }
 
 async function runCloudVideoUpscale() {
   if (typeof checkQuota === 'function' && !checkQuota('cloudUpscale')) return;
-  const apiUrlInput = document.getElementById('cloudApiUrl');
+
+  const apiUrlInput          = document.getElementById('cloudApiUrl');
   const btnStartCloudUpscale = document.getElementById('btnStartCloudUpscale');
-  const cloudStatusBox = document.getElementById('cloudStatusBox');
+  const cloudStatusBox       = document.getElementById('cloudStatusBox');
 
   const apiUrl = apiUrlInput ? apiUrlInput.value.trim().replace(/\/+$/, '') : '';
   if (!apiUrl) { alert('Please enter your active Ngrok API Tunnel URL from Google Colab.'); return; }
@@ -618,22 +694,24 @@ async function runCloudVideoUpscale() {
     if (btnStartCloudUpscale) btnStartCloudUpscale.disabled = true;
     if (cloudStatusBox) {
       cloudStatusBox.style.display = 'block';
-      cloudStatusBox.className = 'status-box working';
+      cloudStatusBox.className     = 'status-box working';
     }
+
     setCloudProgress(20, 'Uploading video to Cloud GPU cluster (Ngrok API)...');
 
     const formData = new FormData();
     formData.append('file', selectedCloudVideoFile);
 
     const response = await fetch(`${apiUrl}/upscale`, {
-      method: 'POST',
-      body: formData,
+      method:  'POST',
+      body:    formData,
       headers: { 'ngrok-skip-browser-warning': 'true' }
     });
 
     if (!response.ok) throw new Error(`Cloud API responded with HTTP status ${response.status}`);
 
     setCloudProgress(70, '🔥 Processing frame-by-frame Real-ESRGAN GPU Super-Resolution...');
+
     const resultBlob = await response.blob();
     setCloudProgress(100, '🎉 Cloud Upscale Complete! Downloading video...');
 
@@ -644,7 +722,7 @@ async function runCloudVideoUpscale() {
 
     if (cloudStatusBox) cloudStatusBox.className = 'status-box success';
     if (btnStartCloudUpscale) {
-      btnStartCloudUpscale.disabled = false;
+      btnStartCloudUpscale.disabled  = false;
       btnStartCloudUpscale.innerHTML = '<span>☁️ Launch Cloud Video Super-Resolution Again</span>';
     }
     recordSuccess();
