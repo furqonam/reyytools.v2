@@ -10,28 +10,37 @@
   <meta name="author" content="reyy.tools">
   <meta name="theme-color" content="#000000">
 
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
 
-  <script src="js/atom-utils.js" defer></script>
-  <script src="js/patcher.js" defer></script>
+  <!-- Scripts (load order penting) -->
+  <script src="js/atom-utils.js"    defer></script>
+  <script src="js/patcher.js"       defer></script>
   <script src="js/ffmpeg-engine.js" defer></script>
-  <script src="js/auth.js" defer></script>
-  <script src="js/limits.js" defer></script>
-  <script src="js/analyzer.js" defer></script>
-  <script src="js/profile.js" defer></script>
-  <script src="js/main.js" defer></script>
-  <script src="js/ui.js" defer></script>
+  <script src="js/auth.js"          defer></script>
+  <script src="js/limits.js"        defer></script>
+  <script src="js/analyzer.js"      defer></script>
+  <script src="js/profile.js"       defer></script>
+  <script src="js/main.js"          defer></script>
+  <script src="js/ui.js"            defer></script>
 </head>
 
 <body>
 
+  <!-- ═══════════════════════════════════════════════════════════
+       BACKGROUND & GLOBAL UI
+       ═══════════════════════════════════════════════════════════ -->
   <canvas id="reyyParticles"></canvas>
   <div class="reyy-toast" id="reyyToast"></div>
 
-  <!-- SPLASH -->
+  <!-- ═══════════════════════════════════════════════════════════
+       SPLASH SCREEN
+       ═══════════════════════════════════════════════════════════ -->
   <div id="welcomeOverlay" class="welcome-overlay" role="dialog" aria-modal="true">
     <div class="welcome-glow"></div>
     <div class="welcome-card">
@@ -41,13 +50,18 @@
     </div>
   </div>
 
-  <!-- GATE SCREEN -->
+  <!-- ═══════════════════════════════════════════════════════════
+       GATE SCREEN (LOGIN)
+       ═══════════════════════════════════════════════════════════ -->
   <div id="gateScreen" class="gate-screen">
     <div class="gate-card">
       <div class="gate-logo">⚡ reyy.tools</div>
       <p class="gate-sub">Masuk untuk mengakses tools</p>
       <div class="gate-input-wrap">
-        <input type="text" id="gateInput" class="gate-input" placeholder="Username atau Telegram ID" autocomplete="off" maxlength="30" aria-label="Username atau Telegram ID">
+        <input type="text" id="gateInput" class="gate-input"
+               placeholder="Username atau Telegram ID"
+               autocomplete="off" maxlength="30"
+               aria-label="Username atau Telegram ID">
       </div>
       <p id="gateError" class="gate-error"></p>
       <button class="gate-btn" id="gateBtn" type="button">Masuk →</button>
@@ -58,7 +72,9 @@
     </div>
   </div>
 
-  <!-- LIMIT MODAL -->
+  <!-- ═══════════════════════════════════════════════════════════
+       LIMIT MODAL (QUOTA HABIS)
+       ═══════════════════════════════════════════════════════════ -->
   <div id="limitModal" class="modal-overlay">
     <div class="modal-card">
       <div class="modal-icon">⚠️</div>
@@ -66,7 +82,7 @@
       <p class="modal-desc" id="limitModalDesc"></p>
       <div class="modal-actions">
         <button class="modal-btn modal-btn-secondary" type="button" onclick="closeLimitModal()">Tunggu Besok</button>
-        <button class="modal-btn modal-btn-primary" type="button" onclick="goToBot()">Upgrade VIP</button>
+        <button class="modal-btn modal-btn-primary"   type="button" onclick="goToBot()">Upgrade VIP</button>
       </div>
       <p class="modal-hint">
         Chat bot: <a href="https://t.me/reyystecuu_bot" target="_blank">@reyystecuu_bot</a>
@@ -74,13 +90,17 @@
     </div>
   </div>
 
-  <!-- AMBIENT BG -->
+  <!-- ═══════════════════════════════════════════════════════════
+       AMBIENT BACKGROUND ORBS
+       ═══════════════════════════════════════════════════════════ -->
   <div class="ambient-bg">
     <div class="glow-orb orb-1"></div>
     <div class="glow-orb orb-2"></div>
   </div>
 
-  <!-- NAVBAR -->
+  <!-- ═══════════════════════════════════════════════════════════
+       NAVBAR
+       ═══════════════════════════════════════════════════════════ -->
   <header class="site">
     <div class="container nav">
       <a class="logo" href="#"><span class="logo__box">⚡</span> REYY.TOOLS</a>
@@ -96,28 +116,42 @@
     </div>
   </header>
 
-  <!-- BOTTOM NAV -->
+  <!-- ═══════════════════════════════════════════════════════════
+       BOTTOM NAVIGATION
+       ═══════════════════════════════════════════════════════════ -->
   <div class="main-tab-bar">
     <button class="mtab active" id="mtab-home" type="button" onclick="switchMain('home')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="3" width="7" height="7" rx="1"/>
+        <rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/>
+        <rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
       Tools
     </button>
     <button class="mtab" id="mtab-analyzer" type="button" onclick="switchMain('analyzer')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
       Analyzer
     </button>
     <button class="mtab" id="mtab-account" type="button" onclick="switchMain('account')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
       Akun
     </button>
   </div>
 
-  <!-- ══════════════════════════════════════ -->
-  <!-- PAGE HOME                               -->
-  <!-- ══════════════════════════════════════ -->
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE: HOME
+       ═══════════════════════════════════════════════════════════ -->
   <div class="page-view active" id="page-home">
     <div class="reyy-page-wrap">
 
+      <!-- ─── HERO ─── -->
       <div class="hero-home">
         <span class="kicker">Video Toolkit</span>
         <h1>Patch. Encode. Upscale.<br><span class="outline">Semua di Browser.</span></h1>
@@ -128,7 +162,7 @@
         </div>
       </div>
 
-      <!-- STATISTIK -->
+      <!-- ─── STATISTIK ─── -->
       <div class="section-label">Statistik</div>
       <div class="stats-simple">
         <div class="stat-simple">
@@ -155,30 +189,33 @@
 
       <div class="divider-soft"></div>
 
-      <!-- TOOLS -->
+      <!-- ─── TOOLS ─── -->
       <div id="tools-section">
         <div class="section-label">Tools</div>
 
         <div class="home-tool-tabs">
           <button class="home-tool-tab active" type="button" data-section="patcher" onclick="switchSection('patcher')">MAGIC PATCH</button>
-          <button class="home-tool-tab" type="button" data-section="encoder" onclick="switchSection('encoder')">ADVANCED ENCODE</button>
-          <button class="home-tool-tab" type="button" data-section="upscale" onclick="switchSection('upscale')">AI UPSCALE</button>
+          <button class="home-tool-tab"        type="button" data-section="encoder" onclick="switchSection('encoder')">ADVANCED ENCODE</button>
+          <button class="home-tool-tab"        type="button" data-section="upscale" onclick="switchSection('upscale')">AI UPSCALE</button>
         </div>
 
         <div class="tool-content">
 
-          <!-- PATCH -->
+          <!-- ─── SECTION: PATCHER ─── -->
           <section class="section active" id="section-patcher">
             <div class="workspace-header">
               <h2 class="workspace-title">MAGIC PATCH ENGINE</h2>
               <p class="workspace-desc">Perbaiki metadata video — lewati kompresi platform tanpa re-encode. Kualitas asli, 0% loss.</p>
             </div>
+
             <div class="workspace-grid">
+
+              <!-- Panel Control -->
               <div class="workspace-panel">
                 <div class="control-group">
                   <label for="patchType">Execution Method</label>
                   <select class="modern-select" id="patchType" aria-label="Execution Method">
-                    <option value="patch_only" selected>Patch Only (Instant Metadata)</option>
+                    <option value="patch_only"   selected>Patch Only (Instant Metadata)</option>
                     <option value="encode_patch">Encode + Patch (HD Optimization)</option>
                   </select>
                   <p style="font-size:11px;color:#5a6270;margin-top:6px;line-height:1.5;">
@@ -186,73 +223,121 @@
                     <b style="color:#00d9ff;">Encode + Patch:</b> Re-encode H.264 CRF 18 (10-60 detik).
                   </p>
                 </div>
+
                 <div class="control-group">
                   <span class="control-label" id="labelProcessingMode">Processing Mode</span>
                   <div class="mode-stack" role="group" aria-labelledby="labelProcessingMode">
-                    <button class="mode-card active" type="button" data-mode="patch" onclick="setMode('patch')">
-                      <div class="mode-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></div>
-                      <div class="mode-info"><div class="mode-name">MAGIC PATCH</div><div class="mode-desc">Perbaiki struktur MP4 otomatis</div></div>
+                    <button class="mode-card active" type="button" data-mode="patch"  onclick="setMode('patch')">
+                      <div class="mode-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2">
+                          <path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/>
+                        </svg>
+                      </div>
+                      <div class="mode-info">
+                        <div class="mode-name">MAGIC PATCH</div>
+                        <div class="mode-desc">Perbaiki struktur MP4 otomatis</div>
+                      </div>
                     </button>
                     <button class="mode-card" type="button" data-mode="reyy60" onclick="setMode('reyy60')">
-                      <div class="mode-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
-                      <div class="mode-info"><div class="mode-name">60 FPS OPTIMASI</div><div class="mode-desc">Menambahkan HD metadata stamp</div></div>
+                      <div class="mode-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2">
+                          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                        </svg>
+                      </div>
+                      <div class="mode-info">
+                        <div class="mode-name">60 FPS OPTIMASI</div>
+                        <div class="mode-desc">Menambahkan HD metadata stamp</div>
+                      </div>
                     </button>
                     <button class="mode-card" type="button" data-mode="its" onclick="setMode('its')">
-                      <div class="mode-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-                      <div class="mode-info"><div class="mode-name">SPEED BOOSTER</div><div class="mode-desc">Optimasi frame timing</div></div>
+                      <div class="mode-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2">
+                          <circle cx="12" cy="12" r="10"/>
+                          <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                      </div>
+                      <div class="mode-info">
+                        <div class="mode-name">SPEED BOOSTER</div>
+                        <div class="mode-desc">Optimasi frame timing</div>
+                      </div>
                     </button>
                   </div>
                 </div>
+
                 <div class="control-group its-panel" id="itsPanel">
                   <span class="control-label" id="labelTimingMultiplier">Timing Multiplier</span>
                   <div class="its-grid" role="group" aria-labelledby="labelTimingMultiplier">
                     <button class="its-pill active" type="button" data-scale="2" data-iscale="2" onclick="selectItsScale(this)">x2 (120fps)</button>
-                    <button class="its-pill" type="button" data-scale="4" data-iscale="4" onclick="selectItsScale(this)">x4 (240fps)</button>
+                    <button class="its-pill"        type="button" data-scale="4" data-iscale="4" onclick="selectItsScale(this)">x4 (240fps)</button>
                   </div>
                 </div>
               </div>
+
+              <!-- Panel Upload + Status -->
               <div class="workspace-panel">
                 <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
                   <input type="file" id="fileInput" accept="video/mp4" onchange="handleFileSelect(event)" class="sr-only" aria-label="Upload file video MP4">
-                  <div class="upload-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+                  <div class="upload-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="17 8 12 3 7 8"/>
+                      <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                  </div>
                   <div class="upload-title">Letakkan MP4 di sini</div>
                   <div class="upload-subtitle">atau klik untuk memilih file</div>
                 </div>
+
                 <div class="file-display" id="fileDisplay"><span id="fileName">Tidak ada file terpilih</span></div>
+
                 <div class="preview-box" id="previewBox">
                   <video id="videoPreview" controls></video>
                   <div class="preview-placeholder" id="previewPlaceholder">Preview Video</div>
                 </div>
-                <div class="status-indicator" id="statusBox"><div class="status-dot"></div><span id="statusText">Sistem Siap</span></div>
+
+                <div class="status-indicator" id="statusBox">
+                  <div class="status-dot"></div>
+                  <span id="statusText">Sistem Siap</span>
+                </div>
+
                 <div class="progress-wrap" id="progressWrap">
                   <div class="progress-bg"><div class="progress-fill" id="progressFill"></div></div>
-                  <div class="progress-info"><span id="progressLabel"></span><span id="progressEta">0%</span></div>
+                  <div class="progress-info">
+                    <span id="progressLabel"></span>
+                    <span id="progressEta">0%</span>
+                  </div>
                 </div>
+
                 <div class="result-card" id="resultCard">
                   <div class="result-title">Selesai</div>
                   <div class="res-grid">
-                    <div class="res-label">File:</div><div class="res-val" id="resFileName"></div>
-                    <div class="res-label">Waktu:</div><div class="res-val" id="resTime"></div>
+                    <div class="res-label">File:</div>    <div class="res-val" id="resFileName"></div>
+                    <div class="res-label">Waktu:</div>   <div class="res-val" id="resTime"></div>
                     <div class="res-label">Original:</div><div class="res-val" id="resBefore"></div>
-                    <div class="res-label">Hasil:</div><div class="res-val" id="resAfter"></div>
+                    <div class="res-label">Hasil:</div>   <div class="res-val" id="resAfter"></div>
                   </div>
                 </div>
+
                 <button class="btn-glow-primary" id="patchBtn" type="button" onclick="runProcess()" disabled>Mulai Proses</button>
               </div>
+
             </div>
           </section>
 
-          <!-- ENCODE -->
+          <!-- ─── SECTION: ENCODER ─── -->
           <section class="section" id="section-encoder">
             <div class="workspace-header">
               <h2 class="workspace-title">ADVANCED ENCODER</h2>
               <p class="workspace-desc">Ubah video kamu menjadi H.264 HD menggunakan FFmpeg.wasm — langsung di browser.</p>
             </div>
+
             <div class="workspace-grid">
               <div class="workspace-panel">
                 <div class="control-group">
                   <label for="encCodec">Video Codec</label>
-                  <select class="modern-select" id="encCodec"><option value="libx264" selected>H.264 (libx264)</option></select>
+                  <select class="modern-select" id="encCodec">
+                    <option value="libx264" selected>H.264 (libx264)</option>
+                  </select>
                 </div>
                 <div class="control-group">
                   <label for="encCrf">Kualitas (CRF)</label>
@@ -273,35 +358,57 @@
                 </div>
                 <div class="control-group switch-group">
                   <span>Terapkan TikTok HD Stamp</span>
-                  <label class="switch"><input type="checkbox" id="encApplyStamp" checked aria-label="Terapkan TikTok HD Stamp"><span class="slider round"></span></label>
+                  <label class="switch">
+                    <input type="checkbox" id="encApplyStamp" checked aria-label="Terapkan TikTok HD Stamp">
+                    <span class="slider round"></span>
+                  </label>
                 </div>
               </div>
+
               <div class="workspace-panel">
                 <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
-                  <div class="upload-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+                  <div class="upload-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="17 8 12 3 7 8"/>
+                      <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                  </div>
                   <div class="upload-title">Pilih Video untuk di-Encode</div>
                 </div>
-                <div class="status-indicator" id="encStatusBox"><div class="status-dot"></div><span id="encStatusText">Siap</span></div>
+
+                <div class="status-indicator" id="encStatusBox">
+                  <div class="status-dot"></div>
+                  <span id="encStatusText">Siap</span>
+                </div>
+
                 <div class="progress-wrap" id="encProgressWrap">
                   <div class="progress-bg"><div class="progress-fill" id="encProgressFill"></div></div>
-                  <div class="progress-info"><span id="encProgressLabel"></span><span id="encProgressEta">0%</span></div>
+                  <div class="progress-info">
+                    <span id="encProgressLabel"></span>
+                    <span id="encProgressEta">0%</span>
+                  </div>
                 </div>
+
                 <button class="btn-glow-primary" id="encBtn" type="button" onclick="runProcess()" disabled>Mulai Encoding</button>
               </div>
             </div>
           </section>
 
-          <!-- UPSCALE -->
+          <!-- ─── SECTION: UPSCALE ─── -->
           <section class="section" id="section-upscale">
             <div class="workspace-header">
               <h2 class="workspace-title">AI UPSCALER</h2>
               <p class="workspace-desc">Perbesar resolusi foto &amp; video dengan AI lokal (ONNX) atau cloud GPU.</p>
             </div>
+
             <div class="workspace-panel full-width">
               <div class="tabs-modern">
                 <button class="tab-btn active" type="button" id="tabLocalPhoto" onclick="switchUpscaleTab('local')">Local AI</button>
-                <button class="tab-btn" type="button" id="tabCloudVideo" onclick="switchUpscaleTab('cloud')">Cloud API</button>
+                <button class="tab-btn"        type="button" id="tabCloudVideo" onclick="switchUpscaleTab('cloud')">Cloud API</button>
               </div>
+
+              <!-- Local Photo -->
               <div class="tab-content active" id="panelLocalPhoto">
                 <div class="alert-box"><strong>Offline Engine:</strong> Berjalan sepenuhnya di browser kamu menggunakan WebGL.</div>
                 <div class="upload-inline">
@@ -311,11 +418,15 @@
                 </div>
                 <img id="upscalePreview" class="preview-image" alt="Preview foto">
                 <div class="progress-wrap" id="upscaleStatusBox" style="display:none;margin-top:24px;">
-                  <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span id="upscaleStatusText">Siap</span></div>
+                  <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+                    <span id="upscaleStatusText">Siap</span>
+                  </div>
                   <div class="progress-bg"><div id="upscaleProgressFill" class="progress-fill"></div></div>
                 </div>
                 <button id="btnStartUpscale" type="button" class="btn-glow-primary" disabled style="margin-top:24px;">Mulai Upscale</button>
               </div>
+
+              <!-- Cloud Video -->
               <div class="tab-content" id="panelCloudVideo">
                 <div class="alert-box"><strong>Cloud Engine:</strong> Membutuhkan Google Colab Ngrok API tunnel.</div>
                 <div class="control-group">
@@ -329,7 +440,9 @@
                 </div>
                 <video id="cloudVideoPreview" class="preview-video" controls></video>
                 <div class="progress-wrap" id="cloudStatusBox" style="display:none;margin-top:24px;">
-                  <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span id="cloudStatusText">Siap</span></div>
+                  <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+                    <span id="cloudStatusText">Siap</span>
+                  </div>
                   <div class="progress-bg"><div id="cloudProgressFill" class="progress-fill"></div></div>
                 </div>
                 <button id="btnStartCloudUpscale" type="button" class="btn-glow-primary" disabled style="margin-top:24px;">Mulai Cloud Upscale</button>
@@ -342,7 +455,7 @@
 
       <div class="divider-soft"></div>
 
-      <!-- CARA KERJA -->
+      <!-- ─── CARA KERJA ─── -->
       <div class="section-label">Cara Kerja</div>
       <div class="steps-compact">
         <div class="step-compact"><span class="num">01</span><h4>Pilih File</h4><p>Pilih file MP4 yang ingin diproses.</p></div>
@@ -353,7 +466,7 @@
 
       <div class="divider-soft"></div>
 
-      <!-- ABOUT -->
+      <!-- ─── ABOUT ─── -->
       <div class="about-compact">
         <div>
           <span class="kicker">Tentang</span>
@@ -374,7 +487,7 @@
 
       <div class="divider-soft"></div>
 
-      <!-- PRICING -->
+      <!-- ─── PRICING ─── -->
       <div class="section-label">Pricing</div>
       <div class="pact-grid">
         <div class="pact-card">
@@ -423,7 +536,7 @@
 
       <div class="divider-soft"></div>
 
-      <!-- FAQ -->
+      <!-- ─── FAQ ─── -->
       <div class="section-label">FAQ</div>
       <div class="grimoire-wrap">
         <div class="grimoire-item">
@@ -479,7 +592,7 @@
 
       <div class="divider-soft"></div>
 
-      <!-- CTA -->
+      <!-- ─── CTA ─── -->
       <div class="cta-magic">
         <div class="cta-magic-inner">
           <h2>Siap Mulai?</h2>
@@ -491,7 +604,7 @@
         </div>
       </div>
 
-      <!-- FOOTER -->
+      <!-- ─── FOOTER ─── -->
       <footer class="site">
         <div class="footer-magic">
           <div class="footer-brand">reyy.tools</div>
@@ -510,9 +623,9 @@
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════ -->
-  <!-- ANALYZER PAGE                           -->
-  <!-- ══════════════════════════════════════ -->
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE: ANALYZER
+       ═══════════════════════════════════════════════════════════ -->
   <div class="page-view" id="page-analyzer">
     <div class="reyy-page-wrap" style="padding-top:48px;padding-bottom:80px;">
       <div class="section-label">Analyzer</div>
@@ -552,7 +665,9 @@
             </div>
           </div>
           <h3 style="margin-bottom:16px;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
             Video Metadata
           </h3>
           <div class="meta-grid" id="metaGrid"></div>
@@ -561,9 +676,9 @@
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════ -->
-  <!-- AKUN PAGE                               -->
-  <!-- ══════════════════════════════════════ -->
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE: AKUN
+       ═══════════════════════════════════════════════════════════ -->
   <div class="page-view" id="page-account">
     <div class="reyy-page-wrap" style="padding-top:48px;padding-bottom:80px;">
       <div class="section-label">Akun</div>
@@ -571,11 +686,17 @@
       <p style="color:#8a95a5;margin-bottom:36px;">Kustomisasi identitas kamu. Link Telegram bersifat opsional.</p>
 
       <div class="account-wrap">
+
+        <!-- Profile Card -->
         <div class="account-card">
           <h3>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
             Profile
           </h3>
+
           <div class="avatar-row">
             <div>
               <div class="avatar-circle" id="avatarCircle" onclick="document.getElementById('avatarInput').click()" title="Klik untuk ganti avatar">
@@ -587,39 +708,50 @@
             </div>
             <div>
               <div class="account-name-badge" id="displayNameBadge">Guest</div>
-              <div class="account-role" id="accountRoleBadge">Guest User</div>
+              <div class="account-role"       id="accountRoleBadge">Guest User</div>
             </div>
           </div>
+
           <div class="input-group">
             <label for="inputDisplayName">Display Name</label>
             <input class="reyy-input" id="inputDisplayName" type="text" placeholder="Masukkan nama tampilan kamu" maxlength="32" aria-label="Display Name">
           </div>
+
           <button class="btn-save" id="saveProfileBtn" type="button">Simpan Perubahan</button>
         </div>
 
+        <!-- Telegram Card -->
         <div class="account-card">
           <h3>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <line x1="22" y1="2" x2="11" y2="13"/>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
             Telegram Link
             <span style="margin-left:auto;font-size:.68rem;background:rgba(0,217,255,0.08);border:1px solid rgba(0,217,255,0.25);padding:2px 10px;border-radius:999px;color:#00d9ff;letter-spacing:.05em;font-weight:600;">Opsional</span>
           </h3>
+
           <div class="tg-status" id="tgStatus">
             <div class="tg-dot"></div>
             <span id="tgStatusText">Tidak ada Telegram yang terhubung — berjalan sebagai Guest</span>
           </div>
+
           <div class="input-group" style="margin-top:20px;">
             <label for="inputTgId">Telegram User ID</label>
             <input class="reyy-input" id="inputTgId" type="text" placeholder="Contoh: 123456789" aria-label="Telegram User ID">
           </div>
+
           <div class="input-group">
             <label for="inputTgUsername">Telegram Username (opsional)</label>
             <input class="reyy-input" id="inputTgUsername" type="text" placeholder="@usernamekamu" aria-label="Telegram Username">
           </div>
+
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            <button class="btn-save" id="saveTelegramBtn" type="button">Link Telegram</button>
+            <button class="btn-save" id="saveTelegramBtn"   type="button">Link Telegram</button>
             <button class="btn-save" id="unlinkTelegramBtn" type="button" style="background:rgba(248,113,113,0.12);color:#f87171;border:1px solid rgba(248,113,113,0.25);">Unlink</button>
           </div>
         </div>
+
       </div>
     </div>
   </div>
