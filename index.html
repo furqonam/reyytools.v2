@@ -103,7 +103,14 @@
        ═══════════════════════════════════════════════════════════ -->
   <header class="site">
     <div class="container nav">
-      <a class="logo" href="#"><span class="logo__box">⚡</span> REYY.TOOLS</a>
+      <div class="logo-wrap">
+        <a class="logo" href="#">
+          <span class="logo__box">⚡</span> REYY.TOOLS
+        </a>
+        <!-- 🆕 v2.1: Tier badge + usage display -->
+        <span id="tierBadge" class="user-badge free">🎁 Basic</span>
+        <span id="usageDisplay" class="usage-display free">Sisa: --</span>
+      </div>
       <button class="nav__burger" id="burger" type="button" aria-label="Buka menu">Menu ☰</button>
       <ul class="nav__links" id="navLinks">
         <li><a href="#tools-section">Tools</a></li>
@@ -210,7 +217,6 @@
 
             <div class="workspace-grid">
 
-              <!-- Panel Control -->
               <div class="workspace-panel">
                 <div class="control-group">
                   <label for="patchType">Execution Method</label>
@@ -273,7 +279,6 @@
                 </div>
               </div>
 
-              <!-- Panel Upload + Status -->
               <div class="workspace-panel">
                 <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
                   <input type="file" id="fileInput" accept="video/mp4" onchange="handleFileSelect(event)" class="sr-only" aria-label="Upload file video MP4">
@@ -377,6 +382,14 @@
                   <div class="upload-title">Pilih Video untuk di-Encode</div>
                 </div>
 
+                <div class="file-display" id="fileDisplay-enc"><span id="fileName-enc">Tidak ada file terpilih</span></div>
+
+                <!-- 🆕 v2.1: Preview Box untuk encoder -->
+                <div class="preview-box" id="previewBox-enc">
+                  <video id="videoPreview-enc" controls></video>
+                  <div class="preview-placeholder" id="previewPlaceholder-enc">Preview Video</div>
+                </div>
+
                 <div class="status-indicator" id="encStatusBox">
                   <div class="status-dot"></div>
                   <span id="encStatusText">Siap</span>
@@ -408,7 +421,6 @@
                 <button class="tab-btn"        type="button" id="tabCloudVideo" onclick="switchUpscaleTab('cloud')">Cloud API</button>
               </div>
 
-              <!-- Local Photo -->
               <div class="tab-content active" id="panelLocalPhoto">
                 <div class="alert-box"><strong>Offline Engine:</strong> Berjalan sepenuhnya di browser kamu menggunakan WebGL.</div>
                 <div class="upload-inline">
@@ -426,7 +438,6 @@
                 <button id="btnStartUpscale" type="button" class="btn-glow-primary" disabled style="margin-top:24px;">Mulai Upscale</button>
               </div>
 
-              <!-- Cloud Video -->
               <div class="tab-content" id="panelCloudVideo">
                 <div class="alert-box"><strong>Cloud Engine:</strong> Membutuhkan Google Colab Ngrok API tunnel.</div>
                 <div class="control-group">
@@ -687,7 +698,6 @@
 
       <div class="account-wrap">
 
-        <!-- Profile Card -->
         <div class="account-card">
           <h3>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
@@ -720,7 +730,6 @@
           <button class="btn-save" id="saveProfileBtn" type="button">Simpan Perubahan</button>
         </div>
 
-        <!-- Telegram Card -->
         <div class="account-card">
           <h3>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
