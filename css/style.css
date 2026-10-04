@@ -1338,3 +1338,91 @@ footer.site {
   .home-tool-tabs { width: 100%; }
   #workspace-panel { width: 100%; }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   v2.1 PATCHES
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Section Label (missing dari versi awal) ─── */
+.section-label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--cyan);
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  margin-bottom: 12px;
+  margin-top: 8px;
+  position: relative;
+  padding-left: 14px;
+  z-index: 1;
+}
+.section-label::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 12px;
+  background: var(--cyan);
+  border-radius: 2px;
+  box-shadow: 0 0 8px var(--cyan-glow);
+}
+
+/* ─── Home Tool Tabs — fix gap dengan tool-content ─── */
+.home-tool-tabs {
+  position: relative;
+  z-index: 2;
+  margin-bottom: -1px; /* overlap border biar nyatu sama tool-content */
+}
+
+/* ─── Fix mobile: `.mode-info` biar nggak overflow ─── */
+.mode-info {
+  flex: 1;
+  min-width: 0;
+}
+.mode-name,
+.mode-desc {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ─── Fix: karusel overflow di analyzer thumb ─── */
+.analyzer-thumb {
+  background: rgba(0, 217, 255, 0.03);
+}
+
+/* ─── Fix: video preview box saat nggak ada video ─── */
+.preview-box video:not([src]) {
+  display: none;
+}
+
+/* ─── Fix: fallback `.mtab.active` untuk Safari iOS ─── */
+@supports (-webkit-touch-callout: none) {
+  .mtab:active { transform: scale(0.94); }
+}
+
+/* ─── Reduce motion — aksesibilitas ─── */
+@media (prefers-reduced-motion: reduce) {
+  .mtab svg,
+  .mode-card,
+  .btn,
+  .pact-btn {
+    transition-duration: 0.01ms !important;
+  }
+  .spinner {
+    animation-duration: 3s !important;
+  }
+}
+
+/* ─── High contrast mode ─── */
+@media (prefers-contrast: more) {
+  :root {
+    --text-muted: #b0b8c4;
+    --text-dim:   #808895;
+    --border:     rgba(255, 255, 255, 0.15);
+  }
+}
