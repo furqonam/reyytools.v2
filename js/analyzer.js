@@ -3,13 +3,27 @@
    v2.1
    ─────────────────────────────────────────────────────────────────
    FIX:
-   - Quota sekarang dicek SETELAH validasi input (bug #1)
-   - Binding analyzeBtn dihapus (sudah di-handle ui.js) — bug #2
+   - Quota dicek SETELAH validasi input (bug #1)
+   - Binding analyzeBtn dihapus (sudah di ui.js) — bug #2
+   - Quota decrement HANYA saat fetch sukses (anti-rugi)
+   - Fetch timeout 8 detik (anti-hang)
    ═══════════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════
+   HELPER — Fetch with timeout
+   ═══════════════════════════════════════════════════════════════ */
+
+function _fetchT(url, opts, ms) {
+  const ctrl  = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), ms || 8000);
+  return fetch(url, { ...opts, signal: ctrl.signal })
+    .finally(() => clearTimeout(timer));
+}
 
 /* ═══════════════════════════════════════════════════════════════
    MAIN ANALYZER FUNCTION
    ═══════════════════════════════════════════════════════════════ */
+
 function analyzeTikTok() {
   const rawUrl  = document.getElementById('tiktokUrlInput').value.trim();
   const loading = document.getElementById('analyzerLoading');
@@ -18,18 +32,24 @@ function analyzeTikTok() {
   const results = document.getElementById('analyzerResults');
   const btn     = document.getElementById('analyzeBtn');
 
-  /* ─── Validasi input DULU, sebelum quota ─── */
+  /* ─── Validasi input DULU ─── */
   if (!rawUrl) {
-    showToast('Tempelkan link TikTok terlebih dahulu');
+    if (typeof showToast === 'function') showToast('Tempelkan link TikTok terlebih dahulu');
     return;
   }
   if (!rawUrl.match(/tiktok\.com/i)) {
-    showToast('Harus berupa link TikTok');
+    if (typeof showToast === 'function') showToast('Harus berupa link TikTok');
     return;
   }
 
-  /* ─── Quota check SETELAH input valid ─── */
-  if (typeof checkQuota === 'function' && !checkQuota('analyzer')) return;
+  /* ─── Cek quota (read-only, JANGAN decrement dulu) ─── */
+  if (typeof getRemainingQuota === 'function') {
+    const rem = getRemainingQuota('analyzer');
+    if (rem === 'LOCKED' || rem === 0) {
+      if (typeof showLimitModal === 'function') showLimitModal('analyzer', 0, 0);
+      return;
+    }
+  }
 
   /* ─── Set UI state: loading ─── */
   loading.style.display = 'block';
@@ -44,7 +64,7 @@ function analyzeTikTok() {
     // 1. allorigins + tikwm
     function () {
       const t = 'https://www.tikwm.com/api/?url=' + encoded + '&hd=1';
-      return fetch('https://api.allorigins.win/get?url=' + encodeURIComponent(t))
+      return _fetchT('https://api.allorigins.win/get?url=' + encodeURIComponent(t), {}, 8000)
         .then(r => r.json())
         .then(p => {
           const d = JSON.parse(p.contents);
@@ -55,7 +75,7 @@ function analyzeTikTok() {
     // 2. corsproxy + tikwm
     function () {
       const t = 'https://www.tikwm.com/api/?url=' + encoded + '&hd=1';
-      return fetch('https://corsproxy.io/?' + encodeURIComponent(t))
+      return _fetchT('https://corsproxy.io/?' + encodeURIComponent(t), {}, 8000)
         .then(r => r.json())
         .then(d => {
           if (!d || d.code !== 0 || !d.data) throw new Error(d.msg || 'no data');
@@ -65,7 +85,7 @@ function analyzeTikTok() {
     // 3. allorigins + tikwm (web=1)
     function () {
       const t = 'https://tikwm.com/api/?url=' + encoded + '&hd=1&web=1';
-      return fetch('https://api.allorigins.win/get?url=' + encodeURIComponent(t))
+      return _fetchT('https://api.allorigins.win/get?url=' + encodeURIComponent(t), {}, 8000)
         .then(r => r.json())
         .then(p => {
           const d = JSON.parse(p.contents);
@@ -75,7 +95,7 @@ function analyzeTikTok() {
     },
     // 4. direct (CORS mode)
     function () {
-      return fetch('https://www.tikwm.com/api/?url=' + encoded + '&hd=1', { mode: 'cors' })
+      return _fetchT('https://www.tikwm.com/api/?url=' + encoded + '&hd=1', { mode: 'cors' }, 8000)
         .then(r => r.json())
         .then(d => {
           if (!d || d.code !== 0 || !d.data) throw new Error(d.msg || 'no data');
@@ -94,6 +114,9 @@ function analyzeTikTok() {
     }
     attempts[i]()
       .then(data => {
+        /* ─── Baru decrement quota SETELAH sukses ─── */
+        if (typeof checkQuota === 'function') checkQuota('analyzer');
+
         loading.style.display = 'none';
         btn.disabled = false;
         renderAnalyzerResults(data, 'tikwm');
@@ -107,8 +130,8 @@ function analyzeTikTok() {
 /* ═══════════════════════════════════════════════════════════════
    RENDER ANALYZER RESULTS
    ═══════════════════════════════════════════════════════════════ */
+
 function renderAnalyzerResults(d, src) {
-  const results  = document.getElementById('analyzerResults');
   const metaGrid = document.getElementById('metaGrid');
 
   /* ─── Detect HD ─── */
@@ -116,7 +139,6 @@ function renderAnalyzerResults(d, src) {
   let w = parseInt(d.width)  || 0;
   let h = parseInt(d.height) || 0;
 
-  // Fallback: extract resolution from URL patterns
   if (!w || !h) {
     const urlsToCheck = [d.hdplay || '', d.play || '', d.wmplay || '', d.origin_cover || '', d.cover || ''];
     for (const pu of urlsToCheck) {
@@ -229,7 +251,7 @@ function renderAnalyzerResults(d, src) {
     </div>`;
   }).join('');
 
-  results.classList.add('show');
+  document.getElementById('analyzerResults').classList.add('show');
 }
 
 /* ═══════════════════════════════════════════════════════════════
