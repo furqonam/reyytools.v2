@@ -1427,3 +1427,60 @@ footer.site {
     --border:     rgba(255, 255, 255, 0.15);
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   v2.1.1 PATCHES
+   - Fix duplikat .home-tool-tabs
+   - Navbar layout baru (logo-wrap + tier badge + usage display)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Navbar layout baru (tier badge + usage display) ─── */
+.logo-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.logo-wrap .logo {
+  margin-right: 4px;
+}
+.logo-wrap .user-badge,
+.logo-wrap .usage-display {
+  margin-left: 0;
+  font-size: 0.72rem;
+  padding: 5px 12px;
+  white-space: nowrap;
+}
+@media (max-width: 600px) {
+  .logo-wrap .user-badge,
+  .logo-wrap .usage-display {
+    display: none; /* hidden di mobile biar logo nggak keganggu */
+  }
+}
+
+/* ─── Fix duplikat .home-tool-tabs (merge jadi satu rule) ─── */
+.home-tool-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: -1px; /* overlap border biar nyatu sama tool-content */
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 2;
+}
+
+/* ─── Preview box di encoder section (baru) ─── */
+#previewBox-enc {
+  display: none;
+}
+#previewBox-enc[style*="display: block"] video {
+  display: block;
+}
+
+/* ─── Preview-image hide sampai ada src ─── */
+.preview-image { display: none; }
+.preview-image[src] {
+  display: block;
+  margin-top: 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
