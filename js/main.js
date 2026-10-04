@@ -5,10 +5,10 @@
    AI upscale init, cloud upscale.
 
    FIX:
-   - Bug #3: encode_patch sekarang route ke encoder (bukan cuma ganti featureKey)
-   - Bug #5: setMode('encoder') nggak clear visual mode-card lagi
-   - Bug #7: ort undefined guard di runLocalAIUpscale
-   - Bug #8: recordSuccess() dipanggil di local upscale
+   - Bug #3: encode_patch sekarang route ke encoder
+   - Bug #5: setMode('encoder') visual fallback + preview di encoder section
+   - Bug #7: ort undefined guard di runLocalAIUpscale + hapus dup splash cleanup
+   - Bug #8: recordSuccess() di local upscale
    ═══════════════════════════════════════════════════════════════════ */
 
 /* ─── Module State ─── */
@@ -40,14 +40,7 @@ function recordSuccess() {
 document.addEventListener('DOMContentLoaded', () => {
   updateLocalStats();
 
-  // Splash cleanup (fallback kalau ui.js nggak jalan)
-  setTimeout(() => {
-    const overlay = document.getElementById('welcomeOverlay');
-    if (overlay) {
-      overlay.style.opacity = '0';
-      setTimeout(() => overlay.remove(), 500);
-    }
-  }, 2200);
+  /* Splash cleanup di-handle oleh ui.js — jangan duplicate di sini */
 
   // Upload zone drag & drop
   const uploadZone = document.getElementById('uploadZone');
@@ -109,23 +102,20 @@ function switchSection(sectionName) {
 function setMode(mode) {
   curMode = mode;
 
-  /* ─── Update visual active mode-card ─── */
   document.querySelectorAll('.mode-card').forEach(card => {
     card.classList.remove('active');
     if (card.dataset.mode === mode) card.classList.add('active');
   });
 
-  /* ─── FIX #5: kalau mode 'encoder', fallback visual ke 'patch' ─── */
+  /* FIX #5: kalau mode 'encoder', fallback visual ke 'patch' */
   if (mode === 'encoder') {
     const patchCard = document.querySelector('.mode-card[data-mode="patch"]');
     if (patchCard) patchCard.classList.add('active');
   }
 
-  /* ─── Show/hide ITS panel ─── */
   const itsPanel = document.getElementById('itsPanel');
   if (itsPanel) itsPanel.style.display = (mode === 'its') ? 'block' : 'none';
 
-  /* ─── Reset patchType kalau mode reyy60/its ─── */
   const patchTypeSelect = document.getElementById('patchType');
   if (patchTypeSelect && (mode === 'reyy60' || mode === 'its')) {
     patchTypeSelect.value = 'patch_only';
@@ -152,20 +142,39 @@ function handleFileSelect(event) {
 function processSelectedFile(file) {
   selectedFile = file;
 
-  const fileDisplay = document.getElementById('fileDisplay');
-  const fileName    = document.getElementById('fileName');
-  if (fileDisplay) fileDisplay.classList.add('ok');
-  if (fileName)    fileName.textContent = file.name;
+  /* ─── Update file display + preview untuk KEDUA section ─── */
+  const fileDisplays = [
+    document.getElementById('fileDisplay'),
+    document.getElementById('fileDisplay-enc')
+  ];
+  const fileNames = [
+    document.getElementById('fileName'),
+    document.getElementById('fileName-enc')
+  ];
 
-  const video       = document.getElementById('videoPreview');
-  const placeholder = document.getElementById('previewPlaceholder');
-  const previewBox  = document.getElementById('previewBox');
-  if (video && placeholder && previewBox) {
-    video.src               = URL.createObjectURL(file);
-    video.style.display     = 'block';
-    previewBox.style.display = 'block';
-    placeholder.style.display = 'none';
-  }
+  fileDisplays.forEach(el => { if (el) el.classList.add('ok'); });
+  fileNames.forEach(el => { if (el) el.textContent = file.name; });
+
+  /* ─── Update preview video untuk KEDUA section (fix #5) ─── */
+  const previewConfigs = [
+    { box: 'previewBox',            video: 'videoPreview',            placeholder: 'previewPlaceholder'    },
+    { box: 'previewBox-enc',        video: 'videoPreview-enc',        placeholder: 'previewPlaceholder-enc' }
+  ];
+
+  const blobURL = URL.createObjectURL(file);
+
+  previewConfigs.forEach(cfg => {
+    const box         = document.getElementById(cfg.box);
+    const video       = document.getElementById(cfg.video);
+    const placeholder = document.getElementById(cfg.placeholder);
+
+    if (box && video) {
+      video.src           = blobURL;
+      video.style.display = 'block';
+      box.style.display   = 'block';
+      if (placeholder) placeholder.style.display = 'none';
+    }
+  });
 
   updateProcessButton();
 }
@@ -247,12 +256,11 @@ async function runProcess() {
 
   const patchType = document.getElementById('patchType')?.value || 'patch_only';
 
-  /* ─── FIX #3: Route ke encoder kalau encode_patch dipilih ─── */
+  /* FIX #3: Route ke encoder kalau encode_patch dipilih */
   if (curMode === 'patch' && patchType === 'encode_patch') {
     curMode = 'encoder';
   }
 
-  /* ─── Determine feature key for quota ─── */
   let featureKey = 'patchOnly';
   if (curMode === 'patch' && patchType === 'encode_patch') featureKey = 'encodePatch';
   else if (curMode === 'reyy60')                          featureKey = 'reyy60';
@@ -510,7 +518,7 @@ async function runLocalAIUpscale(imageFile) {
   const btnStartUpscale  = document.getElementById('btnStartUpscale');
   const upscaleStatusBox = document.getElementById('upscaleStatusBox');
 
-  /* ─── FIX #7: ort undefined guard ─── */
+  /* FIX #7: ort undefined guard */
   if (typeof ort === 'undefined') {
     if (typeof showToast === 'function') showToast('AI Engine belum ready. Tunggu beberapa detik, coba lagi.');
     return;
@@ -540,7 +548,6 @@ async function runLocalAIUpscale(imageFile) {
     img.src = URL.createObjectURL(imageFile);
     await new Promise(r => { img.onload = r; });
 
-    /* ─── Resize ke maksimal 1080p, multiple of 4 ─── */
     let targetW = Math.floor(img.width  / 4) * 4;
     let targetH = Math.floor(img.height / 4) * 4;
     if (targetW > 1080 || targetH > 1080) {
@@ -556,7 +563,6 @@ async function runLocalAIUpscale(imageFile) {
     ctx.drawImage(img, 0, 0, targetW, targetH);
     const imgData = ctx.getImageData(0, 0, targetW, targetH).data;
 
-    /* ─── Convert to CHW float32 tensor ─── */
     const floatData = new Float32Array(3 * targetH * targetW);
     for (let i = 0; i < targetH * targetW; i++) {
       floatData[i]                              = imgData[i * 4]     / 255.0;
