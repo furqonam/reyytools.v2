@@ -529,7 +529,8 @@ input:checked + .slider.round::before {
 }
 .preview-video { width: 100%; aspect-ratio: 16/9; background: #000; border: 1px solid var(--border); border-radius: var(--radius-sm); display: none; }
 .preview-video[src] { display: block; }
-.preview-image[src] { margin-top: 16px; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+.preview-image { display: none; }
+.preview-image[src] { display: block; margin-top: 16px; border-radius: var(--radius-sm); border: 1px solid var(--border); }
 
 .status-indicator {
   display: flex;
