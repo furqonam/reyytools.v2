@@ -1,26 +1,37 @@
-/* ═══════════════════════════════════════════════════════════════
-   auth.js — v6.2
-   FIX:
-   - var global (bukan let) → biar limits.js bisa akses
-   - DOMContentLoaded race → cek readyState
-   - Event binding pindah dari onclick → addEventListener
-   ═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════
+   js/auth.js — reyy tools v2.1
+   ─────────────────────────────────────────────────────────────────
+   Auth via Username / Telegram ID.
+   Backend: Cloudflare Worker bot (reyystecu-bot).
+
+   CATATAN:
+   - Pakai `var` (bukan let/const) biar jadi window property —
+     biar bisa diakses dari limits.js dan file lain.
+   - Event binding pakai addEventListener (bukan inline onclick).
+   - Boot pakai readyState check (bukan langsung DOMContentLoaded).
+   ═══════════════════════════════════════════════════════════════════ */
 
 const API_BASE = 'https://reyystecu-bot.furqonalmughni95.workers.dev';
-const BOT_URL = 'https://t.me/reyystecuu_bot';
+const BOT_URL  = 'https://t.me/reyystecuu_bot';
 
-// ─── State (pakai var → jadi global property) ───
-var currentUser = null;
-var currentTier = 'free';
+/* ═══════════════════════════════════════════════════════════════
+   MODULE STATE (var — jadi window property)
+   ═══════════════════════════════════════════════════════════════ */
+var currentUser      = null;
+var currentTier      = 'free';
 var currentRemaining = 0;
 
-// ─── Init ───
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 1 — INIT
+   ═══════════════════════════════════════════════════════════════ */
+
 function initAuth() {
   const savedUser = localStorage.getItem('reyy_user');
+
   if (savedUser) {
     try {
-      currentUser = JSON.parse(savedUser);
-      currentTier = currentUser.tier || 'free';
+      currentUser      = JSON.parse(savedUser);
+      currentTier      = currentUser.tier      || 'free';
       currentRemaining = currentUser.remaining || 0;
       verifyUser(currentUser.username || currentUser.tg);
     } catch (e) {
@@ -31,20 +42,30 @@ function initAuth() {
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 2 — VERIFY USER (Background check)
+   ═══════════════════════════════════════════════════════════════ */
+
 async function verifyUser(identifier) {
   try {
     const isTgId = /^\d+$/.test(identifier);
-    const param = isTgId ? `tg=${identifier}` : `username=${identifier}`;
-    const res = await fetch(`${API_BASE}/api/auth?${param}`);
+    const param  = isTgId ? `tg=${identifier}` : `username=${identifier}`;
+
+    const res  = await fetch(`${API_BASE}/api/auth?${param}`);
     const data = await res.json();
+
     if (data.ok) {
       currentUser = {
-        username: data.username || identifier,
-        tg: data.tg, tier: data.tier, remaining: data.remaining,
-        expiry: data.expiry, registered: data.registered
+        username:   data.username || identifier,
+        tg:         data.tg,
+        tier:       data.tier,
+        remaining:  data.remaining,
+        expiry:     data.expiry,
+        registered: data.registered
       };
-      currentTier = data.tier;
+      currentTier      = data.tier;
       currentRemaining = data.remaining;
+
       localStorage.setItem('reyy_user', JSON.stringify(currentUser));
       hideGate();
       updateUserBadge();
@@ -58,41 +79,64 @@ async function verifyUser(identifier) {
       }
     }
   } catch (e) {
-    if (currentUser) { hideGate(); updateUserBadge(); }
-    else { showGate('Gagal konek server. Coba lagi.'); }
+    if (currentUser) {
+      hideGate();
+      updateUserBadge();
+    } else {
+      showGate('Gagal konek server. Coba lagi.');
+    }
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 3 — LOGIN HANDLER
+   ═══════════════════════════════════════════════════════════════ */
 
 async function doLogin() {
   const input = document.getElementById('gateInput');
   const errEl = document.getElementById('gateError');
-  const btn = document.getElementById('gateBtn');
+  const btn   = document.getElementById('gateBtn');
+
   const val = (input && input.value || '').trim().toLowerCase().replace(/^@/, '');
 
   if (!val || val.length < 3) {
     showGateError('Masukkan username atau Telegram ID yang valid');
     return;
   }
+
   if (errEl) errEl.classList.remove('show');
   if (btn) { btn.disabled = true; btn.textContent = 'Memeriksa...'; }
 
   try {
     const isTgId = /^\d+$/.test(val);
-    const param = isTgId ? `tg=${val}` : `username=${val}`;
-    const res = await fetch(`${API_BASE}/api/auth?${param}`);
+    const param  = isTgId ? `tg=${val}` : `username=${val}`;
+
+    const res  = await fetch(`${API_BASE}/api/auth?${param}`);
     const data = await res.json();
+
     if (btn) { btn.disabled = false; btn.textContent = 'Masuk'; }
 
-    if (!data.ok) { showGateError('Terjadi kesalahan. Coba lagi.'); return; }
-    if (!data.registered) { showGateError('Username tidak terdaftar. Daftar dulu di bot @reyystecuu_bot'); return; }
+    if (!data.ok) {
+      showGateError('Terjadi kesalahan. Coba lagi.');
+      return;
+    }
+    if (!data.registered) {
+      showGateError('Username tidak terdaftar. Daftar dulu di bot @reyystecuu_bot');
+      return;
+    }
 
+    /* ─── Login sukses ─── */
     currentUser = {
-      username: data.username || val,
-      tg: data.tg, tier: data.tier, remaining: data.remaining,
-      expiry: data.expiry, registered: true
+      username:   data.username || val,
+      tg:         data.tg,
+      tier:       data.tier,
+      remaining:  data.remaining,
+      expiry:     data.expiry,
+      registered: true
     };
-    currentTier = data.tier;
+    currentTier      = data.tier;
     currentRemaining = data.remaining;
+
     localStorage.setItem('reyy_user', JSON.stringify(currentUser));
     hideGate();
     updateUserBadge();
@@ -104,24 +148,40 @@ async function doLogin() {
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 4 — GATE SCREEN HELPERS
+   ═══════════════════════════════════════════════════════════════ */
+
 function showGate(errorMsg) {
   const gate = document.getElementById('gateScreen');
   if (gate) gate.classList.add('show');
   if (errorMsg) showGateError(errorMsg);
 }
+
 function hideGate() {
   const gate = document.getElementById('gateScreen');
   if (gate) gate.classList.remove('show');
 }
+
 function showGateError(msg) {
   const errEl = document.getElementById('gateError');
-  if (errEl) { errEl.textContent = msg; errEl.classList.add('show'); }
+  if (errEl) {
+    errEl.textContent = msg;
+    errEl.classList.add('show');
+  }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 5 — USER BADGE (Navbar)
+   ═══════════════════════════════════════════════════════════════ */
+
 function updateUserBadge() {
   const badge = document.getElementById('tierBadge');
   if (!badge || !currentUser) return;
-  const tier = currentUser.tier;
+
+  const tier     = currentUser.tier;
   const username = currentUser.username || 'Guest';
+
   if (tier === 'pro') {
     badge.innerHTML = `<span style="color:#fbbf5a;">👑 VIP+</span> · ${username}`;
     badge.className = 'user-badge pro';
@@ -133,22 +193,38 @@ function updateUserBadge() {
     badge.className = 'user-badge free';
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 6 — LOGOUT + UPGRADE REDIRECT
+   ═══════════════════════════════════════════════════════════════ */
+
 function logout() {
   localStorage.removeItem('reyy_user');
   localStorage.removeItem('reyy_usage');
   location.reload();
 }
-function goToBot() { window.open(BOT_URL, '_blank'); }
 
-// ─── Boot (FIX readyState race) ───
+function goToBot() {
+  window.open(BOT_URL, '_blank');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 7 — BOOT (readyState-safe)
+   ═══════════════════════════════════════════════════════════════ */
+
 (function boot() {
   function run() {
     initAuth();
+
     const btn = document.getElementById('gateBtn');
     if (btn) btn.addEventListener('click', doLogin);
+
     const inp = document.getElementById('gateInput');
-    if (inp) inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') doLogin(); });
+    if (inp) inp.addEventListener('keydown', e => {
+      if (e.key === 'Enter') doLogin();
+    });
   }
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', run);
   } else {
