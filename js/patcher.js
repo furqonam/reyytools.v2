@@ -173,12 +173,6 @@ function applyMetadataStamp(arrayBuffer) {
   return buf;
 }
 
-function applyreyyPatch(arrayBuffer, originalName) {
-  const buf = applyMetadataStamp(arrayBuffer);
-  downloadBlob(buf, originalName.replace(/\.[^/.]+$/, '') + '_patched.mp4');
-  return buf.byteLength;
-}
-
 /* ═══════════════════════════════════════════════════════════════
    SECTION 5 — CF WORKER LAZY LOADER
    ═══════════════════════════════════════════════════════════════ */
